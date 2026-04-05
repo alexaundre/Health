@@ -1,709 +1,309 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>健康管理全方案 v4</title>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>健康管理 v4.2</title>
 <style>
-:root{--bg:#0e1015;--bg2:#161a22;--bg3:#1c2029;--tx:#e8e8ec;--tx2:rgba(232,232,236,0.65);--tx3:rgba(232,232,236,0.4);--bd:rgba(255,255,255,0.06);--bd2:rgba(255,255,255,0.12);--acc:#7dd3a8;--warn:#ffa94d;--danger:#ff6b6b;--info:#8ab4f8;--purple:#c090e0;--gold:#f0c060}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;font-size:13px}
-.wrap{max-width:760px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:22px;font-weight:700}
-.sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
-.desc{font-size:12px;color:var(--tx3);margin-top:4px}
-.tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 12px;position:sticky;top:0;z-index:10;background:var(--bg);padding:6px 0}
-.tb{padding:6px 12px;border-radius:18px;border:1px solid var(--bd);background:transparent;color:var(--tx3);cursor:pointer;font-size:11px;transition:all .2s}
-.tb.on{border-color:var(--bd2);background:rgba(255,255,255,0.08);color:#fff;font-weight:600}
+:root{--bg:#0e1015;--bg2:#161a22;--bg3:#1c2029;--tx:#e8e8ec;--tx2:rgba(232,232,236,.65);--tx3:rgba(232,232,236,.4);--bd:rgba(255,255,255,.06);--bd2:rgba(255,255,255,.12);--acc:#7dd3a8;--wrn:#ffa94d;--dng:#ff6b6b;--inf:#8ab4f8;--pur:#c090e0;--gld:#f0c060}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;font-size:12px}
+.w{max-width:760px;margin:0 auto;padding:14px 12px 36px}h1{font-size:20px;font-weight:700}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:12px 0 10px;position:sticky;top:0;z-index:10;background:var(--bg);padding:5px 0}
+.tb{padding:5px 10px;border-radius:16px;border:1px solid var(--bd);background:0;color:var(--tx3);cursor:pointer;font-size:10px}.tb.on{border-color:var(--bd2);background:rgba(255,255,255,.08);color:#fff;font-weight:600}
 .sec{display:none}.sec.active{display:block}
-.card{background:var(--bg2);border-radius:12px;border:1px solid var(--bd);padding:14px;margin-bottom:10px}
-.card-t{font-size:14px;font-weight:700;margin-bottom:8px}
-.label{font-size:10px;color:var(--tx3);margin-bottom:2px}
-.val{font-size:13px;font-weight:600}
-.ed{border-bottom:1px dashed rgba(255,255,255,0.15);cursor:text;outline:none;min-width:20px;display:inline-block}
-.ed:focus{border-color:var(--info);border-style:solid}
-.hint{font-size:10px;color:var(--tx3);margin-bottom:6px}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.pgrid .it{background:var(--bg3);border-radius:8px;padding:7px 10px}
-.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
-.tag{font-size:10px;padding:2px 8px;border-radius:12px}
-.tw{background:rgba(255,180,100,0.12);color:var(--warn)}
-.tg{background:rgba(125,211,168,0.12);color:var(--acc)}
-.hl{background:rgba(125,211,168,0.08);border-radius:10px;padding:10px;margin-bottom:10px;border-left:3px solid rgba(125,211,168,0.4)}
-.hl b{font-size:13px;display:block;margin-bottom:3px}.hl p{font-size:12px;color:var(--tx2);line-height:1.5}
-table.mt{width:100%;font-size:12px;border-collapse:collapse;margin:4px 0 10px}
-table.mt th{text-align:left;padding:4px 6px;color:var(--tx3);font-weight:500;font-size:11px;border-bottom:1px solid var(--bd2)}
-table.mt td{padding:5px 6px;border-bottom:1px solid var(--bd)}
-.tblk{margin-bottom:12px}
-.tblk-h{font-size:13px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.tblk-h i{width:8px;height:8px;border-radius:50%;display:inline-block}
-.ti{background:var(--bg3);border-radius:8px;padding:8px 10px;margin-bottom:4px;cursor:pointer;transition:background .15s}
-.ti:hover{background:rgba(255,255,255,0.05)}
-.ti-top{display:flex;justify-content:space-between;align-items:baseline}
-.ti-n{font-size:12px;font-weight:600}.ti-d{font-size:11px;color:var(--tx3);flex-shrink:0;margin-left:6px}
-.ti-note{font-size:11px;color:var(--tx2);margin-top:3px;display:none;line-height:1.4}
-.ti.open .ti-note{display:block}
-.flt{display:flex;gap:5px;margin-bottom:8px}
-.fb{padding:3px 9px;border-radius:12px;border:1px solid var(--bd);background:transparent;color:var(--tx3);cursor:pointer;font-size:10px}
-.fb.on{background:rgba(255,255,255,0.08);color:var(--tx);border-color:var(--bd2)}
-.shdr{display:grid;grid-template-columns:minmax(0,1.6fr) 38px 38px 38px 50px 40px;gap:2px;font-size:10px;color:var(--tx3);padding:0 6px 3px}
-.shdr>div:not(:first-child){text-align:center}
-.shdr .so{cursor:pointer;user-select:none}.shdr .so:hover{color:var(--tx)}.shdr .so.ac{color:var(--info)}
-.sr{display:grid;grid-template-columns:minmax(0,1.6fr) 38px 38px 38px 50px 40px;gap:2px;align-items:center;padding:7px 6px;border-radius:6px;cursor:pointer;font-size:12px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--bd);transition:background .15s}
-.sr:hover,.sr.open{background:var(--bg3)}.sr>div:not(:first-child){text-align:center;font-size:10px}
-.sd{display:none;padding:8px;background:var(--bg3);border-radius:0 0 6px 6px;margin-bottom:3px;font-size:11px;line-height:1.5;color:var(--tx2)}
-.sd.show{display:block}
-.sdg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
-.sdc{background:var(--bg2);border-radius:6px;padding:6px;border:1px solid var(--bd)}
-.sdl{margin-bottom:4px}.sdl strong{color:var(--tx)}
-.sdt{margin-top:4px;padding:5px 7px;border-left:2px solid rgba(138,180,248,0.3);font-size:11px;color:var(--info)}
-.bdg{font-size:9px;padding:2px 5px;border-radius:5px;font-weight:600}
-.td-item{background:var(--bg3);border-radius:8px;padding:8px 10px;margin-bottom:5px}
-.td-item.done{opacity:0.4}
-.td-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.td-n{font-size:12px;font-weight:600;flex:1}
-.td-t{font-size:9px;padding:2px 6px;border-radius:8px;white-space:nowrap}
-.td-d{font-size:11px;color:var(--tx2);margin-top:3px;line-height:1.4}
-.td-yes{border-left:2px solid rgba(125,211,168,0.35)}
-.td-no{border-left:2px solid rgba(255,100,100,0.25)}
-.td-done-item{border-left:2px solid rgba(138,180,248,0.35)}
-.bt{font-size:11px;border-collapse:collapse;width:100%}
-.bt td{padding:5px 6px;border-bottom:1px solid var(--bd)}.bt td:first-child{font-weight:600}
-.ki{margin-bottom:8px;background:var(--bg3);border-radius:8px;padding:8px 10px}
-.ki b{font-size:12px;display:block;margin-bottom:2px}.ki p{font-size:11px;color:var(--tx2);line-height:1.5}
-.prin{margin-top:12px;padding:12px;background:var(--bg2);border-radius:10px;border:1px solid var(--bd)}
-.prin h3{font-size:13px;font-weight:700;margin-bottom:6px}.prin p{font-size:11px;line-height:1.7;color:var(--tx2)}.prin strong{color:var(--tx)}
-.ft{text-align:center;font-size:10px;color:var(--tx3);margin-top:20px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--acc);color:#0e1015;padding:5px 14px;border-radius:18px;font-size:11px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
-.toast.show{opacity:1}
-.btn{padding:5px 12px;border-radius:7px;border:1px solid var(--bd2);background:transparent;color:var(--tx);cursor:pointer;font-size:11px;transition:all .15s}
-.btn:hover{background:rgba(255,255,255,0.06)}
-.btn-acc{border-color:rgba(125,211,168,0.3);color:var(--acc)}
-.btn-sm{padding:3px 7px;font-size:10px}
-.btn-ai{border-color:rgba(192,144,224,0.3);color:var(--purple);font-size:10px;padding:4px 10px}
-select.sel{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);border-radius:5px;padding:3px 6px;font-size:11px;outline:none}
-input.inp{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);border-radius:5px;padding:3px 6px;font-size:11px;outline:none;width:50px}
-.formula-box{background:var(--bg3);border-radius:6px;padding:8px 10px;font-size:10px;line-height:1.7;color:var(--tx2);margin:6px 0;font-family:monospace;white-space:pre-wrap}.formula-box strong{color:var(--info)}
-.meal-row{display:flex;gap:5px;align-items:center;margin-bottom:4px;flex-wrap:wrap;font-size:11px}
-.day-total{background:rgba(125,211,168,0.08);border-radius:8px;padding:8px 10px;margin-top:10px;border:1px solid rgba(125,211,168,0.15)}
-.day-total table{font-size:11px;width:100%;border-collapse:collapse}.day-total td{padding:3px 6px}
-.ai-box{background:rgba(192,144,224,0.06);border:1px dashed rgba(192,144,224,0.2);border-radius:6px;padding:10px;text-align:center;color:var(--purple);font-size:10px;margin:6px 0;display:none}
-.blood-item{display:grid;grid-template-columns:1fr 80px 1fr 20px;gap:3px;padding:5px 6px;border-bottom:1px solid var(--bd);align-items:center;font-size:11px;cursor:pointer}
-.blood-item .bi-n{font-weight:600}.blood-item .bi-r{color:var(--tx3)}.blood-item .bi-x{color:var(--danger);cursor:pointer;text-align:center}
-.doctor-script{background:var(--bg3);border-radius:6px;padding:10px;font-size:11px;line-height:1.7;margin-bottom:10px}
-textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);border-radius:5px;padding:5px 7px;font-size:11px;outline:none;width:100%;min-height:36px;resize:vertical;font-family:inherit}
-.db-item{background:var(--bg3);border-radius:8px;padding:8px 10px;margin-bottom:4px;cursor:pointer}
-.db-item:hover{background:rgba(255,255,255,0.04)}
-.db-item .db-head{display:flex;justify-content:space-between;align-items:center}
-.db-item .db-name{font-weight:600;font-size:12px}.db-item .db-cat{font-size:10px;color:var(--tx3)}
-.db-detail{display:none;margin-top:6px;font-size:11px;color:var(--tx2);line-height:1.6}
-.db-item.open .db-detail{display:block}
-.db-detail table{width:100%;font-size:10px;border-collapse:collapse;margin-top:4px}
-.db-detail td{padding:2px 5px;border-bottom:1px solid var(--bd)}.db-detail td:first-child{color:var(--tx3);width:80px}
-.fasting-bar{height:22px;border-radius:6px;margin:6px 0;display:flex;overflow:hidden;font-size:9px;font-weight:600}
-.fasting-eat{background:var(--acc);color:#0e1015;display:flex;align-items:center;justify-content:center}
-.fasting-fast{background:rgba(255,255,255,0.06);color:var(--tx3);display:flex;align-items:center;justify-content:center}
-.meal-time-input{background:var(--bg3);color:var(--info);border:1px solid var(--bd2);border-radius:4px;padding:2px 4px;font-size:11px;width:52px;text-align:center;outline:none}
-.exer-day{background:var(--bg3);border-radius:8px;padding:8px 10px;margin-bottom:6px}
-.exer-day-title{font-size:12px;font-weight:600;margin-bottom:4px}
-.exer-item{font-size:11px;color:var(--tx2);padding:3px 0;border-bottom:1px solid var(--bd)}
-.chart-container{background:var(--bg3);border-radius:8px;padding:10px;margin-top:10px}
-</style>
-</head>
-<body>
-<div class="wrap">
-<div class="sub">Health Protocol v4</div>
+.c{background:var(--bg2);border-radius:10px;border:1px solid var(--bd);padding:12px;margin-bottom:8px}.ct{font-size:13px;font-weight:700;margin-bottom:6px}
+.lb{font-size:9px;color:var(--tx3)}.vl{font-size:12px;font-weight:600}
+.ed{border-bottom:1px dashed rgba(255,255,255,.15);cursor:text;outline:0;min-width:16px;display:inline-block}.ed:focus{border-color:var(--inf);border-style:solid}
+.ht{font-size:8px;color:var(--tx3);margin-bottom:5px}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}.pg .it{background:var(--bg3);border-radius:6px;padding:5px 8px}
+.tag{font-size:9px;padding:2px 6px;border-radius:10px}.tw{background:rgba(255,180,100,.12);color:var(--wrn)}.tg{background:rgba(125,211,168,.12);color:var(--acc)}
+.hl{background:rgba(125,211,168,.08);border-radius:8px;padding:8px;margin-bottom:8px;border-left:3px solid rgba(125,211,168,.4)}
+table.mt{width:100%;font-size:10px;border-collapse:collapse;margin:3px 0 8px}table.mt th{text-align:left;padding:3px 4px;color:var(--tx3);font-size:9px;border-bottom:1px solid var(--bd2)}table.mt td{padding:3px 4px;border-bottom:1px solid var(--bd)}
+.btn{padding:3px 8px;border-radius:5px;border:1px solid var(--bd2);background:0;color:var(--tx);cursor:pointer;font-size:9px}.btn:hover{background:rgba(255,255,255,.05)}.btn-a{border-color:rgba(125,211,168,.3);color:var(--acc)}
+.btn-ai{border-color:rgba(192,144,224,.3);color:var(--pur);font-size:8px;padding:2px 6px}
+.ai-box{background:rgba(192,144,224,.05);border:1px dashed rgba(192,144,224,.2);border-radius:5px;padding:6px;text-align:center;color:var(--pur);font-size:8px;margin:4px 0;display:none}
+select.sl{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);border-radius:4px;padding:2px 4px;font-size:10px;outline:0}
+input.ip{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);border-radius:4px;padding:2px 4px;font-size:10px;outline:0;width:46px}
+textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);border-radius:4px;padding:3px 5px;font-size:10px;outline:0;width:100%;min-height:28px;resize:vertical;font-family:inherit}
+.formula{background:var(--bg3);border-radius:5px;padding:6px 8px;font-size:9px;line-height:1.6;color:var(--tx2);margin:4px 0;font-family:monospace;white-space:pre-wrap}.formula strong{color:var(--inf)}
+.mr{display:flex;gap:3px;align-items:center;margin-bottom:3px;flex-wrap:wrap;font-size:10px}
+.dt{background:rgba(125,211,168,.08);border-radius:6px;padding:6px;margin-top:6px;border:1px solid rgba(125,211,168,.15)}.dt table{font-size:10px;width:100%;border-collapse:collapse}.dt td{padding:2px 4px}
+.fbar{height:18px;border-radius:9px;background:var(--bg3);position:relative;overflow:hidden;margin:5px 0}.feat{background:rgba(125,211,168,.3);position:absolute;height:100%;border-radius:9px}
+.flab{display:flex;justify-content:space-between;font-size:7px;color:var(--tx3)}
+/* DB tables */
+.dbr{display:grid;gap:2px;align-items:center;padding:5px 4px;border-radius:5px;cursor:pointer;font-size:10px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--bd)}.dbr:hover,.dbr.open{background:var(--bg3)}
+.dbr>div:not(:first-child){text-align:center;font-size:9px}
+.dbhdr{font-size:8px;color:var(--tx3);padding:0 4px 2px}.dbhdr>div:not(:first-child){text-align:center}
+.dbhdr .so{cursor:pointer;user-select:none}.dbhdr .so:hover{color:var(--tx)}.dbhdr .so.ac{color:var(--inf)}
+.dbd{display:none;padding:6px;background:var(--bg3);border-radius:0 0 5px 5px;margin-bottom:2px;font-size:9px;line-height:1.6;color:var(--tx2)}.dbd.show{display:block}.dbd strong{color:var(--tx)}
+.bdg{font-size:8px;padding:1px 4px;border-radius:4px;font-weight:600}
+.sgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin:6px 0}.sday{background:var(--bg3);border-radius:6px;padding:6px 4px;font-size:9px;min-height:120px}
+.sday-h{font-weight:600;text-align:center;margin-bottom:4px;font-size:10px}
+.sblk{border-radius:3px;padding:2px 4px;margin-bottom:2px;font-size:8px;cursor:pointer;line-height:1.4}
+.sblk:hover{filter:brightness(1.2)}
+.sb-eat{background:rgba(125,211,168,.15);color:var(--acc)}.sb-walk{background:rgba(255,212,59,.12);color:#daa520}.sb-str{background:rgba(192,144,224,.15);color:var(--pur)}.sb-cardio{background:rgba(138,180,248,.12);color:var(--inf)}.sb-hiit{background:rgba(255,107,107,.12);color:var(--dng)}.sb-yoga{background:rgba(125,211,168,.12);color:var(--acc)}.sb-rest{background:rgba(255,255,255,.03);color:var(--tx3)}.sb-sleep{background:rgba(138,180,248,.08);color:rgba(138,180,248,.5)}
+.spop{position:fixed;background:var(--bg2);border:1px solid var(--bd2);border-radius:6px;padding:8px;font-size:9px;color:var(--tx2);line-height:1.5;z-index:20;max-width:240px;display:none}.spop b{color:var(--tx)}
+.exconf{display:grid;grid-template-columns:50px 50px 1fr;gap:3px;align-items:center;font-size:10px;padding:3px 0;border-bottom:1px solid var(--bd)}
+.ti{background:var(--bg3);border-radius:6px;padding:6px 8px;margin-bottom:3px;cursor:pointer}.ti:hover{background:rgba(255,255,255,.04)}
+.ti-top{display:flex;justify-content:space-between;align-items:baseline}.ti-n{font-size:11px;font-weight:600}.ti-d{font-size:9px;color:var(--tx3)}.ti-note{font-size:9px;color:var(--tx2);margin-top:2px;display:none;line-height:1.4}.ti.open .ti-note{display:block}
+.td-i{background:var(--bg3);border-radius:6px;padding:6px 8px;margin-bottom:4px}.td-i.done{opacity:.4}.td-top{display:flex;justify-content:space-between;align-items:center;gap:4px}.td-n{font-size:11px;font-weight:600;flex:1}.td-t{font-size:8px;padding:1px 4px;border-radius:5px}.td-d{font-size:9px;color:var(--tx2);margin-top:2px}.td-y{border-left:2px solid rgba(125,211,168,.35)}.td-no{border-left:2px solid rgba(255,100,100,.25)}.td-dn{border-left:2px solid rgba(138,180,248,.35)}
+.bi{display:grid;grid-template-columns:1fr 60px 1fr 14px;gap:2px;padding:3px 4px;border-bottom:1px solid var(--bd);align-items:center;font-size:9px}.bi .bn{font-weight:600;font-size:10px}.bx{color:var(--dng);cursor:pointer;text-align:center}
+.ds{background:var(--bg3);border-radius:5px;padding:7px;font-size:10px;line-height:1.6;margin-bottom:7px}
+.ki{margin-bottom:5px;background:var(--bg3);border-radius:6px;padding:6px 8px}.ki b{font-size:11px;display:block;margin-bottom:1px}.ki p{font-size:10px;color:var(--tx2);line-height:1.4}
+.prin{margin-top:8px;padding:8px;background:var(--bg2);border-radius:8px;border:1px solid var(--bd)}.prin h3{font-size:11px;font-weight:700;margin-bottom:3px}.prin p{font-size:9px;line-height:1.5;color:var(--tx2)}.prin strong{color:var(--tx)}
+.ft{text-align:center;font-size:8px;color:var(--tx3);margin-top:14px}
+.toast{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:var(--acc);color:#0e1015;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}.toast.show{opacity:1}
+.flt{display:flex;gap:3px;margin-bottom:5px}.fb{padding:2px 7px;border-radius:10px;border:1px solid var(--bd);background:0;color:var(--tx3);cursor:pointer;font-size:9px}.fb.on{background:rgba(255,255,255,.08);color:var(--tx);border-color:var(--bd2)}
+</style></head><body>
+<div class="w">
+<div style="font-size:9px;letter-spacing:2px;color:var(--tx3)">HEALTH PROTOCOL v4.2</div>
 <h1>健康管理全方案</h1>
-<div class="desc">v4 Phase 1 / 数据库+饮食升级+运动+可导出</div>
+<div style="font-size:9px;color:var(--tx3);margin-top:2px">虚线可编辑 / 日程表自动生成 / [P2]=AI功能</div>
 <div class="tabs" id="tabs">
-<button class="tb on" data-tab="profile">档案</button>
-<button class="tb" data-tab="db">数据库</button>
-<button class="tb" data-tab="diet">饮食</button>
-<button class="tb" data-tab="suppl">补剂</button>
-<button class="tb" data-tab="exercise">运动</button>
-<button class="tb" data-tab="storage">储存</button>
-<button class="tb" data-tab="todo">待办</button>
-<button class="tb" data-tab="blood">血检</button>
-<button class="tb" data-tab="know">认知</button>
+<button class="tb on" data-tab="profile">档案</button><button class="tb" data-tab="database">数据库</button><button class="tb" data-tab="diet">饮食</button><button class="tb" data-tab="suppl">补剂</button><button class="tb" data-tab="schedule">日程表</button><button class="tb" data-tab="todo">待办</button><button class="tb" data-tab="blood">血检</button><button class="tb" data-tab="know">认知</button>
 </div>
-<div class="sec active" id="sec-profile"><div class="card">
-<div class="hint">虚线可编辑 / 修改自动保存+联动计算</div>
-<div class="pgrid">
-<div class="it"><div class="label">姓名</div><div class="val ed" data-key="p-name" contenteditable="true">徐俊峰</div></div>
-<div class="it"><div class="label">出生年</div><div class="val ed" data-key="p-year" contenteditable="true">1980</div></div>
-<div class="it"><div class="label">体重(kg)</div><div class="val ed" data-key="p-weight" contenteditable="true">78</div></div>
-<div class="it"><div class="label">身高(cm)</div><div class="val ed" data-key="p-height" contenteditable="true">175</div></div>
-<div class="it"><div class="label">性别</div><div class="val ed" data-key="p-sex" contenteditable="true">男</div></div>
-<div class="it"><div class="label">睡眠</div><div class="val ed" data-key="p-sleep" contenteditable="true">5-7h</div></div>
+
+<div class="sec active" id="sec-profile"><div class="c">
+<div class="ht">虚线字段可编辑 / 联动宏量+日程</div>
+<div class="pg">
+<div class="it"><div class="lb">姓名</div><div class="vl ed" data-key="p-name" contenteditable="true">徐俊峰</div></div>
+<div class="it"><div class="lb">出生年</div><div class="vl ed" data-key="p-year" contenteditable="true">1980</div></div>
+<div class="it"><div class="lb">体重(kg)</div><div class="vl ed" data-key="p-weight" contenteditable="true">78</div></div>
+<div class="it"><div class="lb">身高(cm)</div><div class="vl ed" data-key="p-height" contenteditable="true">175</div></div>
+<div class="it"><div class="lb">性别</div><div class="vl ed" data-key="p-sex" contenteditable="true">男</div></div>
+<div class="it"><div class="lb">睡眠</div><div class="vl ed" data-key="p-sleep" contenteditable="true">23:00-7:00</div></div>
 </div>
-<div class="label">目标</div>
-<div class="tags" style="margin-bottom:8px"><select class="sel" id="goal-sel">
-<option value="fatliver">减脂+脂肪肝逆转(高脂低碳)</option>
-<option value="lose">减脂(均衡)</option><option value="maintain">维持</option>
-<option value="gain">增肌</option><option value="metabolic">代谢调整</option>
-</select></div>
-<div class="label">活动水平</div>
-<div class="tags" style="margin-bottom:8px"><select class="sel" id="act-sel">
-<option value="1.2">久坐</option><option value="1.375" selected>轻度</option>
-<option value="1.55">中度(周3-4次)</option><option value="1.725">高强度</option>
-</select></div>
-<div class="label">健康状况</div>
-<div class="ed" data-key="p-health" contenteditable="true" style="font-size:11px;line-height:2;margin-top:3px"><span class="tag tw">轻度脂肪肝</span> <span class="tag tw">前列腺钙化</span> <span class="tag tw">肺结节</span> <span class="tag tw">胰岛素敏感性待优化</span></div>
+<div class="lb">目标</div><select class="sl" id="gsel"><option value="fatliver">减脂+脂肪肝逆转</option><option value="lose">减脂(均衡)</option><option value="maintain">维持</option><option value="gain">增肌</option><option value="metabolic">代谢调整</option></select>
+<div class="lb" style="margin-top:4px">活动水平</div><select class="sl" id="asel"><option value="1.2">久坐</option><option value="1.375" selected>轻度</option><option value="1.55">中度</option><option value="1.725">高强度</option></select>
+<div class="lb" style="margin-top:4px">健康状况</div>
+<div class="ed" data-key="p-health" contenteditable="true" style="font-size:10px;line-height:1.8;margin-top:2px"><span class="tag tw">轻度脂肪肝</span> <span class="tag tw">前列腺钙化</span> <span class="tag tw">肺结节</span> <span class="tag tw">胰岛素敏感性待优化</span></div>
 </div>
-<div class="card"><div class="card-t">代谢曲线模拟</div>
-<div class="hint">根据档案+饮食+补剂联动模拟 / 横轴=24h / 纵轴=相对水平</div>
-<div class="chart-container"><canvas id="metab-chart" height="200"></canvas></div>
-</div></div>
-<div class="sec" id="sec-db">
-<div class="card"><div class="card-t">补剂数据库 <span style="font-size:10px;color:var(--tx3);font-weight:400">(点击展开详情)</span></div>
-<div id="db-suppl-list"></div>
-<button class="btn btn-sm btn-acc" id="db-suppl-add" style="margin-top:6px">+ 新增补剂</button>
-<div id="db-suppl-form" style="display:none;margin-top:6px">
-<div style="display:flex;gap:4px;flex-wrap:wrap">
-<input class="inp" id="dbs-name" placeholder="名称" style="width:120px">
-<input class="inp" id="dbs-cat" placeholder="类型(脂溶/水溶)" style="width:100px">
-<input class="inp" id="dbs-comp" placeholder="主要成分" style="width:200px">
-<button class="btn btn-sm btn-acc" id="dbs-save">保存</button></div></div>
-</div>
-<div class="card"><div class="card-t">食物数据库 <span style="font-size:10px;color:var(--tx3);font-weight:400">(每100g/每个 / 点击展开详情)</span></div>
-<div id="db-food-list"></div>
-<button class="btn btn-sm btn-acc" id="db-food-add" style="margin-top:6px">+ 新增食物</button>
-<div id="db-food-form" style="display:none;margin-top:6px">
-<div style="display:flex;gap:4px;flex-wrap:wrap">
-<input class="inp" id="dbf-name" placeholder="名称" style="width:80px">
-<input class="inp" id="dbf-unit" placeholder="单位(g/个)" style="width:50px">
-<input class="inp" id="dbf-p" placeholder="蛋白" style="width:40px">
-<input class="inp" id="dbf-f" placeholder="脂肪" style="width:40px">
-<input class="inp" id="dbf-c" placeholder="碳水" style="width:40px">
-<input class="inp" id="dbf-cal" placeholder="kcal" style="width:40px">
-<input class="inp" id="dbf-gi" placeholder="GI" style="width:30px">
-<button class="btn btn-sm btn-acc" id="dbf-save">保存</button></div></div>
-</div></div>
+<div class="c"><div class="ct">代谢曲线模拟 <span style="font-size:8px;color:var(--pur)">[P2]</span></div><div class="ai-box" style="display:block">批次B: 联动饮食/补剂模拟血糖/胰岛素/皮质醇24h曲线</div></div></div>
+
+<div class="sec" id="sec-database">
+<div class="c"><div class="ct">补剂数据库 <span style="font-size:8px;color:var(--tx3)">(名称品牌可编辑 / 点表头排序 / 灰色=暂停)</span></div>
+<div style="display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap"><div class="flt" id="dbsflt" style="margin:0"><button class="fb on" data-sf="all">全部</button><button class="fb" data-sf="hi">高风险</button><button class="fb" data-sf="lo">稳定</button></div><button class="btn btn-a" id="dbs-add">+ 新增补剂</button></div>
+<div class="dbhdr" id="dbshdr" style="display:grid;grid-template-columns:minmax(0,1fr) 50px 32px 24px 24px 24px 32px 26px 16px 14px"><div>名称</div><div class="so" data-sort="brand">品牌</div><div class="so" data-sort="sol">溶解</div><div class="so" data-sort="ls">光</div><div class="so" data-sort="os">氧</div><div class="so" data-sort="ms">潮</div><div class="so" data-sort="ts">温</div><div class="so ac" data-sort="rs">险</div><div></div><div></div></div>
+<div id="dbs-tb"></div>
+<div id="dbs-form" style="display:none;margin-top:4px" class="c"><div style="display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="dsn-nm" placeholder="名称" style="width:80px"><input class="ip" id="dsn-br" placeholder="品牌" style="width:60px"><select class="sl" id="dsn-sol"><option>脂溶</option><option>水溶</option><option>混合</option><option>特殊(活菌)</option></select><button class="btn btn-a" id="dsn-save">保存</button></div></div></div>
+<div class="c"><div class="ct">食物数据库 <span style="font-size:8px;color:var(--tx3)">(每100g或每个 / 名称可编辑 / 灰色=暂停)</span></div>
+<div style="margin-bottom:4px"><button class="btn btn-a" id="dbf-add">+ 新增食物</button></div>
+<div class="dbhdr" id="dbfhdr" style="display:grid;grid-template-columns:minmax(0,1fr) 34px 24px 24px 24px 22px 24px 22px 20px 14px"><div>名称</div><div class="so" data-sort="cat">类别</div><div class="so" data-sort="p">P</div><div class="so" data-sort="f">F</div><div class="so" data-sort="c">C</div><div class="so" data-sort="w">水</div><div class="so" data-sort="cal">cal</div><div class="so" data-sort="gi">GI</div><div></div><div></div></div>
+<div id="dbf-tb"></div>
+<div id="dbf-form" style="display:none;margin-top:4px" class="c"><div style="display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="dfn-nm" placeholder="名称" style="width:70px"><select class="sl" id="dfn-cat"><option>主食</option><option>蛋白</option><option>脂肪</option><option>蔬菜</option><option>乳制品</option></select><input class="ip" id="dfn-p" placeholder="P" style="width:30px"><input class="ip" id="dfn-f" placeholder="F" style="width:30px"><input class="ip" id="dfn-c" placeholder="C" style="width:30px"><input class="ip" id="dfn-cal" placeholder="cal" style="width:34px"><input class="ip" id="dfn-gi" placeholder="GI" style="width:28px"><button class="btn btn-a" id="dfn-save">保存</button></div></div></div></div>
+
 <div class="sec" id="sec-diet">
-<div class="hl"><b><span class="ed" data-key="diet-strat" contenteditable="true">低胰岛素饮食 + 16:8 间歇断食</span></b>
-<p>高脂肪、中蛋白、低碳水。控制胰岛素AUC。</p>
-<button class="btn btn-ai" data-ai="diet">[P2] AI分析</button>
-<div class="ai-box" id="ai-diet">P2: AI将优化策略</div></div>
-<div class="card"><div class="card-t">断食窗口</div>
-<div style="display:flex;gap:10px;align-items:center;font-size:12px;margin-bottom:6px">
-<span>首餐 <input class="meal-time-input" id="fast-start" value="12:00"></span>
-<span>末餐 <input class="meal-time-input" id="fast-end" value="18:00"></span>
-<span id="fast-summary" style="color:var(--acc)"></span></div>
-<div class="fasting-bar" id="fasting-bar"></div></div>
-<div class="card"><div class="card-t">宏量计算器</div><div id="macro-out"></div>
-<div class="formula-box" id="formula-out"></div></div>
-<div class="card"><div class="card-t">三餐规划</div><div id="meals-out"></div>
-<div class="day-total" id="day-total" style="display:none"></div>
-<button class="btn btn-ai" data-ai="meal" style="margin-top:8px">[P2] AI分析三餐</button>
-<div class="ai-box" id="ai-meal">P2: AI对比宏量目标给建议</div></div></div>
-<div class="sec" id="sec-suppl">
-<div class="hint">名称/剂量可编辑 / 每个时段可新增补剂</div>
-<div id="suppl-c"></div>
-<button class="btn btn-ai" data-ai="suppl" style="margin-top:8px">[P2] AI检查补剂</button>
-<div class="ai-box" id="ai-suppl">P2: AI检查补剂合理性</div></div>
-<div class="sec" id="sec-exercise">
-<div class="card"><div class="card-t">运动周计划 <span style="font-size:10px;color:var(--tx3);font-weight:400">(点击查看详情)</span></div>
-<div class="hint">包含饭后快走 + 力量/HIIT/有氧 / 可编辑</div>
-<div id="exer-week"></div></div></div>
-<div class="sec" id="sec-storage">
-<div class="hint">点表头排序</div>
-<div class="flt" id="sflt"><button class="fb on" data-sf="all">全部</button><button class="fb" data-sf="hi">高风险</button><button class="fb" data-sf="lo">稳定</button></div>
-<div class="shdr" id="shdr"><div>补剂</div><div class="so" data-sort="ls">光</div><div class="so" data-sort="os">氧</div><div class="so" data-sort="ms">潮</div><div class="so" data-sort="ts">温</div><div class="so ac" data-sort="rs">险</div></div>
-<div id="stb"></div>
-<div class="prin"><h3>储存原则</h3><p><strong>高风险:</strong>鱼油/叶黄素/番茄红素怕氧+光;CoQ10/姜黄素怕光+热;益生菌怕热+潮<br><strong>存放:</strong>卧室抽屉或书柜<br><strong>取用:</strong>快开快关,手干燥,留干燥剂</p></div></div>
+<div class="hl"><b><span class="ed" data-key="d-strat" contenteditable="true">低胰岛素饮食 + 16:8</span></b><div style="font-size:9px;color:var(--tx2)">高脂中蛋白低碳水 / 控胰岛素AUC</div></div>
+<div class="c"><div class="ct">断食窗口</div><div class="flab"><span>0:00</span><span>6:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div><div class="fbar"><div class="feat" id="feat"></div></div><div id="finfo" style="font-size:9px;color:var(--tx2)"></div></div>
+<div class="c"><div class="ct">宏量计算器</div><div id="mout"></div><div class="formula" id="fout"></div></div>
+<div class="c"><div class="ct">三餐规划 <span style="font-size:8px;color:var(--tx3)">(食物链接数据库 / 时间联动日程表)</span></div><div id="mlout"></div><div class="dt" id="dtot" style="display:none"></div></div></div>
+
+<div class="sec" id="sec-suppl"><div class="ht">名称剂量可编辑 / 含溶解性 / 可新增</div><div id="sc"></div></div>
+
+<div class="sec" id="sec-schedule"><div class="c"><div class="ct">周日程表 <span style="font-size:8px;color:var(--tx3)">(自动从饮食+补剂+运动生成)</span></div>
+<div class="sgrid" id="schgrid"></div>
+<div id="spop" class="spop"></div></div>
+<div class="c"><div class="ct">每日运动配置</div><div class="ht">时间和类型改变后日程表自动更新</div><div id="exconf"></div>
+<div id="exdetail" style="margin-top:6px"></div></div></div>
+
 <div class="sec" id="sec-todo">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<div class="card-t" style="margin:0">待办</div>
-<div style="display:flex;gap:5px">
-<button class="btn btn-sm btn-acc" id="todo-add">+ 新增</button>
-<button class="btn btn-sm" id="todo-toggle">隐藏已完成</button></div></div>
-<div id="todo-list"></div>
-<div id="todo-form" style="display:none;margin:8px 0" class="card">
-<input class="inp" id="tn-name" placeholder="名称" style="width:100%;margin-bottom:4px">
-<textarea class="ta" id="tn-desc" placeholder="描述" rows="2"></textarea>
-<div style="display:flex;gap:5px;margin-top:4px"><select class="sel" id="tn-type">
-<option value="yes">待执行</option><option value="no">不做</option><option value="done">已完成</option>
-</select><button class="btn btn-sm btn-acc" id="tn-save">保存</button></div></div>
-<button class="btn btn-ai" data-ai="todo" style="margin-top:8px">[P2] AI分析</button>
-<div class="ai-box" id="ai-todo">P2: AI分析优先级</div></div>
-<div class="sec" id="sec-blood"><div class="card">
-<div class="card-t">血液检查</div>
-<div class="label">跟医生说(自动生成):</div>
-<div class="doctor-script" id="doc-script"></div>
-<div class="hint">点击项目可展开详情 / 所有字段可编辑</div>
-<div id="blood-list"></div>
-<div style="margin-top:8px;display:flex;gap:5px">
-<button class="btn btn-sm btn-acc" id="blood-add">+ 新增</button>
-<button class="btn btn-ai" data-ai="blood">[P2] AI检查</button></div>
-<div id="blood-form" style="display:none;margin:8px 0;display:flex;gap:4px;flex-wrap:wrap">
-<input class="inp" id="bn-name" placeholder="项目" style="width:100px">
-<input class="inp" id="bn-ref" placeholder="参考值" style="width:80px">
-<input class="inp" id="bn-why" placeholder="原因" style="width:120px">
-<input class="inp" id="bn-detail" placeholder="详情说明" style="width:200px">
-<button class="btn btn-sm btn-acc" id="bn-save">保存</button></div>
-<div class="ai-box" id="ai-blood">P2: AI检查完整性</div>
-<div style="font-size:10px;color:var(--tx3);margin-top:8px">费用约300-500元</div>
-</div></div>
-<div class="sec" id="sec-know">
-<div id="know-c"></div>
-<div style="margin-top:8px"><button class="btn btn-sm btn-acc" id="know-add">+ 新增认知</button></div>
-<div id="know-form" style="display:none;margin:8px 0" class="card">
-<input class="inp" id="kn-title" placeholder="标题" style="width:100%;margin-bottom:4px">
-<textarea class="ta" id="kn-desc" placeholder="内容" rows="2"></textarea>
-<button class="btn btn-sm btn-acc" id="kn-save" style="margin-top:4px">保存</button></div></div>
-<div class="ft">Health Protocol v4 / 2026.04</div>
-</div>
-<div class="toast" id="toast">已保存</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><div class="ct" style="margin:0">待办</div><div style="display:flex;gap:3px"><button class="btn btn-a" id="ta">+新增</button><button class="btn" id="tt">隐藏已完成</button></div></div>
+<div id="tl"></div><div id="tf" style="display:none" class="c"><input class="ip" id="tn" placeholder="名称" style="width:100%;margin-bottom:2px"><textarea class="ta" id="td2" placeholder="描述" rows="1"></textarea><div style="display:flex;gap:3px;margin-top:2px"><select class="sl" id="tty"><option value="yes">待执行</option><option value="no">不做</option><option value="done">已完成</option></select><button class="btn btn-a" id="ts2">存</button></div></div></div>
+
+<div class="sec" id="sec-blood"><div class="c"><div class="ct">血液检查</div>
+<div class="lb">跟医生说(自动生成):</div><div class="ds" id="dsc"></div><div id="bl"></div>
+<div style="margin-top:5px;display:flex;gap:3px"><button class="btn btn-a" id="ba">+新增</button><button class="btn btn-ai" data-ai="blood">[P2]AI检查</button></div>
+<div id="bf" style="display:none;margin-top:4px;display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="bnn" placeholder="项目" style="width:80px"><input class="ip" id="bnr" placeholder="参考值" style="width:60px"><input class="ip" id="bnw" placeholder="原因" style="width:90px"><button class="btn btn-a" id="bns">存</button></div>
+<div class="ai-box" id="ai-blood">P2</div></div></div>
+
+<div class="sec" id="sec-know"><div id="kc"></div><button class="btn btn-a" id="ka" style="margin-top:4px">+新增认知</button>
+<div id="kf" style="display:none;margin-top:4px" class="c"><input class="ip" id="knt" placeholder="标题" style="width:100%;margin-bottom:2px"><textarea class="ta" id="knd" placeholder="内容" rows="1"></textarea><button class="btn btn-a" id="kns" style="margin-top:2px">存</button></div></div>
+
+<div class="ft">v4.2 / Batch A / 2026.04</div>
+</div><div class="toast" id="toast">已保存</div>
 <script>
 (function(){
-function sv(k,v){try{localStorage.setItem("hp_"+k,JSON.stringify(v));var t=document.getElementById("toast");t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show");},800);}catch(e){}}
-function ld(k){try{var v=localStorage.getItem("hp_"+k);return v?JSON.parse(v):null;}catch(e){return null;}}
-function esc(s){var d=document.createElement("div");d.textContent=String(s);return d.innerHTML;}
-function q(s){return document.querySelector(s);}
-function qa(s){return document.querySelectorAll(s);}
+var FOODS=[{"id": "rice", "nm": "糙米饭(熟)", "cat": "主食", "u": "g", "per": 100, "p": 2.6, "f": 0.9, "c": 23, "cal": 111, "gi": 50, "step": 50, "d": 120, "omega": {"n3": 0, "n6": 0.3, "n9": 0.2, "sat": 0.2}, "micro": "Mg43 P83 Mn0.9", "amino": "谷氨酸/天冬氨酸", "w": 65}, {"id": "purplerice", "nm": "紫米饭(熟)", "cat": "主食", "u": "g", "per": 100, "p": 2.5, "f": 0.8, "c": 22, "cal": 105, "gi": 72, "step": 50, "d": 0, "omega": {"n3": 0, "n6": 0.2, "n9": 0.2, "sat": 0.2}, "micro": "Fe1.5 Zn1.2", "amino": "谷氨酸", "w": 65}, {"id": "oats", "nm": "燕麦片(熟)", "cat": "主食", "u": "g", "per": 100, "p": 2.4, "f": 1.4, "c": 12, "cal": 71, "gi": 55, "step": 50, "d": 0, "omega": {"n3": 0, "n6": 0.8, "n9": 0.4, "sat": 0.2}, "micro": "Mg27 P77", "amino": "亮氨酸/谷氨酸", "w": 85}, {"id": "egg", "nm": "鸡蛋", "cat": "蛋白", "u": "个", "per": 1, "p": 6.5, "f": 5, "c": 0.6, "cal": 72, "gi": 0, "step": 1, "d": 2, "pc": 1, "omega": {"n3": 0.1, "n6": 0.7, "n9": 1.8, "sat": 1.6}, "micro": "Se15 B12-0.6 choline147", "amino": "亮氨酸1.1/蛋氨酸0.4/赖氨酸0.9", "w": 75}, {"id": "wing", "nm": "鸡翅中", "cat": "蛋白", "u": "个", "per": 1, "p": 9, "f": 6, "c": 0, "cal": 90, "gi": 0, "step": 1, "d": 0, "pc": 1, "omega": {"n3": 0.1, "n6": 1.2, "n9": 2.4, "sat": 1.8}, "micro": "Zn1 B6-0.2", "amino": "BCAA丰富", "w": 55}, {"id": "thigh", "nm": "鸡腿(带皮)", "cat": "蛋白", "u": "g", "per": 100, "p": 16, "f": 10, "c": 0, "cal": 157, "gi": 0, "step": 50, "d": 0, "omega": {"n3": 0.1, "n6": 2, "n9": 4, "sat": 3}, "micro": "Fe0.9 Zn1.8 B6-0.3", "amino": "亮氨酸/赖氨酸", "w": 65}, {"id": "breast", "nm": "鸡胸肉", "cat": "蛋白", "u": "g", "per": 100, "p": 23, "f": 1.2, "c": 0, "cal": 105, "gi": 0, "step": 50, "d": 0, "omega": {"n3": 0, "n6": 0.2, "n9": 0.3, "sat": 0.3}, "micro": "B6-0.6 B3-12 Se24", "amino": "亮氨酸2/赖氨酸1.9", "w": 65}, {"id": "belly", "nm": "五花肉", "cat": "蛋白", "u": "g", "per": 100, "p": 14, "f": 30, "c": 0, "cal": 330, "gi": 0, "step": 50, "d": 0, "omega": {"n3": 0.1, "n6": 3.2, "n9": 13, "sat": 11}, "micro": "B1-0.5 Zn1.7 B12-0.6", "amino": "亮氨酸/赖氨酸", "w": 40}, {"id": "shrimp", "nm": "虾仁(去壳)", "cat": "蛋白", "u": "g", "per": 100, "p": 20, "f": 1, "c": 0, "cal": 90, "gi": 0, "step": 50, "d": 0, "omega": {"n3": 0.3, "n6": 0.05, "n9": 0.1, "sat": 0.2}, "micro": "Se38 B12-1.1 Zn1.6", "amino": "谷氨酸/亮氨酸", "w": 78}, {"id": "salmon", "nm": "三文鱼", "cat": "蛋白", "u": "g", "per": 100, "p": 20, "f": 13, "c": 0, "cal": 200, "gi": 0, "step": 50, "d": 0, "omega": {"n3": 2.2, "n6": 0.3, "n9": 3.8, "sat": 3}, "micro": "D3-11 Se31 B12-3.2", "amino": "亮氨酸/赖氨酸", "w": 60}, {"id": "yogurt", "nm": "希腊酸奶(0脂)", "cat": "乳制品", "u": "g", "per": 100, "p": 10, "f": 0, "c": 5, "cal": 60, "gi": 11, "step": 50, "d": 0, "omega": {"n3": 0, "n6": 0, "n9": 0, "sat": 0}, "micro": "Ca110 B12-0.75 K141", "amino": "酪蛋白/乳清BCAA丰富", "w": 80}, {"id": "avocado", "nm": "牛油果", "cat": "脂肪", "u": "g", "per": 100, "p": 2, "f": 15, "c": 8.5, "cal": 160, "gi": 15, "step": 50, "d": 0, "omega": {"n3": 0.1, "n6": 1.7, "n9": 10, "sat": 2.1}, "micro": "K485 folate81 Mg29", "amino": "", "w": 73}, {"id": "nuts", "nm": "混合坚果", "cat": "脂肪", "u": "g", "per": 100, "p": 15, "f": 50, "c": 20, "cal": 580, "gi": 25, "step": 10, "d": 0, "omega": {"n3": 1.5, "n6": 12, "n9": 25, "sat": 6}, "micro": "Mg160 Zn3 Se5 VE8", "amino": "精氨酸丰富", "w": 5}, {"id": "olive", "nm": "橄榄油", "cat": "脂肪", "u": "ml", "per": 100, "p": 0, "f": 100, "c": 0, "cal": 884, "gi": 0, "step": 5, "d": 0, "omega": {"n3": 0.8, "n6": 9, "n9": 73, "sat": 14}, "micro": "VE14 VK60", "amino": "", "w": 0}, {"id": "mct", "nm": "MCT油", "cat": "脂肪", "u": "ml", "per": 100, "p": 0, "f": 100, "c": 0, "cal": 860, "gi": 0, "step": 5, "d": 0, "omega": {"n3": 0, "n6": 0, "n9": 0, "sat": 100}, "micro": "--", "amino": "C8/C10中链直供肝脏产酮", "w": 0}, {"id": "veg", "nm": "绿叶蔬菜", "cat": "蔬菜", "u": "g", "per": 100, "p": 2, "f": 0.3, "c": 3, "cal": 22, "gi": 15, "step": 50, "d": 200, "omega": {"n3": 0.1, "n6": 0, "n9": 0, "sat": 0}, "micro": "VK200 folate100 Mg25 Ca60", "amino": "", "w": 92}, {"id": "broccoli", "nm": "西兰花", "cat": "蔬菜", "u": "g", "per": 100, "p": 2.8, "f": 0.4, "c": 7, "cal": 34, "gi": 15, "step": 50, "d": 0, "omega": {"n3": 0, "n6": 0, "n9": 0, "sat": 0}, "micro": "VC89 VK102 folate63", "amino": "", "w": 89}, {"id": "tofu", "nm": "豆腐", "cat": "蛋白", "u": "g", "per": 100, "p": 8, "f": 4, "c": 2, "cal": 76, "gi": 15, "step": 50, "d": 0, "omega": {"n3": 0.3, "n6": 2.3, "n9": 0.8, "sat": 0.6}, "micro": "Ca350 Fe5.4 Mg30", "amino": "赖氨酸丰富(互补谷物)", "w": 83}];
+var SUPPLS=[{"id": "gnc", "nm": "GNC Mega Men", "brand": "GNC", "cat": "复合维生素", "sol": "混合", "dose": "1片(减半)", "timing": "午餐", "ingredients": "VA450ug VC150mg VD312.5ug VE20mg VK40ug B1-B6各25mg B12-25ug folate340ug Ca100mg Fe4.5mg Mg50mg Zn7.5mg Se100ug Cr60ug lutein1mg lycopene0.5mg", "notes": "减半B族仍充足 含铁注意", "l": "*", "o": "*", "m": "***", "t": "室温", "so": "按需", "ss": "2-3年", "sp": "拧紧瓶盖不放浴室", "r": "中", "ls": 1, "os": 1, "ms": 3, "rs": 3, "ts": 25}, {"id": "d3k2", "nm": "NOW D3+K2", "brand": "NOW Foods", "cat": "骨骼/免疫", "sol": "脂溶", "dose": "1粒", "timing": "午餐", "ingredients": "VD3 5000IU(125ug) VK2(MK-7)180ug MenaQ7专利", "notes": "须随油脂 不含钙 K2引导钙入骨", "l": "**", "o": "**", "m": "**", "t": "室温", "so": "3-6月", "ss": "2-3年", "sp": "K2是短板 MenaQ7优化", "r": "中", "ls": 2, "os": 2, "ms": 2, "rs": 3, "ts": 25}, {"id": "coq10", "nm": "CoQ10", "brand": "--", "cat": "线粒体", "sol": "脂溶", "dose": "100-200mg", "timing": "午餐", "ingredients": "辅酶Q10(泛醌/泛醇)100-200mg", "notes": "脂溶性 Ubiquinol更易吸收 berberine轻度降CoQ10", "l": "***", "o": "**", "m": "*", "t": "15-25C", "so": "6-12月", "ss": "1-2年", "sp": "鲜橙变浅黄=降解 >45C结块", "r": "高", "ls": 3, "os": 2, "ms": 1, "rs": 4, "ts": 25}, {"id": "fish", "nm": "GNC 4X鱼油", "brand": "GNC", "cat": "抗炎/心血管", "sol": "脂溶", "dose": "2粒", "timing": "午餐", "ingredients": "EPA647mg+DHA253mg rTG EPAX IFOS五星", "notes": "rTG>EE吸收率 开封后冷藏", "l": "***", "o": "***", "m": "*", "t": "<25C", "so": "3-6月", "ss": "2-3年", "sp": "闻鱼腥=已氧化 每升10C翻倍", "r": "极高", "ls": 3, "os": 3, "ms": 1, "rs": 5, "ts": 25}, {"id": "lutein", "nm": "叶黄素", "brand": "--", "cat": "眼部", "sol": "脂溶", "dose": "10-20mg", "timing": "午餐", "ingredients": "叶黄素10-20mg+玉米黄质2-4mg", "notes": "GNC减半仅1mg 脂溶性", "l": "***", "o": "***", "m": "**", "t": "20-25C", "so": "尽快", "ss": "1-2年", "sp": "变褐/灰=降解 极度光热敏感", "r": "极高", "ls": 3, "os": 3, "ms": 2, "rs": 5, "ts": 25}, {"id": "berb", "nm": "盐酸小檗碱", "brand": "东北制药", "cat": "代谢", "sol": "水溶", "dose": "500mg(5片)x2", "timing": "午餐+晚餐", "ingredients": "盐酸小檗碱100mg/片", "notes": "药品级铝板 AMPK激活 与益生菌间隔2h", "l": "*", "o": "-", "m": "*", "t": "室温", "so": "保质期", "ss": "3-5年", "sp": "最稳定之一 药品级铝板", "r": "极低", "ls": 1, "os": 0, "ms": 1, "rs": 0, "ts": 25}, {"id": "nac", "nm": "NAC", "brand": "NOW Foods", "cat": "肝脏/抗氧化", "sol": "水溶", "dose": "1000mg", "timing": "午餐", "ingredients": "N-乙酰半胱氨酸1000mg", "notes": "谷胱甘肽前体 强硫味=可能氧化", "l": "*", "o": "**", "m": "**", "t": "室温", "so": "6-12月", "ss": "2-3年", "sp": "巯基可氧化形成二硫键", "r": "低-中", "ls": 1, "os": 2, "ms": 2, "rs": 2, "ts": 25}, {"id": "curc", "nm": "姜黄素", "brand": "--", "cat": "抗炎", "sol": "脂溶", "dose": "500-1000mg", "timing": "晚餐", "ingredients": "姜黄素500-1000mg(磷脂复合更佳)+胡椒碱5-10mg", "notes": "脂溶须随油脂 光极敏", "l": "***", "o": "**", "m": "*", "t": "20-27C", "so": "6-12月", "ss": "2年", "sp": "颜色褪变=降解 80C以下2h稳", "r": "高", "ls": 3, "os": 2, "ms": 1, "rs": 4, "ts": 27}, {"id": "prob", "nm": "益生菌", "brand": "NOW Foods", "cat": "肠道", "sol": "特殊(活菌)", "dose": "按标签", "timing": "晚餐", "ingredients": "Probiotic-10:10菌株250亿CFU", "notes": "与小檗碱间隔2h 唯一活补剂", "l": "*", "o": "**", "m": "***", "t": "冷藏佳", "so": "1-3月", "ss": "6月-2年", "sp": "湿度激活致死 标签CFU到期剩半", "r": "高", "ls": 1, "os": 2, "ms": 3, "rs": 4, "ts": 4}, {"id": "magt", "nm": "苏糖酸镁", "brand": "NOW Foods", "cat": "脑部/睡眠", "sol": "水溶", "dose": "3粒=144mg镁", "timing": "睡前", "ingredients": "L-苏糖酸镁2000mg(元素镁144mg)", "notes": "穿越血脑屏障 全身需另补甘氨酸镁", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "保质期", "ss": "2-3年", "sp": "防潮即可 非常稳定", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}, {"id": "ashw", "nm": "Ashwagandha", "brand": "KSM-66", "cat": "抗压/睡眠", "sol": "水溶", "dose": "300-600mg", "timing": "睡前", "ingredients": "南非醉茄根(KSM-66)300-600mg withanolides5%", "notes": "降皮质醇 避Timeless", "l": "*", "o": "*", "m": "**", "t": "室温", "so": "6-12月", "ss": "2年", "sp": "怕潮发霉 包装重要", "r": "低", "ls": 1, "os": 1, "ms": 2, "rs": 1, "ts": 25}, {"id": "gly", "nm": "甘氨酸", "brand": "BulkSupplements", "cat": "睡眠/肝脏", "sol": "水溶", "dose": "3g粉末", "timing": "睡前", "ingredients": "甘氨酸3000mg", "notes": "助眠(降核心体温)+谷胱甘肽前体 极稳定", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "极长", "ss": "3-5年", "sp": "最稳定 233C熔点 密封干燥", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}, {"id": "crea", "nm": "肌酸", "brand": "ON/Myprotein", "cat": "认知/肌肉", "sol": "水溶", "dose": "3-5g", "timing": "睡前", "ingredients": "一水肌酸3-5g Creapure更佳", "notes": "泡水后尽快喝 认知+肌肉", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "极长", "ss": "3-5年", "sp": "受潮转化肌酐 干粉极稳", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}, {"id": "nmn", "nm": "NMN", "brand": "--", "cat": "NAD+", "sol": "水溶(空腹)", "dose": "250-500mg", "timing": "空腹", "ingredients": "烟酰胺单核苷酸250-500mg", "notes": "因肺结节+促癌争议暂不加 需医生", "l": "*", "o": "*", "m": "*", "t": "室温", "so": "6-12月", "ss": "2年", "sp": "冷藏更佳", "r": "低", "ls": 1, "os": 1, "ms": 1, "rs": 1, "ts": 25}, {"id": "lyco", "nm": "番茄红素", "brand": "--", "cat": "前列腺", "sol": "脂溶", "dose": "10-15mg", "timing": "午餐", "ingredients": "番茄红素10-15mg", "notes": "GNC减半仅0.5mg 脂溶性", "l": "***", "o": "***", "m": "*", "t": "<25C", "so": "3-6月", "ss": "1-2年", "sp": "同叶黄素 13双键极易降解", "r": "极高", "ls": 3, "os": 3, "ms": 1, "rs": 5, "ts": 25}, {"id": "magg", "nm": "甘氨酸镁", "brand": "--", "cat": "全身镁", "sol": "水溶", "dose": "200-300mg镁", "timing": "睡前", "ingredients": "甘氨酸镁(元素镁200-300mg)", "notes": "补全身系统性镁需求 与苏糖酸镁同吃", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "保质期", "ss": "2-3年", "sp": "同苏糖酸镁 防潮", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}];
+var EXDATA={"strength": {"name": "全身力量(一分化)", "duration": 50, "warmup": "5min动态拉伸", "cooldown": "5min静态拉伸", "motto": "蹲 推 拉 举 提", "moves": [{"name": "深蹲(杠铃/哑铃)", "sets": 3, "reps": "8-12", "rest": "60-90s", "target": "腿/下肢"}, {"name": "卧推/俯卧撑", "sets": 3, "reps": "8-12", "rest": "60-90s", "target": "胸/手臂前侧"}, {"name": "哑铃单臂划船", "sets": 3, "reps": "8-12", "rest": "60-90s", "target": "背"}, {"name": "哑铃站姿肩推", "sets": 3, "reps": "8-12", "rest": "60-90s", "target": "肩"}, {"name": "硬拉/臀桥", "sets": 3, "reps": "8-12", "rest": "60-90s", "target": "臀/腰背"}], "progress": "连续两次做满3x12 -> 加重(哑铃+2.5kg 杠铃+5kg)"}, "cardio": {"name": "有氧", "duration": 30, "detail": "快走/慢跑(HR130-150)或椭圆机/自行车30min"}, "hiit": {"name": "HIIT", "duration": 25, "detail": "20s全力+40s休息x8轮: 波比跳/登山者/高抬腿/深蹲跳各2轮"}, "yoga": {"name": "瑜伽/拉伸", "duration": 30, "detail": "瑜伽或拉伸30min 可选轻度散步"}, "rest": {"name": "休息", "duration": 0, "detail": "主动恢复/散步"}, "weekly_default": [{"day": "周一", "type": "strength", "time": "14:00"}, {"day": "周二", "type": "cardio", "time": "17:00"}, {"day": "周三", "type": "strength", "time": "14:00"}, {"day": "周四", "type": "rest", "time": ""}, {"day": "周五", "type": "strength", "time": "14:00"}, {"day": "周六", "type": "hiit", "time": "10:00"}, {"day": "周日", "type": "yoga", "time": "10:00"}]};
 
-qa(".ed").forEach(function(el){var k=el.getAttribute("data-key");if(k){var s=ld(k);if(s!==null)el.innerHTML=s;el.addEventListener("blur",function(){sv(k,el.innerHTML);recalc();});}});
-q("#tabs").addEventListener("click",function(e){var b=e.target.closest(".tb");if(!b)return;qa(".sec").forEach(function(s){s.classList.remove("active");});q("#sec-"+b.getAttribute("data-tab")).classList.add("active");qa(".tb").forEach(function(x){x.classList.remove("on");});b.classList.add("on");});
-qa("[data-ai]").forEach(function(btn){btn.addEventListener("click",function(){var el=document.getElementById("ai-"+btn.getAttribute("data-ai"));if(el)el.style.display=el.style.display==="none"?"block":"none";});});
+function sv(k,v){try{localStorage.setItem("hp_"+k,JSON.stringify(v));var t=document.getElementById("toast");t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show")},600)}catch(e){}}
+function ld(k){try{var v=localStorage.getItem("hp_"+k);return v?JSON.parse(v):null}catch(e){return null}}
+function esc(s){if(!s)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
+function q(s){return document.querySelector(s)}
+function qa(s){return document.querySelectorAll(s)}
 
-var goalSel=q("#goal-sel"),actSel=q("#act-sel");
-var sg=ld("p-goal"),sa=ld("p-act");if(sg)goalSel.value=sg;if(sa)actSel.value=sa;
-goalSel.addEventListener("change",function(){sv("p-goal",goalSel.value);recalc();});
-actSel.addEventListener("change",function(){sv("p-act",actSel.value);recalc();});
+qa(".ed").forEach(function(el){var k=el.getAttribute("data-key");if(k){var s=ld(k);if(s!==null)el.innerHTML=s;el.addEventListener("blur",function(){sv(k,el.innerHTML);recalc();drawSch()})}});
+q("#tabs").addEventListener("click",function(e){var b=e.target.closest(".tb");if(!b)return;qa(".sec").forEach(function(s){s.classList.remove("active")});q("#sec-"+b.getAttribute("data-tab")).classList.add("active");qa(".tb").forEach(function(x){x.classList.remove("on")});b.classList.add("on")});
+qa("[data-ai]").forEach(function(b){b.addEventListener("click",function(){var el=document.getElementById("ai-"+b.getAttribute("data-ai"));if(el)el.style.display=el.style.display==="none"?"block":"none"})});
+var gsel=q("#gsel"),asel=q("#asel");var sg=ld("p-goal"),sa=ld("p-act");if(sg)gsel.value=sg;if(sa)asel.value=sa;
+gsel.addEventListener("change",function(){sv("p-goal",gsel.value);recalc()});asel.addEventListener("change",function(){sv("p-act",asel.value);recalc()});
 
-/* ========== FOOD DATABASE ========== */
-var FOODS=ld("foods")||[
-{id:"rice",nm:"糙米饭(熟)",u:"g",p:2.6,f:0.9,c:23,cal:111,gi:50,step:50,d:120,
- aa:"谷氨酸0.4 天冬氨酸0.2 亮氨酸0.2",fa:"SFA 0.2 MUFA 0.3 n6 0.3",micro:"Mg 40mg Mn 1mg"},
-{id:"purplerice",nm:"紫米饭(熟)",u:"g",p:2.5,f:0.8,c:22,cal:105,gi:72,step:50,d:0,
- aa:"类似糙米",fa:"SFA 0.2 MUFA 0.2 n6 0.3",micro:"花青素丰富 Fe 1.5mg"},
-{id:"egg",nm:"鸡蛋",u:"个",p:6.5,f:5,c:0.6,cal:72,gi:0,step:1,d:2,pc:1,
- aa:"亮氨酸0.5 赖氨酸0.4 蛋氨酸0.2 完整氨基酸谱",fa:"SFA 1.6 MUFA 1.8 n6 0.7 n3 0.04",micro:"胆碱147mg Se 15ug B12 0.6ug"},
-{id:"wing",nm:"鸡翅中",u:"个",p:9,f:6,c:0,cal:90,gi:0,step:1,d:0,pc:1,
- aa:"亮氨酸0.7 赖氨酸0.6",fa:"SFA 1.7 MUFA 2.5 n6 1.3 n9 2.2",micro:"Zn 1mg B6 0.2mg"},
-{id:"thigh",nm:"鸡腿(带皮)",u:"g",p:16,f:10,c:0,cal:157,gi:0,step:50,d:0,
- aa:"亮氨酸1.3 赖氨酸1.4 完整",fa:"SFA 2.8 MUFA 4 n6 2 n9 3.5",micro:"Fe 0.8mg Zn 1.8mg"},
-{id:"breast",nm:"鸡胸肉",u:"g",p:23,f:1.2,c:0,cal:105,gi:0,step:50,d:0,
- aa:"亮氨酸1.8 赖氨酸1.7 完整",fa:"SFA 0.3 MUFA 0.4 n6 0.2",micro:"B6 0.5mg Se 22ug"},
-{id:"belly",nm:"五花肉",u:"g",p:14,f:30,c:0,cal:330,gi:0,step:50,d:0,
- aa:"亮氨酸1.1 赖氨酸1.2",fa:"SFA 11 MUFA 13 n6 3.3 n9 12",micro:"B1 0.5mg Zn 1.7mg"},
-{id:"shrimp",nm:"虾仁(去壳)",u:"g",p:20,f:1,c:0,cal:90,gi:0,step:50,d:0,
- aa:"亮氨酸1.6 赖氨酸1.7 甘氨酸1.1",fa:"SFA 0.2 n3(EPA+DHA) 0.3",micro:"Se 30ug I 35ug Zn 1.5mg"},
-{id:"salmon",nm:"三文鱼",u:"g",p:20,f:13,c:0,cal:200,gi:0,step:50,d:0,
- aa:"亮氨酸1.6 赖氨酸1.8 完整",fa:"SFA 3 MUFA 3.8 n3(EPA+DHA) 2.2 n6 0.3",micro:"D3 11ug B12 3ug Se 32ug"},
-{id:"yogurt",nm:"希腊酸奶(0脂)",u:"g",p:10,f:0,c:5,cal:60,gi:25,step:50,d:0,
- aa:"酪蛋白+乳清 亮氨酸0.9 赖氨酸0.7",fa:"0脂",micro:"Ca 110mg B12 0.5ug"},
-{id:"avocado",nm:"牛油果",u:"g",p:2,f:15,c:8.5,cal:160,gi:15,step:50,d:0,
- aa:"低蛋白",fa:"SFA 2.1 MUFA(n9) 10 n6 1.7",micro:"K 485mg Mg 29mg 叶酸81ug"},
-{id:"nuts",nm:"混合坚果",u:"g",p:15,f:50,c:20,cal:580,gi:20,step:10,d:0,
- aa:"精氨酸2.5 亮氨酸1.2",fa:"SFA 6 MUFA(n9) 24 n6 14 n3(ALA) 2",micro:"Mg 150mg VE 15mg Se 10ug"},
-{id:"olive",nm:"橄榄油",u:"ml",p:0,f:100,c:0,cal:884,gi:0,step:5,d:0,
- aa:"无",fa:"SFA 14 MUFA(n9) 73 n6 10 n3 0.8",micro:"VE 14mg 多酚"},
-{id:"mct",nm:"MCT油",u:"ml",p:0,f:100,c:0,cal:860,gi:0,step:5,d:0,
- aa:"无",fa:"C8(辛酸) 60 C10(癸酸) 40 全饱和",micro:"无"},
-{id:"veg",nm:"绿叶蔬菜",u:"g",p:2,f:0.3,c:3,cal:22,gi:15,step:50,d:200,
- aa:"少量",fa:"微量n3(ALA)",micro:"K 250mg Mg 25mg Ca 80mg 叶酸80ug VK 150ug"}
-];
+var GM={fatliver:{c:.2,p:.25,f:.55,def:500},lose:{c:.3,p:.3,f:.4,def:500},maintain:{c:.4,p:.25,f:.35,def:0},gain:{c:.4,p:.3,f:.3,def:-300},metabolic:{c:.25,p:.25,f:.5,def:300}};
+function gp(){var w=parseFloat(String(ld("p-weight")||q("[data-key=p-weight]").textContent).replace(/[^0-9.]/g,""))||78;var h=parseFloat(String(ld("p-height")||q("[data-key=p-height]").textContent).replace(/[^0-9.]/g,""))||175;var yr=parseInt(String(ld("p-year")||q("[data-key=p-year]").textContent).replace(/[^0-9]/g,""))||1980;var sx=String(ld("p-sex")||q("[data-key=p-sex]").textContent).indexOf("\u5973")>=0?"f":"m";return{w:w,h:h,age:2026-yr,sx:sx,goal:gsel.value,act:parseFloat(asel.value)}}
 
-/* ========== SUPPLEMENT DATABASE ========== */
-var SUPPDB=ld("suppdb")||[
-{id:"gnc-mv",nm:"GNC Mega Men",cat:"复合维生素",comp:"VA 900ug VD3 25ug VE 20mg VK 80ug VC 120mg B1 25mg B2 25mg B3 25mg B5 25mg B6 25mg B7 300ug B9 680ug B12 25ug Ca 200mg Fe 8mg Mg 100mg Zn 15mg Se 105ug Cr 120ug 叶黄素2mg 番茄红素1mg",store:"室温/怕潮"},
-{id:"d3k2",nm:"NOW D3+K2",cat:"脂溶维生素",comp:"VD3 5000IU(125ug) VK2(MK-7) 180ug MenaQ7专利",store:"室温/K2怕光"},
-{id:"coq10",nm:"CoQ10",cat:"脂溶/线粒体",comp:"辅酶Q10(泛醌/泛醇) 100-200mg",store:"15-25C/避光"},
-{id:"fishoil",nm:"GNC 4X鱼油",cat:"脂溶/Omega-3",comp:"EPA 720mg DHA 480mg rTG形式 EPAX原料 IFOS五星",store:"<25C/冷藏佳/避光"},
-{id:"lutein",nm:"叶黄素",cat:"脂溶/类胡萝卜素",comp:"叶黄素10-20mg 玉米黄质2mg FloraGLO专利",store:"20-25C/极光敏"},
-{id:"berberine",nm:"盐酸小檗碱",cat:"水溶/生物碱",comp:"盐酸小檗碱500mg 东北制药药品级 AMPK激活剂",store:"室温/极稳定"},
-{id:"nac",nm:"NAC",cat:"水溶/氨基酸",comp:"N-乙酰半胱氨酸1000mg NOW Foods 谷胱甘肽前体",store:"室温/巯基怕氧"},
-{id:"curcumin",nm:"姜黄素",cat:"脂溶/多酚",comp:"姜黄素95% + 胡椒碱(Piperine)增强吸收",store:"室温/极光敏"},
-{id:"probiotic",nm:"益生菌",cat:"活菌",comp:"10菌株 100亿CFU NOW Probiotic-10 肠溶胶囊",store:"冷藏佳/怕潮"},
-{id:"magthre",nm:"苏糖酸镁",cat:"水溶/矿物质",comp:"苏糖酸镁 元素镁144mg(3粒) 穿越血脑屏障",store:"室温/防潮"},
-{id:"ashwa",nm:"Ashwagandha",cat:"水溶/植物提取",comp:"KSM-66 withanolides 5% 降皮质醇",store:"室温/怕潮"},
-{id:"glycine",nm:"甘氨酸",cat:"水溶/氨基酸",comp:"甘氨酸3g粉末 助眠(降核心体温) 谷胱甘肽前体",store:"室温/最稳定"},
-{id:"creatine",nm:"肌酸",cat:"水溶/氨基酸衍生物",comp:"一水肌酸3-5g Creapure 认知+肌肉维持",store:"室温/最稳定"}
-];
+var meals=ld("meals")||[{nm:"\u65e9\u9910",time:"08:00",items:[]},{nm:"\u5348\u9910",time:"12:00",items:[{fid:"rice",qty:120},{fid:"egg",qty:2},{fid:"thigh",qty:100},{fid:"veg",qty:200}]},{nm:"\u665a\u9910",time:"18:00",items:[{fid:"rice",qty:80},{fid:"wing",qty:3},{fid:"veg",qty:200}]},{nm:"\u52a0\u9910",time:"15:00",items:[]}];
+var defTimes=["08:00","12:00","18:00","15:00"];meals.forEach(function(m,i){if(!m.time)m.time=defTimes[i]||"12:00";if(!m.nm)m.nm=["\u65e9\u9910","\u5348\u9910","\u665a\u9910","\u52a0\u9910"][i]||""});
 
-/* ========== MEALS DATA ========== */
-var meals=ld("meals")||[
-{nm:"早餐(如有)",time:"",items:[]},
-{nm:"午餐",time:"12:00",items:[]},
-{nm:"晚餐",time:"18:00",items:[]},
-{nm:"加餐",time:"",items:[]}
-];
-
-/* ========== SUPPLEMENT SCHEDULE ========== */
-var suppl=ld("suppl")||[
-{time:"起床空腹",color:"#f0c060",items:[{sid:"",n:"NMN",d:"按标签",note:"需医生确认"}]},
-{time:"午餐随餐(须油脂)",color:"#7dd3a8",items:[
-{sid:"gnc-mv",n:"GNC Mega Men",d:"1片(减半)",note:"B族充足"},
-{sid:"d3k2",n:"NOW D3+K2",d:"5000IU+180ug",note:"MenaQ7"},
-{sid:"coq10",n:"CoQ10",d:"按标签",note:"脂溶性"},
-{sid:"fishoil",n:"GNC 4X鱼油",d:"2粒",note:"EPAX rTG"},
-{sid:"lutein",n:"叶黄素",d:"10-20mg",note:"护眼"},
-{sid:"berberine",n:"盐酸小檗碱",d:"500mg",note:"AMPK"},
-{sid:"nac",n:"NAC",d:"1000mg",note:"谷胱甘肽前体"}]},
-{time:"晚餐随餐",color:"#c090e0",items:[
-{sid:"curcumin",n:"姜黄素",d:"按标签",note:"抗炎"},
-{sid:"berberine",n:"盐酸小檗碱",d:"500mg",note:"第二次"},
-{sid:"probiotic",n:"益生菌",d:"按标签",note:"间隔小檗碱2h"}]},
-{time:"睡前30-60min",color:"#8ab4f8",items:[
-{sid:"magthre",n:"苏糖酸镁",d:"3粒=144mg",note:"脑部镁"},
-{sid:"ashwa",n:"Ashwagandha",d:"KSM-66",note:"降皮质醇"},
-{sid:"glycine",n:"甘氨酸",d:"3g",note:"助眠"},
-{sid:"creatine",n:"肌酸",d:"3-5g",note:"认知+肌肉"}]}
-];
-
-/* ========== EXERCISE DATA ========== */
-var exerWeek=ld("exer")||[
-{day:"周一",type:"力量(上肢)+快走",items:[
-"午餐后快走20min",
-"上肢力量45min: 哑铃推举4x10 俯卧撑3x15 哑铃划船4x10 二头弯举3x12 三头下压3x12",
-"晚餐后快走20min"]},
-{day:"周二",type:"有氧+快走",items:[
-"午餐后快走20min",
-"有氧30min: 慢跑或椭圆机 心率130-150bpm 或游泳",
-"晚餐后快走20min"]},
-{day:"周三",type:"力量(下肢+核心)+快走",items:[
-"午餐后快走20min",
-"下肢力量40min: 深蹲4x10 罗马尼亚硬拉4x8 保加利亚分腿蹲3x10/侧 平板支撑3x45s 卷腹3x15",
-"晚餐后快走20min"]},
-{day:"周四",type:"HIIT+快走",items:[
-"午餐后快走20min",
-"HIIT 20min: 30s全力冲刺+90s慢走 重复10轮 或波比跳/开合跳/登山者交替",
-"晚餐后快走20min"]},
-{day:"周五",type:"力量(全身)+快走",items:[
-"午餐后快走20min",
-"全身力量40min: 引体向上(辅助)3x8 哑铃卧推4x10 单腿硬拉3x10/侧 肩推3x10 农夫行走3x30s",
-"晚餐后快走20min"]},
-{day:"周六",type:"活动恢复+快走",items:[
-"午餐后快走30min(可延长)",
-"拉伸/瑜伽30min 或户外散步",
-"晚餐后快走20min"]},
-{day:"周日",type:"休息+快走",items:[
-"午餐后快走20min",
-"完全休息 可轻度拉伸",
-"晚餐后快走20min"]}
-];
-
-/* ========== STORAGE DATA ========== */
-var SD=[
-{n:"鱼油(rTG)",c:"脂溶",t:"<25C",td:"每升10C翻倍",l:"\u2605\u2605\u2605",ln:"深色瓶",o:"\u2605\u2605\u2605",on:"转小瓶",m:"\u2606\u2606\u2606",mn:"留干燥剂",so:"3-6月",ss:"2-3年",sp:"开封冷藏",r:"极高",ls:3,os:3,ms:1,rs:5,ts:25},
-{n:"叶黄素",c:"脂溶",t:"20-25C",td:">=25C加速",l:"\u2605\u2605\u2605",ln:"6h完全降解",o:"\u2605\u2605\u2605",on:"自氧化",m:"\u2605\u2605\u2606",mn:"吸潮加速",so:"尽快",ss:"1-2年",sp:"变色=降解",r:"极高",ls:3,os:3,ms:2,rs:5,ts:25},
-{n:"番茄红素",c:"脂溶",t:"<25C",td:"13双键",l:"\u2605\u2605\u2605",ln:"极光敏",o:"\u2605\u2605\u2605",on:"自氧化",m:"\u2606\u2606\u2606",mn:"小",so:"3-6月",ss:"1-2年",sp:"同叶黄素",r:"极高",ls:3,os:3,ms:1,rs:5,ts:25},
-{n:"CoQ10",c:"脂溶",t:"15-25C",td:">45C结块",l:"\u2605\u2605\u2605",ln:"UV降解72%",o:"\u2605\u2605\u2606",on:"软胶囊护",m:"\u2606\u2606\u2606",mn:"不大",so:"6-12月",ss:"1-2年",sp:"变色=降解",r:"高",ls:3,os:2,ms:1,rs:4,ts:25},
-{n:"姜黄素",c:"脂溶",t:"20-27C",td:"80C下稳",l:"\u2605\u2605\u2605",ln:"6h脱色",o:"\u2605\u2605\u2606",on:"磷脂更稳",m:"\u2606\u2606\u2606",mn:"不大",so:"6-12月",ss:"2年",sp:"褪变=降解",r:"高",ls:3,os:2,ms:1,rs:4,ts:27},
-{n:"益生菌",c:"活菌",t:"冷藏佳",td:"10C存活降",l:"\u2606\u2606\u2606",ln:"不大",o:"\u2605\u2605\u2606",on:"厌氧怕氧",m:"\u2605\u2605\u2605",mn:"湿度激活致死",so:"1-3月",ss:"6月-2年",sp:"唯一活补剂",r:"高",ls:1,os:2,ms:3,rs:4,ts:4},
-{n:"D3+K2",c:"脂溶",t:"室温",td:"K2短板",l:"\u2605\u2605\u2606",ln:"K2光敏",o:"\u2605\u2605\u2606",on:"软胶囊护",m:"\u2605\u2605\u2606",mn:"不大",so:"3-6月",ss:"2-3年",sp:"MenaQ7",r:"中",ls:2,os:2,ms:2,rs:3,ts:25},
-{n:"GNC复合维生素",c:"混合",t:"室温",td:"VC易降",l:"\u2606\u2606\u2606",ln:"片剂护",o:"\u2606\u2606\u2606",on:"面积小",m:"\u2605\u2605\u2605",mn:"最怕潮！",so:"按需",ss:"2-3年",sp:"拧紧盖",r:"中",ls:1,os:1,ms:3,rs:3,ts:25},
-{n:"Fisetin",c:"脂溶",t:"室温",td:"中等",l:"\u2605\u2605\u2606",ln:"中等",o:"\u2605\u2605\u2606",on:"酚氧化",m:"\u2606\u2606\u2606",mn:"小",so:"6-12月",ss:"2年",sp:"注意储存",r:"中",ls:2,os:2,ms:1,rs:3,ts:25},
-{n:"NAC",c:"水溶",t:"室温",td:"巯基弱点",l:"\u2606\u2606\u2606",ln:"固体可",o:"\u2605\u2605\u2606",on:"巯基氧化",m:"\u2605\u2605\u2606",mn:"吸湿加速",so:"6-12月",ss:"2-3年",sp:"硫味=氧化",r:"低-中",ls:1,os:2,ms:2,rs:2,ts:25},
-{n:"尿石素A",c:"水溶",t:"室温",td:"固体稳",l:"\u2606\u2606\u2606",ln:"中等",o:"\u2606\u2606\u2606",on:"抗氧化",m:"\u2606\u2606\u2606",mn:"低",so:"6-12月",ss:"2年",sp:"Mitopure",r:"低",ls:1,os:1,ms:1,rs:1,ts:25},
-{n:"Ashwagandha",c:"水溶",t:"室温",td:"KSM-66好",l:"\u2606\u2606\u2606",ln:"中等",o:"\u2606\u2606\u2606",on:"轻度",m:"\u2605\u2605\u2606",mn:"怕潮",so:"6-12月",ss:"2年",sp:"包装重要",r:"低",ls:1,os:1,ms:2,rs:1,ts:25},
-{n:"盐酸小檗碱",c:"水溶",t:"室温",td:"极稳",l:"\u2606\u2606\u2606",ln:"稳定",o:"\u2606\u2606\u2606",on:"不敏感",m:"\u2606\u2606\u2606",mn:"铝板护",so:"保质期",ss:"3-5年",sp:"最稳定",r:"极低",ls:1,os:0,ms:1,rs:0,ts:25},
-{n:"苏糖酸镁",c:"水溶",t:"室温",td:"很稳",l:"\u2606\u2606\u2606",ln:"不光敏",o:"\u2606\u2606\u2606",on:"不氧化",m:"\u2605\u2605\u2606",mn:"结块",so:"保质期",ss:"2-3年",sp:"防潮",r:"极低",ls:0,os:0,ms:2,rs:0,ts:25},
-{n:"甘氨酸镁",c:"水溶",t:"室温",td:"很稳",l:"\u2606\u2606\u2606",ln:"不光敏",o:"\u2606\u2606\u2606",on:"不氧化",m:"\u2605\u2605\u2606",mn:"吸湿",so:"保质期",ss:"2-3年",sp:"同苏糖酸镁",r:"极低",ls:0,os:0,ms:2,rs:0,ts:25},
-{n:"甘氨酸",c:"水溶",t:"室温",td:"233C熔点",l:"\u2606\u2606\u2606",ln:"不光敏",o:"\u2606\u2606\u2606",on:"无可氧化",m:"\u2605\u2605\u2606",mn:"吸湿结块",so:"极长",ss:"3-5年",sp:"最稳定",r:"极低",ls:0,os:0,ms:2,rs:0,ts:25},
-{n:"肌酸",c:"水溶",t:"室温",td:"干粉极稳",l:"\u2606\u2606\u2606",ln:"不光敏",o:"\u2606\u2606\u2606",on:"不氧化",m:"\u2605\u2605\u2606",mn:"受潮转化",so:"极长",ss:"3-5年",sp:"泡水尽快喝",r:"极低",ls:0,os:0,ms:2,rs:0,ts:25}
-];
-var RC={"极高":"#E24B4A","高":"#EF9F27","中":"#BA7517","低-中":"#97C459","低":"#1D9E75","极低":"#1D9E75"};
-var RCbg={"极高":"rgba(255,107,107,.15)","高":"rgba(255,169,77,.12)","中":"rgba(255,212,59,.1)","低-中":"rgba(125,211,168,.1)","低":"rgba(125,211,168,.1)","极低":"rgba(125,211,168,.1)"};
-
-/* ========== TODO/BLOOD/KNOW DATA ========== */
-var todos=ld("todos")||[
-{n:"尿石素A",d:"线粒体自噬 500-1000mg/天",type:"yes"},
-{n:"Fisetin间歇",d:"每月2天x1400mg",type:"yes"},
-{n:"甘氨酸镁",d:"补全身镁200-300mg",type:"yes"},
-{n:"番茄红素10-15mg",d:"前列腺",type:"yes"},
-{n:"柠檬酸钙~500mg",d:"视饮食定",type:"yes"},
-{n:"瑞拓龄",d:"无人体验证 太贵",type:"no"},
-{n:"NR/NMN长期",d:"促癌争议",type:"no"},
-{n:"二甲双胍",d:"与berberine重叠",type:"no"},
-{n:"Timeless",d:"315曝光假进口",type:"no"},
-{n:"东北制药小檗碱",d:"已购",type:"done"}
-];
-var bloods=ld("bloods")||[
-{name:"25(OH)D",ref:"40-60ng/mL",why:"D3到位否",detail:"反映近2-3个月VD水平。低于30需纠正补充5000IU,40-60为最优区间。"},
-{name:"血清钙+磷",ref:"生化含",why:"高钙风险",detail:"钙正常2.1-2.55mmol/L。D3+K2+钙补充下需监测。K2引导钙入骨。"},
-{name:"血清镁",ref:"单独勾选",why:"苏糖酸镁够否",detail:"正常0.75-1.02mmol/L。镁缺乏很常见但常规生化不含。影响D3代谢。"},
-{name:"铁蛋白",ref:"30-150ng/mL",why:"铁代谢",detail:"<30缺铁,>300可能铁过载。GNC含铁8mg需监测。东亚男性一般不易过载。"},
-{name:"同型半胱氨酸",ref:"<10umol/L",why:"B族效果",detail:"反映B6/B12/叶酸的功能状态。GNC减半后仍覆盖,此指标验证。>15需关注。"},
-{name:"肝功ALT/AST",ref:"生化含",why:"补剂安全",detail:"NAC/姜黄素/小檗碱经肝代谢。ALT>40需警惕。脂肪肝基线很重要。"},
-{name:"空腹血糖+HbA1c",ref:"--",why:"小檗碱基线",detail:"空腹血糖<5.6正常。HbA1c<5.7正常。小檗碱降糖需要基线。"},
-{name:"血脂四项",ref:"--",why:"鱼油追踪",detail:"TC/TG/LDL/HDL。鱼油主要降TG。小檗碱也影响血脂。"}
-];
-var KD=ld("knowledge")||[
-{t:"脂肪肝本质",d:"不是脂肪病,是胰岛素病。高胰岛素->SREBP-1c->DNL->肝脂肪->抵抗->正反馈。"},
-{t:"控制胰岛素三杠杆",d:"1)进食窗口>2)减碳水>3)避免蛋白+碳水大剂量叠加(超加性)"},
-{t:"血糖低!=胰岛素低",d:"碳水+蛋白胰岛素可达80-120+,但血糖反而低。CGM好看!=负担小。"},
-{t:"饭后散步机制",d:"肌肉GLUT4直接摄葡萄糖(不需胰岛素),和低碳+小檗碱同一目标不同切入。"},
-{t:"镁的分工",d:"苏糖酸镁->脑(穿血脑屏障);甘氨酸镁->全身;GNC->50mg保险。"},
-{t:"Berberine vs 二甲双胍",d:"AMPK/线粒体复合体I重叠。药品级10-15元碾压进口。"},
-{t:"皮质醇管理",d:"Ashwagandha+镁+甘氨酸三重睡前。"},
-{t:"鱼油品质",d:"rTG>EE;IFOS看成品;TOTOX=2xPV+AV;EPAX/KD Pharma/Solutex。"}
-];
-
-/* ========== MACRO GOALS ========== */
-var GM={fatliver:{c:.20,p:.25,f:.55,def:500},lose:{c:.30,p:.30,f:.40,def:500},maintain:{c:.40,p:.25,f:.35,def:0},gain:{c:.40,p:.30,f:.30,def:-300},metabolic:{c:.25,p:.25,f:.50,def:300}};
-function gp(){
-var w=parseFloat(String(ld("p-weight")||q("[data-key=p-weight]").textContent).replace(/[^0-9.]/g,""))||78;
-var h=parseFloat(String(ld("p-height")||q("[data-key=p-height]").textContent).replace(/[^0-9.]/g,""))||175;
-var yr=parseInt(String(ld("p-year")||q("[data-key=p-year]").textContent).replace(/[^0-9]/g,""))||1980;
-var sx=String(ld("p-sex")||q("[data-key=p-sex]").textContent).indexOf("女")>=0?"f":"m";
-return{w:w,h:h,age:2026-yr,sx:sx,goal:goalSel.value,act:parseFloat(actSel.value)};
-}
-
-/* ========== RENDER: DB ========== */
-function drawDB(){
-var sl=q("#db-suppl-list");sl.innerHTML="";
-SUPPDB.forEach(function(s,i){
-sl.insertAdjacentHTML("beforeend","<div class=db-item data-dbi="+i+"><div class=db-head><span class=db-name>"+esc(s.nm)+"</span><span class=db-cat>"+esc(s.cat)+"</span></div><div class=db-detail><table><tr><td>成分</td><td>"+esc(s.comp)+"</td></tr><tr><td>储存</td><td>"+esc(s.store)+"</td></tr></table></div></div>");
-});
-var fl=q("#db-food-list");fl.innerHTML="";
-FOODS.forEach(function(f,i){
-var unit=f.pc?"每个":"每100"+f.u;
-fl.insertAdjacentHTML("beforeend","<div class=db-item data-dfi="+i+"><div class=db-head><span class=db-name>"+esc(f.nm)+"</span><span class=db-cat>"+unit+" | GI:"+f.gi+"</span></div><div class=db-detail><table><tr><td>基础营养</td><td>P"+f.p+"g F"+f.f+"g C"+f.c+"g "+f.cal+"kcal</td></tr>"+(f.aa?"<tr><td>氨基酸</td><td>"+esc(f.aa)+"</td></tr>":"")+(f.fa?"<tr><td>脂肪酸</td><td>"+esc(f.fa)+"</td></tr>":"")+(f.micro?"<tr><td>微量元素</td><td>"+esc(f.micro)+"</td></tr>":"")+"</table></div></div>");
-});
-}
-drawDB();
-q("#db-suppl-list").addEventListener("click",function(e){var it=e.target.closest(".db-item");if(it)it.classList.toggle("open");});
-q("#db-food-list").addEventListener("click",function(e){var it=e.target.closest(".db-item");if(it)it.classList.toggle("open");});
-q("#db-suppl-add").addEventListener("click",function(){q("#db-suppl-form").style.display=q("#db-suppl-form").style.display==="none"?"block":"none";});
-q("#dbs-save").addEventListener("click",function(){var n=q("#dbs-name").value.trim();if(!n)return;SUPPDB.push({id:"custom-"+Date.now(),nm:n,cat:q("#dbs-cat").value.trim()||"",comp:q("#dbs-comp").value.trim()||"",store:""});sv("suppdb",SUPPDB);drawDB();q("#dbs-name").value="";q("#db-suppl-form").style.display="none";});
-q("#db-food-add").addEventListener("click",function(){q("#db-food-form").style.display=q("#db-food-form").style.display==="none"?"block":"none";});
-q("#dbf-save").addEventListener("click",function(){var n=q("#dbf-name").value.trim();if(!n)return;FOODS.push({id:"f-"+Date.now(),nm:n,u:q("#dbf-unit").value.trim()||"g",p:parseFloat(q("#dbf-p").value)||0,f:parseFloat(q("#dbf-f").value)||0,c:parseFloat(q("#dbf-c").value)||0,cal:parseFloat(q("#dbf-cal").value)||0,gi:parseFloat(q("#dbf-gi").value)||0,step:50,d:0,aa:"",fa:"",micro:""});sv("foods",FOODS);drawDB();recalc();q("#dbf-name").value="";q("#db-food-form").style.display="none";});
-
-/* ========== RENDER: FASTING ========== */
-function drawFasting(){
-var fs=q("#fast-start").value||"12:00",fe=q("#fast-end").value||"18:00";
-var sh=parseInt(fs.split(":")[0]),sm=parseInt(fs.split(":")[1])||0;
-var eh=parseInt(fe.split(":")[0]),em=parseInt(fe.split(":")[1])||0;
-var startMin=sh*60+sm,endMin=eh*60+em;
-var eatMin=endMin-startMin;if(eatMin<0)eatMin+=1440;
-var fastMin=1440-eatMin;
-q("#fast-summary").textContent="进食"+Math.round(eatMin/60)+"h / 断食"+Math.round(fastMin/60)+"h";
-var eatPct=Math.round(eatMin/1440*100);
-var bar=q("#fasting-bar");
-var beforePct=Math.round(startMin/1440*100);
-var afterPct=100-beforePct-eatPct;
-bar.innerHTML="<div class=fasting-fast style=width:"+beforePct+"%>断食</div><div class=fasting-eat style=width:"+eatPct+"%>"+fs+"-"+fe+"</div><div class=fasting-fast style=width:"+afterPct+"%>断食</div>";
-}
-q("#fast-start").addEventListener("change",drawFasting);
-q("#fast-end").addEventListener("change",drawFasting);
-drawFasting();
-
-/* ========== RENDER: MACROS + MEALS ========== */
 function recalc(){
-var p=gp();var gm=GM[p.goal]||GM.fatliver;
-var bmr=p.sx==="m"?(10*p.w+6.25*p.h-5*p.age+5):(10*p.w+6.25*p.h-5*p.age-161);
-var tdee=Math.round(bmr*p.act);var tgt=Math.round(tdee-gm.def);
+var p=gp(),gm=GM[p.goal]||GM.fatliver;var bmr=p.sx==="m"?(10*p.w+6.25*p.h-5*p.age+5):(10*p.w+6.25*p.h-5*p.age-161);var tdee=Math.round(bmr*p.act),tgt=Math.round(tdee-gm.def);
 var cg=Math.round(tgt*gm.c/4),pg=Math.round(tgt*gm.p/4),fg=Math.round(tgt*gm.f/9);
+q("#mout").innerHTML="<table class=mt><tr><th>\u5b8f\u91cf</th><th>\u76ee\u6807</th><th>%</th><th>g/kg</th></tr><tr><td>\u78b3\u6c34</td><td style=color:var(--acc)><b>"+cg+"g</b></td><td>"+Math.round(gm.c*100)+"</td><td>"+(cg/p.w).toFixed(1)+"</td></tr><tr><td>\u86cb\u767d</td><td style=color:var(--acc)><b>"+pg+"g</b></td><td>"+Math.round(gm.p*100)+"</td><td>"+(pg/p.w).toFixed(1)+"</td></tr><tr><td>\u8102\u80aa</td><td style=color:var(--acc)><b>"+fg+"g</b></td><td>"+Math.round(gm.f*100)+"</td><td>"+(fg/p.w).toFixed(1)+"</td></tr><tr><td>\u70ed\u91cf</td><td style=color:var(--acc)><b>"+tgt+"</b></td><td colspan=2 style=color:var(--tx3)>TDEE"+tdee+"-"+gm.def+"</td></tr></table>";
+q("#fout").innerHTML="BMR=10*"+p.w+"+6.25*"+p.h+"-5*"+p.age+(p.sx==="m"?"+5":"-161")+"="+Math.round(bmr)+"\nTDEE="+Math.round(bmr)+"*"+p.act+"="+tdee+" Target="+tdee+"-"+gm.def+"="+tgt;
+drawMeals(cg,pg,fg,tgt);updateFast()}
 
-q("#macro-out").innerHTML="<table class=mt><tr><th>宏量</th><th>目标</th><th>占比</th><th>g/kg</th></tr>"+
-"<tr><td>碳水</td><td style=color:var(--acc)><b>"+cg+"g</b></td><td>"+Math.round(gm.c*100)+"%</td><td>"+(cg/p.w).toFixed(1)+"</td></tr>"+
-"<tr><td>蛋白</td><td style=color:var(--acc)><b>"+pg+"g</b></td><td>"+Math.round(gm.p*100)+"%</td><td>"+(pg/p.w).toFixed(1)+"</td></tr>"+
-"<tr><td>脂肪</td><td style=color:var(--acc)><b>"+fg+"g</b></td><td>"+Math.round(gm.f*100)+"%</td><td>"+(fg/p.w).toFixed(1)+"</td></tr>"+
-"<tr><td>热量</td><td style=color:var(--acc)><b>"+tgt+"kcal</b></td><td colspan=2 style=color:var(--tx3)>TDEE"+tdee+" - "+gm.def+"</td></tr></table>";
-q("#formula-out").textContent="BMR = 10x"+p.w+" + 6.25x"+p.h+" - 5x"+p.age+(p.sx==="m"?" + 5":" - 161")+" = "+Math.round(bmr)+"\nTDEE = "+Math.round(bmr)+" x "+p.act+" = "+tdee+"\nTarget = "+tdee+" - "+gm.def+" = "+tgt+"\nC="+cg+"g P="+pg+"g("+(pg/p.w).toFixed(1)+"g/kg) F="+fg+"g";
-drawMeals(cg,pg,fg,tgt);
-drawMetabChart(p,meals);
-}
+function updateFast(){var ts=meals.filter(function(m){return m.items.length>0}).map(function(m){var p=(m.time||"12:00").split(":");return parseInt(p[0])*60+(parseInt(p[1])||0)});if(ts.length<2){q("#finfo").textContent="2+\u9910\u663e\u793a\u7a97\u53e3";q("#feat").style.width="0";return}var f=Math.min.apply(null,ts),l=Math.max.apply(null,ts);q("#feat").style.left=(f/1440*100)+"%";q("#feat").style.width=((l-f)/1440*100)+"%";q("#finfo").innerHTML="\u8fdb\u98df<b>"+((l-f)/60).toFixed(1)+"h</b> \u65ad\u98df<b>"+(24-(l-f)/60).toFixed(1)+"h</b>"}
 
 function drawMeals(tc,tp,tf,tcal){
-var mb=q("#meals-out");var h="";
-var colors=["var(--warn)","var(--gold)","var(--info)","var(--tx3)"];
+var mb=q("#mlout"),h="",cl=["var(--wrn)","var(--gld)","var(--inf)","var(--tx3)"];
 meals.forEach(function(ml,mi){
-h+="<div style=margin-bottom:12px><div style='display:flex;align-items:center;gap:8px;margin-bottom:4px'><span style='font-size:12px;font-weight:600;color:"+colors[mi]+"'>"+esc(ml.nm)+"</span>";
-if(mi<3)h+="<input class=meal-time-input value='"+(ml.time||"")+"' data-mtime="+mi+" placeholder='HH:MM'>";
-h+="</div>";
-ml.items.forEach(function(it,ii){
-var fd=FOODS.find(function(f){return f.id===it.fid;});if(!fd)return;
-var m=fd.pc?it.qty:(it.qty/100);
-h+="<div class=meal-row data-mi="+mi+" data-ii="+ii+">"+
-"<span style=min-width:75px>"+esc(fd.nm)+"</span>"+
-"<button class=btn data-act=minus style='padding:1px 5px'>-</button>"+
-"<span style='min-width:32px;text-align:center;font-size:11px'>"+it.qty+(fd.pc?"":"g")+"</span>"+
-"<button class=btn data-act=plus style='padding:1px 5px'>+</button>"+
-"<span style='color:var(--tx3);font-size:9px;margin-left:3px'>P"+Math.round(fd.p*m)+" F"+Math.round(fd.f*m)+" C"+Math.round(fd.c*m)+" "+Math.round(fd.cal*m)+"kcal</span>"+
-"<button class=btn data-act=del style='color:var(--danger);margin-left:auto;padding:1px 5px'>x</button></div>";
-});
-h+="<select class=sel data-madd="+mi+" style=margin-top:3px><option value=>+ 添加食物</option>";
-FOODS.forEach(function(f){h+="<option value="+f.id+">"+esc(f.nm)+"</option>";});
-h+="</select></div>";
-});
+h+="<div style=margin-bottom:8px><div style='display:flex;align-items:center;gap:4px;margin-bottom:2px'><span style='font-size:11px;font-weight:600;color:"+cl[mi]+"'>"+esc(ml.nm)+"</span><input class=ip data-mt="+mi+" value='"+esc(ml.time)+"' style='width:45px;font-size:9px'></div>";
+ml.items.forEach(function(it,ii){var fd=FOODS.find(function(f){return f.id===it.fid});if(!fd)return;var m=fd.pc?it.qty:(it.qty/100);
+h+="<div class=mr data-mi="+mi+" data-ii="+ii+"><span style=min-width:60px>"+esc(fd.nm)+"</span><button class=btn data-a=m style=padding:1px_3px>-</button><span style=min-width:24px;text-align:center>"+it.qty+(fd.pc?"":"g")+"</span><button class=btn data-a=p style=padding:1px_3px>+</button><span style=color:var(--tx3);font-size:8px;margin-left:2px>P"+Math.round(fd.p*m)+"F"+Math.round(fd.f*m)+"C"+Math.round(fd.c*m)+(fd.gi?" GI"+fd.gi:"")+" "+Math.round(fd.cal*m)+"cal</span><button class=btn data-a=d style=color:var(--dng);margin-left:auto;padding:1px_3px>x</button></div>"});
+h+="<select class=sl data-ma="+mi+" style=font-size:9px;margin-top:2px><option value=>+\u98df\u7269</option>";FOODS.forEach(function(f){h+="<option value="+f.id+">"+esc(f.nm)+"</option>"});h+="</select></div>"});
 mb.innerHTML=h;
+var dp=0,df=0,dc=0,dcl=0;meals.forEach(function(ml){ml.items.forEach(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});if(!fd)return;var m=fd.pc?it.qty:(it.qty/100);dp+=fd.p*m;df+=fd.f*m;dc+=fd.c*m;dcl+=fd.cal*m})});
+dp=Math.round(dp);df=Math.round(df);dc=Math.round(dc);dcl=Math.round(dcl);
+var dt=q("#dtot");if(dcl>0){dt.style.display="block";function ds(v){return v>0?"<span style=color:var(--dng)>+"+v+"</span>":"<span style=color:var(--acc)>"+v+"</span>"}dt.innerHTML="<div style=font-size:10px;font-weight:600;margin-bottom:2px>\u4eca\u65e5vs\u76ee\u6807</div><table><tr><td>\u70ed\u91cf</td><td><b>"+dcl+"</b>/"+tcal+"</td><td>"+ds(dcl-tcal)+"</td></tr><tr><td>C</td><td><b>"+dc+"</b>/"+tc+"</td><td>"+ds(dc-tc)+"</td></tr><tr><td>P</td><td><b>"+dp+"</b>/"+tp+"</td><td>"+ds(dp-tp)+"</td></tr><tr><td>F</td><td><b>"+df+"</b>/"+tf+"</td><td>"+ds(df-tf)+"</td></tr></table>"}else dt.style.display="none"}
 
-var dp=0,df=0,dc=0,dcal=0;
-meals.forEach(function(ml){ml.items.forEach(function(it){
-var fd=FOODS.find(function(f){return f.id===it.fid;});if(!fd)return;
-var m=fd.pc?it.qty:(it.qty/100);dp+=fd.p*m;df+=fd.f*m;dc+=fd.c*m;dcal+=fd.cal*m;});});
-dp=Math.round(dp);df=Math.round(df);dc=Math.round(dc);dcal=Math.round(dcal);
-var dt=q("#day-total");
-if(dcal>0){dt.style.display="block";
-function ds(v){return v>0?"<span style=color:var(--danger)>+"+v+"</span>":"<span style=color:var(--acc)>"+v+"</span>";}
-dt.innerHTML="<div style='font-size:12px;font-weight:600;margin-bottom:4px'>今日合计 vs 目标</div><table>"+
-"<tr><td>热量</td><td><b>"+dcal+"</b>/"+tcal+"</td><td>"+ds(dcal-tcal)+"</td></tr>"+
-"<tr><td>碳水</td><td><b>"+dc+"</b>/"+tc+"g</td><td>"+ds(dc-tc)+"</td></tr>"+
-"<tr><td>蛋白</td><td><b>"+dp+"</b>/"+tp+"g</td><td>"+ds(dp-tp)+"</td></tr>"+
-"<tr><td>脂肪</td><td><b>"+df+"</b>/"+tf+"g</td><td>"+ds(df-tf)+"</td></tr></table>";
-}else{dt.style.display="none";}
-}
-q("#meals-out").addEventListener("click",function(e){
-var b=e.target.closest("[data-act]");if(!b)return;
-var r=b.closest(".meal-row"),mi=parseInt(r.getAttribute("data-mi")),ii=parseInt(r.getAttribute("data-ii"));
-var it=meals[mi].items[ii],fd=FOODS.find(function(f){return f.id===it.fid;});
-var a=b.getAttribute("data-act");
-if(a==="plus")it.qty+=fd.step;
-else if(a==="minus"){it.qty=Math.max(0,it.qty-fd.step);if(it.qty<=0)meals[mi].items.splice(ii,1);}
-else if(a==="del")meals[mi].items.splice(ii,1);
-sv("meals",meals);recalc();
-});
-q("#meals-out").addEventListener("change",function(e){
-var s=e.target.closest("[data-madd]");
-var mt=e.target.closest("[data-mtime]");
-if(s&&s.value){
-var mi=parseInt(s.getAttribute("data-madd")),fd=FOODS.find(function(f){return f.id===s.value;});
-if(fd){meals[mi].items.push({fid:fd.id,qty:fd.pc?(fd.d||1):(fd.d||100)});s.value="";sv("meals",meals);recalc();}
-}
-if(mt){meals[parseInt(mt.getAttribute("data-mtime"))].time=mt.value;sv("meals",meals);}
-});
-
-/* ========== RENDER: SUPPLEMENTS ========== */
-function drawSuppl(){
-var sc=q("#suppl-c");sc.innerHTML="";
-suppl.forEach(function(b,bi){
-var h="<div class=tblk><div class=tblk-h><i style=background:"+b.color+"></i><span style=color:"+b.color+">"+esc(b.time)+"</span></div>";
-b.items.forEach(function(it,ii){
-var dbMatch=SUPPDB.find(function(s){return s.id===it.sid;});
-var detailHtml=dbMatch?"<br><span style='font-size:10px;color:var(--tx3)'>"+esc(dbMatch.comp).substring(0,80)+"...</span>":"";
-h+="<div class=ti data-bi="+bi+" data-ii="+ii+"><div class=ti-top><span class='ti-n ed' contenteditable=true data-sf=n>"+esc(it.n)+"</span><span class='ti-d ed' contenteditable=true data-sf=d>"+esc(it.d)+"</span></div><div class=ti-note>"+esc(it.note)+detailHtml+"</div></div>";
-});
-h+="<select class=sel data-sadd="+bi+" style=margin-top:3px><option value=>+ 添加补剂</option>";
-SUPPDB.forEach(function(s){h+="<option value="+s.id+">"+esc(s.nm)+"</option>";});
-h+="</select></div>";
-sc.insertAdjacentHTML("beforeend",h);
-});}
-drawSuppl();
-q("#suppl-c").addEventListener("click",function(e){if(e.target.closest(".ed"))return;var t=e.target.closest(".ti");if(t)t.classList.toggle("open");});
-q("#suppl-c").addEventListener("blur",function(e){var ed=e.target.closest(".ed");if(!ed)return;var t=ed.closest(".ti"),bi=parseInt(t.getAttribute("data-bi")),ii=parseInt(t.getAttribute("data-ii"));suppl[bi].items[ii][ed.getAttribute("data-sf")]=ed.textContent;sv("suppl",suppl);},true);
-q("#suppl-c").addEventListener("change",function(e){var s=e.target.closest("[data-sadd]");if(!s||!s.value)return;var bi=parseInt(s.getAttribute("data-sadd"));var db=SUPPDB.find(function(x){return x.id===s.value;});if(db){suppl[bi].items.push({sid:db.id,n:db.nm,d:"",note:""});s.value="";sv("suppl",suppl);drawSuppl();}});
-
-/* ========== RENDER: EXERCISE ========== */
-function drawExer(){
-var ew=q("#exer-week");ew.innerHTML="";
-exerWeek.forEach(function(d,di){
-var h="<div class=exer-day><div class=exer-day-title><span>"+esc(d.day)+" - "+esc(d.type)+"</span></div>";
-d.items.forEach(function(it,ii){
-h+="<div class=exer-item data-edi="+di+" data-eii="+ii+" style=cursor:pointer><span class=ed contenteditable=true data-efield=item>"+esc(it)+"</span></div>";
-});
-h+="</div>";
-ew.insertAdjacentHTML("beforeend",h);
-});}
-drawExer();
-q("#exer-week").addEventListener("blur",function(e){
-var ed=e.target.closest("[data-efield]");if(!ed)return;
-var row=ed.closest("[data-edi]");
-var di=parseInt(row.getAttribute("data-edi")),ii=parseInt(row.getAttribute("data-eii"));
-exerWeek[di].items[ii]=ed.textContent;sv("exer",exerWeek);
-},true);
-
-/* ========== RENDER: STORAGE ========== */
-var sF="all",sO=null,sK="rs",sA=false;
-function drawS(){
-var tb=q("#stb");tb.innerHTML="";
-var f=SD.filter(function(d){if(sF==="hi")return d.rs>=4;if(sF==="lo")return d.rs<=2;return true;});
-f.sort(function(a,b){return sA?(a[sK]-b[sK]):(b[sK]-a[sK]);});
-f.forEach(function(d){
-var rw=document.createElement("div");rw.className="sr"+(sO===d.n?" open":"");rw.setAttribute("data-sn",d.n);
-rw.innerHTML="<div><span style=font-weight:600>"+esc(d.n)+"</span><span style='font-size:9px;color:var(--tx3);margin-left:3px'>"+esc(d.c)+"</span></div><div>"+d.l+"</div><div>"+d.o+"</div><div>"+d.m+"</div><div style='font-size:9px;color:var(--tx2)'>"+esc(d.t)+"</div><div><span class=bdg style='background:"+RCbg[d.r]+";color:"+RC[d.r]+"'>"+d.r+"</span></div>";
-var det=document.createElement("div");det.className="sd"+(sO===d.n?" show":"");
-det.innerHTML="<div class=sdg><div class=sdc><div class=label>温度</div><b>"+esc(d.t)+"</b><div style=margin-top:2px>"+esc(d.td)+"</div></div><div class=sdc><div class=label>保质期</div><div><span style=color:var(--tx3)>封</span>"+esc(d.ss)+" <span style=color:var(--tx3)>开</span>"+esc(d.so)+"</div></div></div><div class=sdl><strong>光</strong>"+esc(d.ln)+" <strong>氧</strong>"+esc(d.on)+" <strong>潮</strong>"+esc(d.mn)+"</div>"+(d.sp?"<div class=sdt>"+esc(d.sp)+"</div>":"");
-tb.appendChild(rw);tb.appendChild(det);});}
-drawS();
-q("#stb").addEventListener("click",function(e){var r=e.target.closest(".sr");if(!r)return;sO=sO===r.getAttribute("data-sn")?null:r.getAttribute("data-sn");drawS();});
-q("#sflt").addEventListener("click",function(e){var b=e.target.closest(".fb");if(!b)return;sF=b.getAttribute("data-sf");qa("#sflt .fb").forEach(function(x){x.classList.remove("on");});b.classList.add("on");sO=null;drawS();});
-q("#shdr").addEventListener("click",function(e){var c=e.target.closest(".so");if(!c)return;var k=c.getAttribute("data-sort");if(sK===k)sA=!sA;else{sK=k;sA=false;}qa(".shdr .so").forEach(function(x){x.classList.remove("ac");});c.classList.add("ac");sO=null;drawS();});
-
-/* ========== RENDER: TODOS ========== */
-var hideDone=false;
-function drawTodos(){
-var list=q("#todo-list");list.innerHTML="";
-var lm={yes:"待执行",no:"不做",done:"已完成"};
-var cm={yes:"background:rgba(125,211,168,.12);color:var(--acc)",no:"background:rgba(255,107,107,.12);color:var(--danger)",done:"background:rgba(138,180,248,.12);color:var(--info)"};
-var cls2={yes:"td-yes",no:"td-no",done:"td-done-item"};
-todos.forEach(function(t,i){
-if(hideDone&&t.type==="done")return;
-list.insertAdjacentHTML("beforeend","<div class='td-item "+cls2[t.type]+(t.type==="done"?" done":"")+"' data-ti="+i+"><div class=td-top><span class='td-n ed' contenteditable=true data-tf=n>"+esc(t.n)+"</span><span class=td-t style='"+cm[t.type]+"'>"+lm[t.type]+"</span><select class=sel data-tsel="+i+" style='font-size:10px;padding:2px 3px;margin-left:3px'><option value=yes"+(t.type==="yes"?" selected":"")+">待执行</option><option value=done"+(t.type==="done"?" selected":"")+">已完成</option><option value=no"+(t.type==="no"?" selected":"")+">不做</option><option value=del>删除</option></select></div><div class='td-d ed' contenteditable=true data-tf=d>"+esc(t.d)+"</div></div>");
-});}
-drawTodos();
-q("#todo-list").addEventListener("change",function(e){var s=e.target.closest("[data-tsel]");if(!s)return;var i=parseInt(s.getAttribute("data-tsel"));if(s.value==="del")todos.splice(i,1);else todos[i].type=s.value;sv("todos",todos);drawTodos();});
-q("#todo-list").addEventListener("blur",function(e){var ed=e.target.closest(".ed");if(!ed)return;var it=ed.closest(".td-item"),i=parseInt(it.getAttribute("data-ti"));todos[i][ed.getAttribute("data-tf")]=ed.textContent;sv("todos",todos);},true);
-q("#todo-toggle").addEventListener("click",function(){hideDone=!hideDone;this.textContent=hideDone?"显示已完成":"隐藏已完成";drawTodos();});
-q("#todo-add").addEventListener("click",function(){q("#todo-form").style.display=q("#todo-form").style.display==="none"?"block":"none";});
-q("#tn-save").addEventListener("click",function(){var n=q("#tn-name").value.trim();if(!n)return;todos.push({n:n,d:q("#tn-desc").value.trim(),type:q("#tn-type").value});sv("todos",todos);drawTodos();q("#tn-name").value="";q("#tn-desc").value="";q("#todo-form").style.display="none";});
-
-/* ========== RENDER: BLOOD ========== */
-function drawBloods(){
-var bl=q("#blood-list");bl.innerHTML="";
-bloods.forEach(function(b,i){
-bl.insertAdjacentHTML("beforeend","<div style='margin-bottom:3px'><div class=blood-item data-bi="+i+" style=cursor:pointer><span class='bi-n ed' contenteditable=true data-bf=name>"+esc(b.name)+"</span><span class='bi-r ed' contenteditable=true data-bf=ref>"+esc(b.ref)+"</span><span class='bi-w ed' contenteditable=true data-bf=why>"+esc(b.why)+"</span><span class=bi-x data-bdel="+i+">x</span></div><div class=blood-detail style='display:none;padding:4px 8px;font-size:10px;color:var(--tx3);line-height:1.5;background:var(--bg3);border-radius:0 0 6px 6px' data-bdet="+i+">"+esc(b.detail||"")+"</div></div>");
-});
-q("#doc-script").textContent="请帮我查: "+bloods.map(function(b){return b.name;}).join(", ");
-}
-drawBloods();
-q("#blood-list").addEventListener("click",function(e){
-var x=e.target.closest("[data-bdel]");
-if(x){bloods.splice(parseInt(x.getAttribute("data-bdel")),1);sv("bloods",bloods);drawBloods();return;}
-var row=e.target.closest("[data-bi]");
-if(row&&!e.target.closest(".ed")){var det=row.parentElement.querySelector("[data-bdet]");if(det)det.style.display=det.style.display==="none"?"block":"none";}
-});
-q("#blood-list").addEventListener("blur",function(e){var ed=e.target.closest(".ed");if(!ed)return;var it=ed.closest("[data-bi]"),i=parseInt(it.getAttribute("data-bi"));bloods[i][ed.getAttribute("data-bf")]=ed.textContent;sv("bloods",bloods);drawBloods();},true);
-q("#blood-add").addEventListener("click",function(){q("#blood-form").style.display=q("#blood-form").style.display==="none"?"flex":"none";});
-q("#bn-save").addEventListener("click",function(){var n=q("#bn-name").value.trim();if(!n)return;bloods.push({name:n,ref:q("#bn-ref").value.trim()||"--",why:q("#bn-why").value.trim()||"",detail:q("#bn-detail").value.trim()||""});sv("bloods",bloods);drawBloods();q("#bn-name").value="";q("#bn-ref").value="";q("#bn-why").value="";q("#bn-detail").value="";q("#blood-form").style.display="none";});
-
-/* ========== RENDER: KNOWLEDGE ========== */
-function drawKnow(){
-var kc=q("#know-c");kc.innerHTML="";
-KD.forEach(function(k){kc.insertAdjacentHTML("beforeend","<div class=ki><b>"+esc(k.t)+"</b><p>"+esc(k.d)+"</p></div>");});
-}
-drawKnow();
-q("#know-add").addEventListener("click",function(){q("#know-form").style.display=q("#know-form").style.display==="none"?"block":"none";});
-q("#kn-save").addEventListener("click",function(){var t=q("#kn-title").value.trim();if(!t)return;KD.push({t:t,d:q("#kn-desc").value.trim()});sv("knowledge",KD);drawKnow();q("#kn-title").value="";q("#kn-desc").value="";q("#know-form").style.display="none";});
-
-/* ========== METABOLIC CHART ========== */
-var metabChart=null;
-function drawMetabChart(profile,mealData){
-var ctx=document.getElementById("metab-chart");
-if(!ctx)return;
-var hours=[];for(var i=0;i<24;i++)hours.push(i+":00");
-var cortisol=[],insulin=[],glucose=[],gh=[];
-for(var h=0;h<24;h++){
-var cort=h<6?8+h*2:h<9?18-h:h<12?10:h<16?8:h<20?6:4+h*0.2;
-cortisol.push(Math.round(cort));
-var ins=5,glu=85;
-mealData.forEach(function(ml){
-if(!ml.time)return;
-var mh=parseInt(ml.time.split(":")[0]);
-var totalCarb=0;
-ml.items.forEach(function(it){var fd=FOODS.find(function(f){return f.id===it.fid;});if(!fd)return;var m=fd.pc?it.qty:(it.qty/100);totalCarb+=fd.c*m;});
-if(totalCarb>0){
-var diff=h-mh;
-if(diff>=0&&diff<=3){ins+=totalCarb*0.8*Math.exp(-diff);glu+=totalCarb*0.5*Math.exp(-diff*0.8);}
-}});
-insulin.push(Math.round(ins));glucose.push(Math.round(glu));
-var ghVal=h>=22||h<4?8:h<8?4:2;
-gh.push(ghVal);
-}
-if(metabChart)metabChart.destroy();
-metabChart=new Chart(ctx,{type:"line",data:{labels:hours,datasets:[
-{label:"皮质醇",data:cortisol,borderColor:"#ffa94d",backgroundColor:"rgba(255,169,77,0.1)",fill:true,tension:0.4,pointRadius:0,borderWidth:1.5},
-{label:"胰岛素",data:insulin,borderColor:"#ff6b6b",backgroundColor:"rgba(255,107,107,0.1)",fill:true,tension:0.4,pointRadius:0,borderWidth:1.5},
-{label:"血糖",data:glucose,borderColor:"#8ab4f8",backgroundColor:"rgba(138,180,248,0.05)",fill:false,tension:0.4,pointRadius:0,borderWidth:1.5},
-{label:"生长激素",data:gh,borderColor:"#c090e0",backgroundColor:"rgba(192,144,224,0.05)",fill:false,tension:0.4,pointRadius:0,borderWidth:1.5,borderDash:[4,4]}
-]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#e8e8ec",font:{size:10},boxWidth:12,padding:8}}},scales:{x:{ticks:{color:"#888",font:{size:9},maxTicksLimit:12},grid:{color:"rgba(255,255,255,0.04)"}},y:{ticks:{color:"#888",font:{size:9}},grid:{color:"rgba(255,255,255,0.04)"}}}}});
-}
-
+q("#mlout").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(!b)return;var r=b.closest(".mr"),mi=parseInt(r.getAttribute("data-mi")),ii=parseInt(r.getAttribute("data-ii"));var it=meals[mi].items[ii],fd=FOODS.find(function(f){return f.id===it.fid});if(b.getAttribute("data-a")==="p")it.qty+=fd.step;else if(b.getAttribute("data-a")==="m"){it.qty=Math.max(0,it.qty-fd.step);if(it.qty<=0)meals[mi].items.splice(ii,1)}else meals[mi].items.splice(ii,1);sv("meals",meals);recalc();drawSch()});
+q("#mlout").addEventListener("change",function(e){var s=e.target.closest("[data-ma]");if(s&&s.value){var mi=parseInt(s.getAttribute("data-ma")),fd=FOODS.find(function(f){return f.id===s.value});if(fd){meals[mi].items.push({fid:fd.id,qty:fd.pc?(fd.d||1):(fd.d||100)});s.value="";sv("meals",meals);recalc();drawSch()}return}var ti=e.target.closest("[data-mt]");if(ti){meals[parseInt(ti.getAttribute("data-mt"))].time=ti.value;sv("meals",meals);updateFast();drawSch()}});
 recalc();
+
+/* SUPPLEMENT DB */
+var sDBsort="rs",sDBasc=false,sDBfil="all";
+function starC(n){var s="";for(var i=0;i<3;i++)s+=i<n?"\u2605":"\u2606";return s}
+function riskColor(r){var c={"极高":"#E24B4A","高":"#EF9F27","中":"#BA7517","低-中":"#97C459","低":"#1D9E75","极低":"#1D9E75"};var b={"极高":"rgba(255,107,107,.15)","高":"rgba(255,169,77,.12)","中":"rgba(255,212,59,.1)","低-中":"rgba(125,211,168,.1)","低":"rgba(125,211,168,.1)","极低":"rgba(125,211,168,.1)"};return{c:c[r]||"#999",b:b[r]||"rgba(255,255,255,.05)"}}
+function drawDBS(){
+var tb=q("#dbs-tb");tb.innerHTML="";
+var f=SUPPLS.filter(function(d){if(sDBfil==="hi")return d.rs>=4;if(sDBfil==="lo")return d.rs<=2;return true});
+f.sort(function(a,b){var ak=a[sDBsort],bk=b[sDBsort];if(typeof ak==="string"){ak=(ak||"").toLowerCase();bk=(bk||"").toLowerCase();return sDBasc?ak.localeCompare(bk):bk.localeCompare(ak)}return sDBasc?(ak-bk):(bk-ak)});
+f.forEach(function(d){
+var rc=riskColor(d.r);var hidden=d.hidden;
+var rw=document.createElement("div");rw.className="dbr"+(hidden?" done":"");rw.setAttribute("data-sid",d.id);
+rw.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 50px 32px 24px 24px 24px 32px 26px 16px 14px"+(hidden?";opacity:.35":"");
+rw.innerHTML="<div><span style='font-weight:600' class='ed' contenteditable='true' data-sfield='nm' data-sid2='"+d.id+"'>"+esc(d.nm)+"</span></div>"+
+"<div class='ed' contenteditable='true' data-sfield='brand' data-sid2='"+d.id+"' style='font-size:8px'>"+esc(d.brand)+"</div>"+
+"<div style='font-size:7px'>"+esc(d.sol)+"</div>"+
+"<div style='color:#f0c060'>"+starC(d.ls)+"</div>"+
+"<div style='color:#8ab4f8'>"+starC(d.os)+"</div>"+
+"<div style='color:#7dd3a8'>"+starC(d.ms)+"</div>"+
+"<div style='font-size:7px'>"+esc(d.t)+"</div>"+
+"<div><span class='bdg' style='background:"+rc.b+";color:"+rc.c+"'>"+d.r+"</span></div>"+
+"<div style='cursor:pointer;font-size:9px;color:var(--tx3)' data-shide='"+d.id+"'>"+(hidden?"\u25b6":"\u23f8")+"</div>"+
+"<div style='cursor:pointer;font-size:10px;color:var(--dng)' data-sdel='"+d.id+"'>x</div>";
+var det=document.createElement("div");det.className="dbd";det.setAttribute("data-sid",d.id);
+det.innerHTML=
+"<b>\u5242\u91cf:</b> "+esc(d.dose)+" | <b>\u65f6\u95f4:</b> "+esc(d.timing)+"<br><b>\u6210\u5206:</b> "+esc(d.ingredients)+"<br><b>\u50a8\u5b58:</b> \u5f00\u5c01"+esc(d.so)+" \u672a\u5f00\u5c01"+esc(d.ss)+(d.sp?" | "+esc(d.sp):"")+"<br><b>\u5907\u6ce8:</b> "+esc(d.notes);
+tb.appendChild(rw);tb.appendChild(det)})}drawDBS();
+q("#dbs-tb").addEventListener("click",function(e){
+var del=e.target.closest("[data-sdel]");if(del){var id=del.getAttribute("data-sdel");var idx=SUPPLS.findIndex(function(s){return s.id===id});if(idx>=0&&confirm("\u5220\u9664 "+SUPPLS[idx].nm+"?")){SUPPLS.splice(idx,1);sv("suppls-edit",SUPPLS);drawDBS()}return}
+var hide=e.target.closest("[data-shide]");if(hide){var id2=hide.getAttribute("data-shide");var s=SUPPLS.find(function(x){return x.id===id2});if(s){s.hidden=!s.hidden;sv("suppls-edit",SUPPLS);drawDBS()}return}
+if(e.target.closest(".ed"))return;var r=e.target.closest(".dbr");if(!r)return;var sid=r.getAttribute("data-sid");q("#dbs-tb").querySelectorAll(".dbd").forEach(function(d){if(d.getAttribute("data-sid")===sid)d.classList.toggle("show");else d.classList.remove("show")})});
+q("#dbs-tb").addEventListener("blur",function(e){var ed=e.target.closest("[data-sfield]");if(!ed)return;var id=ed.getAttribute("data-sid2"),field=ed.getAttribute("data-sfield");var s=SUPPLS.find(function(x){return x.id===id});if(s)s[field]=ed.textContent;sv("suppls-edit",SUPPLS)},true);
+q("#dbshdr").addEventListener("click",function(e){var c2=e.target.closest(".so");if(!c2)return;var k=c2.getAttribute("data-sort");if(sDBsort===k)sDBasc=!sDBasc;else{sDBsort=k;sDBasc=false}qa("#dbshdr .so").forEach(function(x){x.classList.remove("ac")});c2.classList.add("ac");drawDBS()});
+q("#dbsflt").addEventListener("click",function(e){var b=e.target.closest(".fb");if(!b)return;sDBfil=b.getAttribute("data-sf");qa("#dbsflt .fb").forEach(function(x){x.classList.remove("on")});b.classList.add("on");drawDBS()});
+q("#dbs-add").addEventListener("click",function(){q("#dbs-form").style.display=q("#dbs-form").style.display==="none"?"block":"none"});
+q("#dsn-save").addEventListener("click",function(){var nm=q("#dsn-nm").value.trim();if(!nm)return;SUPPLS.push({id:"s"+Date.now(),nm:nm,brand:q("#dsn-br").value.trim()||"--",cat:"",sol:q("#dsn-sol").value,dose:"",timing:"",ingredients:"",notes:"",l:"-",o:"-",m:"-",t:"\u5ba4\u6e29",so:"",ss:"",sp:"",r:"\u4f4e",ls:0,os:0,ms:0,rs:1,ts:25});sv("suppls-edit",SUPPLS);drawDBS();q("#dsn-nm").value="";q("#dsn-br").value="";q("#dbs-form").style.display="none"});
+
+/* FOOD DB */
+var fDBsort="cal",fDBasc=false;
+var catOrder={"主食":0,"蛋白":1,"脂肪":2,"蔬菜":3,"乳制品":4};
+function drawDBF(){
+var tb=q("#dbf-tb");tb.innerHTML="";
+var f=FOODS.slice().sort(function(a,b){
+if(fDBsort==="cat"){var ac=catOrder[a.cat]||9,bc=catOrder[b.cat]||9;return fDBasc?(ac-bc):(bc-ac)}
+var av=a[fDBsort]||0,bv=b[fDBsort]||0;return fDBasc?(av-bv):(bv-av)});
+f.forEach(function(d){
+var hidden=d.hidden;
+var rw=document.createElement("div");rw.className="dbr"+(hidden?" done":"");rw.setAttribute("data-fid",d.id);
+rw.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 34px 24px 24px 24px 22px 24px 22px 20px 14px"+(hidden?";opacity:.35":"");
+rw.innerHTML="<div><span style='font-weight:600' class='ed' contenteditable='true' data-ffield='nm' data-fid2='"+d.id+"'>"+esc(d.nm)+"</span></div>"+
+"<div style='font-size:8px'>"+esc(d.cat)+"</div>"+
+"<div>"+d.p+"</div><div>"+d.f+"</div><div>"+d.c+"</div><div>"+(d.w||0)+"</div>"+
+"<div>"+d.cal+"</div><div>"+(d.gi||"-")+"</div>"+
+"<div style='cursor:pointer;font-size:9px;color:var(--tx3)' data-fhide='"+d.id+"'>"+(hidden?"\u25b6":"\u23f8")+"</div>"+
+"<div style='cursor:pointer;font-size:10px;color:var(--dng)' data-fdel='"+d.id+"'>x</div>";
+var det=document.createElement("div");det.className="dbd";det.setAttribute("data-fid",d.id);
+var om=d.omega||{};
+var perInfo=d.pc?("\u6bcf\u4e2a: P"+d.p+"g F"+d.f+"g C"+d.c+"g "+d.cal+"kcal"):"";
+det.innerHTML=(perInfo?"<div style='color:var(--inf)'>"+perInfo+"</div>":"")+
+"\u6bcf"+d.per+(d.pc?"\u4e2a":d.u)+" "+d.cal+"kcal"+(d.gi?" GI:"+d.gi:"")+"<br><b>\u8102\u80aa\u9178:</b> n3:"+om.n3+"g n6:"+om.n6+"g n9:"+om.n9+"g sat:"+om.sat+"g<br><b>\u5fae\u91cf:</b> "+(d.micro||"--")+(d.amino?"<br><b>\u6c28\u57fa\u9178:</b> "+esc(d.amino):"");
+tb.appendChild(rw);tb.appendChild(det)})}drawDBF();
+q("#dbf-tb").addEventListener("click",function(e){
+var del=e.target.closest("[data-fdel]");if(del){var id=del.getAttribute("data-fdel");var idx=FOODS.findIndex(function(f2){return f2.id===id});if(idx>=0&&confirm("\u5220\u9664 "+FOODS[idx].nm+"?")){FOODS.splice(idx,1);sv("foods-edit",FOODS);drawDBF()}return}
+var hide=e.target.closest("[data-fhide]");if(hide){var id2=hide.getAttribute("data-fhide");var f2=FOODS.find(function(x){return x.id===id2});if(f2){f2.hidden=!f2.hidden;sv("foods-edit",FOODS);drawDBF()}return}
+if(e.target.closest(".ed"))return;var r=e.target.closest(".dbr");if(!r)return;var fid=r.getAttribute("data-fid");q("#dbf-tb").querySelectorAll(".dbd").forEach(function(d){if(d.getAttribute("data-fid")===fid)d.classList.toggle("show");else d.classList.remove("show")})});
+q("#dbf-tb").addEventListener("blur",function(e){var ed=e.target.closest("[data-ffield]");if(!ed)return;var id=ed.getAttribute("data-fid2"),field=ed.getAttribute("data-ffield");var f2=FOODS.find(function(x){return x.id===id});if(f2)f2[field]=ed.textContent;sv("foods-edit",FOODS)},true);
+q("#dbfhdr").addEventListener("click",function(e){var c2=e.target.closest(".so");if(!c2)return;var k=c2.getAttribute("data-sort");if(fDBsort===k)fDBasc=!fDBasc;else{fDBsort=k;fDBasc=false}qa("#dbfhdr .so").forEach(function(x){x.classList.remove("ac")});c2.classList.add("ac");drawDBF()});
+q("#dbf-add").addEventListener("click",function(){q("#dbf-form").style.display=q("#dbf-form").style.display==="none"?"block":"none"});
+q("#dfn-save").addEventListener("click",function(){var nm=q("#dfn-nm").value.trim();if(!nm)return;FOODS.push({id:"f"+Date.now(),nm:nm,cat:q("#dfn-cat").value,u:"g",per:100,p:parseFloat(q("#dfn-p").value)||0,f:parseFloat(q("#dfn-f").value)||0,c:parseFloat(q("#dfn-c").value)||0,cal:parseInt(q("#dfn-cal").value)||0,gi:parseInt(q("#dfn-gi").value)||0,w:0,step:50,d:0,omega:{n3:0,n6:0,n9:0,sat:0},micro:"--",amino:""});sv("foods-edit",FOODS);drawDBF();q("#dfn-nm").value="";q("#dfn-p").value="";q("#dfn-f").value="";q("#dfn-c").value="";q("#dfn-cal").value="";q("#dfn-gi").value="";q("#dbf-form").style.display="none"});
+
+/* SUPPLEMENTS PAGE */
+var suppl=ld("suppl")||[{time:"\u7a7a\u8179",color:"#f0c060",items:[{n:"NMN",d:"\u6309\u6807\u7b7e",sol:"\u6c34\u6eb6(\u7a7a\u8179)",note:"\u9700\u533b\u751f\u786e\u8ba4"}]},{time:"\u5348\u9910\u968f\u9910(\u987b\u6cb9\u8102)",color:"#7dd3a8",items:[{n:"GNC Mega Men",d:"1\u7247",sol:"\u6df7\u5408",note:"B\u65cf\u5145\u8db3"},{n:"NOW D3+K2",d:"1\u7c92",sol:"\u8102\u6eb6",note:"MenaQ7"},{n:"CoQ10",d:"\u6309\u6807\u7b7e",sol:"\u8102\u6eb6",note:"\u7ebf\u7c92\u4f53"},{n:"GNC 4X\u9c7c\u6cb9",d:"2\u7c92",sol:"\u8102\u6eb6",note:"EPAX rTG"},{n:"\u53f6\u9ec4\u7d20",d:"10-20mg",sol:"\u8102\u6eb6",note:"\u5355\u72ec\u8865"},{n:"\u76d0\u9178\u5c0f\u6a97\u78b1",d:"500mg",sol:"\u6c34\u6eb6",note:"\u4e1c\u5317\u5236\u836f"},{n:"NAC",d:"1000mg",sol:"\u6c34\u6eb6",note:"\u8c37\u80f1\u7518\u80bd\u524d\u4f53"}]},{time:"\u665a\u9910\u968f\u9910",color:"#c090e0",items:[{n:"\u59dc\u9ec4\u7d20",d:"\u6309\u6807\u7b7e",sol:"\u8102\u6eb6",note:"\u6297\u708e"},{n:"\u76d0\u9178\u5c0f\u6a97\u78b1",d:"500mg",sol:"\u6c34\u6eb6",note:"\u7b2c\u4e8c\u6b21"},{n:"\u76ca\u751f\u83cc",d:"\u6309\u6807\u7b7e",sol:"\u7279\u6b8a(\u6d3b\u83cc)",note:"\u95f4\u96942h"}]},{time:"\u7761\u524d",color:"#8ab4f8",items:[{n:"\u82cf\u7cd6\u9178\u9541",d:"3\u7c92",sol:"\u6c34\u6eb6",note:"\u8111\u90e8\u9541"},{n:"Ashwagandha",d:"KSM-66",sol:"\u6c34\u6eb6",note:"\u964d\u76ae\u8d28\u9187"},{n:"\u7518\u6c28\u9178",d:"3g",sol:"\u6c34\u6eb6",note:"\u52a9\u7720"},{n:"\u808c\u9178",d:"3-5g",sol:"\u6c34\u6eb6",note:"\u8ba4\u77e5+\u808c\u8089"}]}];
+function drawSup(){var sc=q("#sc");sc.innerHTML="";suppl.forEach(function(b,bi){var h="<div style='font-size:11px;font-weight:600;margin:6px 0 3px;display:flex;align-items:center;gap:4px'><span style='width:6px;height:6px;border-radius:50%;display:inline-block;background:"+b.color+"'></span><span style=color:"+b.color+">"+esc(b.time)+"</span><button class=btn data-sadd="+bi+" style=font-size:8px;padding:1px_4px>+</button></div>";
+b.items.forEach(function(it,ii){h+="<div class=ti data-bi="+bi+" data-ii="+ii+"><div class=ti-top><span class='ti-n ed' contenteditable=true data-sf=n>"+esc(it.n)+"</span><span style='font-size:7px;padding:1px 3px;border-radius:3px;background:rgba(255,255,255,.04);color:var(--tx3);margin:0 3px'>"+esc(it.sol)+"</span><span class='ti-d ed' contenteditable=true data-sf=d>"+esc(it.d)+"</span></div><div class=ti-note>"+esc(it.note)+"</div></div>"});sc.insertAdjacentHTML("beforeend",h)})}drawSup();
+q("#sc").addEventListener("click",function(e){var ab=e.target.closest("[data-sadd]");if(ab){var bi=parseInt(ab.getAttribute("data-sadd"));var nm=prompt("\u8865\u5242\u540d\u79f0:");if(nm){suppl[bi].items.push({n:nm,d:"--",sol:"--",note:""});sv("suppl",suppl);drawSup()}return}if(e.target.closest(".ed"))return;var t=e.target.closest(".ti");if(t)t.classList.toggle("open")});
+q("#sc").addEventListener("blur",function(e){var ed=e.target.closest("[data-sf]");if(!ed)return;var t=ed.closest(".ti"),bi=parseInt(t.getAttribute("data-bi")),ii=parseInt(t.getAttribute("data-ii"));suppl[bi].items[ii][ed.getAttribute("data-sf")]=ed.textContent;sv("suppl",suppl)},true);
+
+/* SCHEDULE - auto from meals+suppl+exercise */
+var exWeek=ld("exweek")||EXDATA.weekly_default;
+function drawExConf(){
+var ec=q("#exconf"),h="";var types=["strength","cardio","hiit","yoga","rest"];var labels={strength:"\u529b\u91cf(\u5168\u8eab)",cardio:"\u6709\u6c27",hiit:"HIIT",yoga:"\u7c84\u4f3d/\u62c9\u4f38",rest:"\u4f11\u606f"};
+exWeek.forEach(function(d,i){
+h+="<div class=exconf><span style=font-weight:600>"+esc(d.day)+"</span><input class=ip data-exi="+i+" data-exf=time value='"+esc(d.time||"")+"' style=width:42px;font-size:9px placeholder=HH:MM><select class=sl data-exi="+i+" data-exf=type style=font-size:9px>";
+types.forEach(function(t){h+="<option value="+t+(d.type===t?" selected":"")+">"+labels[t]+"</option>"});h+="</select></div>"});
+ec.innerHTML=h;
+var sel=exWeek.find(function(d){return d.type==="strength"});
+var st=EXDATA.strength;
+q("#exdetail").innerHTML="<div class=c style=margin:0><div class=ct>"+esc(st.name)+" <span style=font-size:9px;color:var(--tx3)>(\u8e72\u63a8\u62c9\u4e3e\u63d0)</span></div><div style=font-size:9px;color:var(--tx2);line-height:1.7>"+st.moves.map(function(m){return"<b>"+esc(m.name)+"</b> "+m.sets+"x"+m.reps+" rest:"+m.rest+" ("+esc(m.target)+")"}).join("<br>")+"<br><br><b>\u8fdb\u9636:</b> "+esc(st.progress)+"</div></div>"}
+drawExConf();
+q("#exconf").addEventListener("change",function(e){var el=e.target;var i=parseInt(el.getAttribute("data-exi")),f=el.getAttribute("data-exf");if(f==="type")exWeek[i].type=el.value;else if(f==="time")exWeek[i].time=el.value;sv("exweek",exWeek);drawSch()});
+
+function drawSch(){
+var g=q("#schgrid"),h="";var days=["\u5468\u4e00","\u5468\u4e8c","\u5468\u4e09","\u5468\u56db","\u5468\u4e94","\u5468\u516d","\u5468\u65e5"];
+var exCls={strength:"sb-str",cardio:"sb-cardio",hiit:"sb-hiit",yoga:"sb-yoga",rest:"sb-rest"};
+var exLbl={strength:"\u529b\u91cf(\u5168\u8eab)",cardio:"\u6709\u6c27",hiit:"HIIT",yoga:"\u7c84\u4f3d",rest:"\u4f11\u606f"};
+days.forEach(function(day,di){
+h+="<div class=sday><div class=sday-h>"+day+"</div>";
+var exd=exWeek[di]||{};
+meals.forEach(function(ml){
+if(ml.items.length===0)return;
+var t=ml.time||"12:00";
+var foodList=ml.items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?(fd.nm+it.qty+(fd.pc?"":"g")):"?"}).join(" ");
+var supplList="";suppl.forEach(function(b){if((b.time.indexOf("\u5348\u9910")>=0&&ml.nm.indexOf("\u5348")>=0)||(b.time.indexOf("\u665a\u9910")>=0&&ml.nm.indexOf("\u665a")>=0)||(b.time.indexOf("\u7a7a\u8179")>=0&&ml.nm.indexOf("\u65e9")>=0)){supplList=b.items.map(function(s){return s.n}).join("/")}});
+h+="<div class='sblk sb-eat' data-pop='"+esc(ml.nm+" "+t)+"\n"+esc(foodList)+(supplList?"\n\u8865\u5242:"+esc(supplList):"")+"'>"+esc(t)+" "+esc(ml.nm)+"</div>";
+if(ml.nm.indexOf("\u5348")>=0||ml.nm.indexOf("\u665a")>=0){var tp=(ml.time||"12:00").split(":");var wt=parseInt(tp[0])*60+(parseInt(tp[1])||0)+40;var wh=Math.floor(wt/60),wm=wt%60;h+="<div class='sblk sb-walk' data-pop='\u5feb\u8d70 20min "+String(wh).padStart(2,"0")+":"+String(wm).padStart(2,"0")+"'>"+String(wh).padStart(2,"0")+":"+String(wm).padStart(2,"0")+" \u5feb\u8d70</div>"}
+});
+if(exd.type&&exd.type!=="rest"&&exd.time){var exInfo=EXDATA[exd.type];var detail=exd.type==="strength"?EXDATA.strength.moves.map(function(m){return m.name+" "+m.sets+"x"+m.reps}).join(" / "):(exInfo?exInfo.detail:"");
+h+="<div class='sblk "+(exCls[exd.type]||"sb-str")+"' data-pop='"+esc((exLbl[exd.type]||"")+"\n"+detail)+"'>"+esc(exd.time)+" "+esc(exLbl[exd.type]||"")+"</div>"}
+else if(exd.type==="rest"){h+="<div class='sblk sb-rest' data-pop='\u4f11\u606f/\u6563\u6b65'>\u4f11\u606f</div>"}
+var sleepSuppl=suppl.find(function(b){return b.time.indexOf("\u7761")>=0});
+if(sleepSuppl){h+="<div class='sblk sb-sleep' data-pop='\u7761\u524d\u8865\u5242\n"+esc(sleepSuppl.items.map(function(s){return s.n+" "+s.d}).join(" / "))+"'>22:30 \u7761\u524d\u8865\u5242</div>"}
+h+="</div>"});g.innerHTML=h}drawSch();
+
+q("#schgrid").addEventListener("click",function(e){var bl=e.target.closest(".sblk");var pop=q("#spop");if(!bl){pop.style.display="none";return}var d=(bl.getAttribute("data-pop")||"").replace(/\\n/g,"\n");pop.innerHTML=d.split("\n").map(function(l,i){return i===0?"<b>"+esc(l)+"</b>":esc(l)}).join("<br>");pop.style.display="block";var r=bl.getBoundingClientRect();pop.style.left=Math.min(r.left,window.innerWidth-250)+"px";pop.style.top=(r.bottom+4)+"px"});
+document.addEventListener("click",function(e){if(!e.target.closest(".sblk")&&!e.target.closest(".spop"))q("#spop").style.display="none"});
+
+/* TODO */
+var todos=ld("todos")||[{n:"\u5c3f\u77f3\u7d20A",d:"500-1000mg/\u5929",type:"yes"},{n:"Fisetin",d:"\u6bcf\u67082\u5929x1400mg",type:"yes"},{n:"\u7518\u6c28\u9178\u9541",d:"\u8865\u5168\u8eab\u9541",type:"yes"},{n:"\u756a\u8304\u7ea2\u7d20",d:"10-15mg",type:"yes"},{n:"\u67e0\u6aac\u9178\u9499",d:"\u89c6\u996e\u98df",type:"yes"},{n:"\u745e\u62d3\u9f84",d:"\u65e0\u9a8c\u8bc1\u592a\u8d35",type:"no"},{n:"NR/NMN\u957f\u671f",d:"\u4fc3\u7647\u4e89\u8bae",type:"no"},{n:"\u4e8c\u7532\u53cc\u80cd",d:"\u4e0eberberine\u91cd\u53e0",type:"no"},{n:"Timeless",d:"315\u66dd\u5149",type:"no"},{n:"\u4e1c\u5317\u5236\u836f\u5c0f\u6a97\u78b1",d:"\u5df2\u8d2d",type:"done"}];
+var hd=false;function drawTd(){var list=q("#tl");list.innerHTML="";var lm={yes:"\u5f85\u6267\u884c",no:"\u4e0d\u505a",done:"\u5df2\u5b8c\u6210"};var cm={yes:"background:rgba(125,211,168,.12);color:var(--acc)",no:"background:rgba(255,107,107,.12);color:var(--dng)",done:"background:rgba(138,180,248,.12);color:var(--inf)"};var cls={yes:"td-y",no:"td-no",done:"td-dn"};
+todos.forEach(function(t,i){if(hd&&t.type==="done")return;list.insertAdjacentHTML("beforeend","<div class='td-i "+cls[t.type]+(t.type==="done"?" done":"")+"' data-ti="+i+"><div class=td-top><span class='td-n ed' contenteditable=true data-tf=n>"+esc(t.n)+"</span><span class=td-t style='"+cm[t.type]+"'>"+lm[t.type]+"</span><select class=sl data-ts="+i+" style=font-size:8px;padding:1px><option value=yes"+(t.type==="yes"?" selected":"")+">\u6267\u884c</option><option value=done"+(t.type==="done"?" selected":"")+">\u5b8c\u6210</option><option value=no"+(t.type==="no"?" selected":"")+">\u4e0d\u505a</option><option value=del>\u5220</option></select></div><div class='td-d ed' contenteditable=true data-tf=d>"+esc(t.d)+"</div></div>")})}drawTd();
+q("#tl").addEventListener("change",function(e){var s=e.target.closest("[data-ts]");if(!s)return;var i=parseInt(s.getAttribute("data-ts"));if(s.value==="del")todos.splice(i,1);else todos[i].type=s.value;sv("todos",todos);drawTd()});
+q("#tl").addEventListener("blur",function(e){var ed=e.target.closest("[data-tf]");if(!ed)return;var it=ed.closest(".td-i"),i=parseInt(it.getAttribute("data-ti"));todos[i][ed.getAttribute("data-tf")]=ed.textContent;sv("todos",todos)},true);
+q("#tt").addEventListener("click",function(){hd=!hd;this.textContent=hd?"\u663e\u793a\u5df2\u5b8c\u6210":"\u9690\u85cf\u5df2\u5b8c\u6210";drawTd()});
+q("#ta").addEventListener("click",function(){q("#tf").style.display=q("#tf").style.display==="none"?"block":"none"});
+q("#ts2").addEventListener("click",function(){var n=q("#tn").value.trim();if(!n)return;todos.push({n:n,d:q("#td2").value.trim(),type:q("#tty").value});sv("todos",todos);drawTd();q("#tn").value="";q("#td2").value="";q("#tf").style.display="none"});
+
+/* BLOOD */
+var bls=ld("bls")||[{name:"25(OH)D",ref:"40-60",why:"D3"},{name:"\u8840\u6e05\u9499+\u78f7",ref:"\u751f\u5316\u5957",why:"\u9ad8\u9499"},{name:"\u8840\u6e05\u9541",ref:"\u5355\u72ec",why:"\u9541\u591f\u5426"},{name:"\u94c1\u86cb\u767d",ref:"30-150",why:"\u94c1"},{name:"\u540c\u578b\u534a\u80f1\u6c28\u9178",ref:"<10",why:"B\u65cf"},{name:"\u809d\u529fALT/AST",ref:"\u751f\u5316\u5957",why:"\u8865\u5242\u5b89\u5168"},{name:"\u8840\u7cd6+HbA1c",ref:"--",why:"\u5c0f\u6a97\u78b1"},{name:"\u8840\u8102\u56db\u9879",ref:"--",why:"\u9c7c\u6cb9"}];
+function drawBl(){var bl=q("#bl");bl.innerHTML="";bls.forEach(function(b,i){bl.insertAdjacentHTML("beforeend","<div class=bi data-bi="+i+"><span class='bn ed' contenteditable=true data-bf=name>"+esc(b.name)+"</span><span class=ed contenteditable=true data-bf=ref style=color:var(--tx3)>"+esc(b.ref)+"</span><span class=ed contenteditable=true data-bf=why style=color:var(--tx2)>"+esc(b.why)+"</span><span class=bx data-bd="+i+">x</span></div>")});q("#dsc").textContent="\u8bf7\u5e2e\u6211\u67e5\uff1a"+bls.map(function(b){return b.name}).join("\u3001")}drawBl();
+q("#bl").addEventListener("blur",function(e){var ed=e.target.closest("[data-bf]");if(!ed)return;var it=ed.closest(".bi"),i=parseInt(it.getAttribute("data-bi"));bls[i][ed.getAttribute("data-bf")]=ed.textContent;sv("bls",bls);drawBl()},true);
+q("#bl").addEventListener("click",function(e){var x=e.target.closest("[data-bd]");if(!x)return;bls.splice(parseInt(x.getAttribute("data-bd")),1);sv("bls",bls);drawBl()});
+q("#ba").addEventListener("click",function(){q("#bf").style.display=q("#bf").style.display==="none"?"flex":"none"});
+q("#bns").addEventListener("click",function(){var n=q("#bnn").value.trim();if(!n)return;bls.push({name:n,ref:q("#bnr").value.trim()||"--",why:q("#bnw").value.trim()||""});sv("bls",bls);drawBl();q("#bnn").value="";q("#bnr").value="";q("#bnw").value="";q("#bf").style.display="none"});
+
+/* KNOWLEDGE */
+var kws=ld("kws")||[{t:"\u8102\u80aa\u809d\u672c\u8d28",d:"\u80f0\u5c9b\u7d20\u75c5 \u9ad8\u80f0\u5c9b\u7d20->DNL->\u809d\u8102\u80aa->\u62b5\u6297->\u6b63\u53cd\u9988"},{t:"\u63a7\u80f0\u5c9b\u7d20\u4e09\u6760\u6746",d:"1)\u8fdb\u98df\u7a97\u53e3>2)\u51cf\u78b3\u6c34>3)\u907f\u53e0\u52a0"},{t:"\u996d\u540e\u6563\u6b65",d:"GLUT4\u76f4\u63a5\u6444\u53d6\u8461\u8404\u7cd6"},{t:"\u9541\u5206\u5de5",d:"\u82cf\u7cd6\u9178\u9541->\u8111;\u7518\u6c28\u9178\u9541->\u5168\u8eab"},{t:"\u9c7c\u6cb9\u54c1\u8d28",d:"rTG>EE;IFOS\u770b\u6210\u54c1;TOTOX=2xPV+AV"}];
+function drawKw(){q("#kc").innerHTML="";kws.forEach(function(k){q("#kc").insertAdjacentHTML("beforeend","<div class=ki><b>"+esc(k.t)+"</b><p>"+esc(k.d)+"</p></div>")})}drawKw();
+q("#ka").addEventListener("click",function(){q("#kf").style.display=q("#kf").style.display==="none"?"block":"none"});
+q("#kns").addEventListener("click",function(){var t=q("#knt").value.trim();if(!t)return;kws.push({t:t,d:q("#knd").value.trim()});sv("kws",kws);drawKw();q("#knt").value="";q("#knd").value="";q("#kf").style.display="none"});
+
 })();
 </script>
-</body>
-</html>
+</body></html>
