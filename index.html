@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>健康管理 v4.3</title>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>健康管理 v4.4</title>
 <style>
 :root{--bg:#0e1015;--bg2:#161a22;--bg3:#1c2029;--tx:#e8e8ec;--tx2:rgba(232,232,236,.65);--tx3:rgba(232,232,236,.4);--bd:rgba(255,255,255,.06);--bd2:rgba(255,255,255,.12);--acc:#7dd3a8;--wrn:#ffa94d;--dng:#ff6b6b;--inf:#8ab4f8;--pur:#c090e0;--gld:#f0c060}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;font-size:12px}
@@ -73,14 +73,38 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 
 .ki-wrap{position:relative}.ki-acts{position:absolute;top:4px;right:6px;display:flex;gap:3px;opacity:0;transition:opacity .15s}.ki:hover .ki-acts{opacity:1}
 .ki-cat{font-size:7px;padding:1px 4px;border-radius:3px;background:rgba(138,180,248,.1);color:var(--inf);margin-left:4px}
+
+#login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--bg2);border:1px solid var(--bd2);border-radius:14px;padding:28px 24px;width:280px;text-align:center}
+.login-box h2{font-size:18px;margin-bottom:4px}.login-box p{font-size:10px;color:var(--tx3);margin-bottom:16px}
+.login-input{width:100%;padding:8px 10px;border-radius:6px;border:1px solid var(--bd2);background:var(--bg3);color:var(--tx);font-size:12px;outline:0;margin-bottom:8px}.login-input:focus{border-color:var(--acc)}
+.login-btn{width:100%;padding:8px;border-radius:6px;border:0;background:var(--acc);color:#0e1015;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px}.login-btn:hover{filter:brightness(1.1)}
+.login-err{color:var(--dng);font-size:9px;margin-top:4px;min-height:14px}
+
+.ai-resp{background:rgba(192,144,224,.06);border:1px solid rgba(192,144,224,.15);border-radius:6px;padding:8px;margin:6px 0;font-size:10px;line-height:1.6;color:var(--tx2);white-space:pre-wrap;max-height:300px;overflow-y:auto;display:none}
+.ai-resp.show{display:block}.ai-resp b{color:var(--tx)}.ai-resp .ai-loading{color:var(--pur);font-style:italic}
+.ai-btn{padding:4px 10px;border-radius:5px;border:1px solid rgba(192,144,224,.3);background:rgba(192,144,224,.08);color:var(--pur);cursor:pointer;font-size:9px;font-weight:600}.ai-btn:hover{background:rgba(192,144,224,.15)}
+
+.set-row{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.set-row .lb2{font-size:10px;min-width:70px;color:var(--tx2)}
+.set-input{flex:1;padding:5px 8px;border-radius:5px;border:1px solid var(--bd2);background:var(--bg3);color:var(--tx);font-size:10px;outline:0;font-family:monospace;min-width:160px}.set-input:focus{border-color:var(--inf)}
 </style>
 </head><body>
-<div class="w">
-<div style="font-size:9px;letter-spacing:2px;color:var(--tx3)">HEALTH PROTOCOL v4.3</div>
+<div id="login-overlay">
+<div class="login-box">
+<div style="font-size:9px;letter-spacing:2px;color:var(--tx3);margin-bottom:4px">HEALTH PROTOCOL</div>
+<h2>登录</h2><p>输入用户名和密码</p>
+<input class="login-input" id="login-user" placeholder="用户名" autocomplete="off">
+<input class="login-input" id="login-pass" placeholder="密码" type="password">
+<button class="login-btn" id="login-btn">登录</button>
+<div class="login-err" id="login-err"></div>
+</div></div>
+<div class="w" id="main-app" style="display:none">
+<div style="font-size:9px;letter-spacing:2px;color:var(--tx3)">HEALTH PROTOCOL v4.4</div>
 <h1>健康管理全方案</h1>
 <div style="font-size:9px;color:var(--tx3);margin-top:2px">虚线可编辑 / 日程表自动生成 / [P2]=AI功能</div>
 <div class="tabs" id="tabs">
-<button class="tb on" data-tab="profile">档案</button><button class="tb" data-tab="database">数据库</button><button class="tb" data-tab="diet">饮食</button><button class="tb" data-tab="suppl">补剂</button><button class="tb" data-tab="schedule">日程表</button><button class="tb" data-tab="sleep">睡眠</button><button class="tb" data-tab="todo">待办</button><button class="tb" data-tab="blood">血检</button><button class="tb" data-tab="know">认知</button>
+<button class="tb on" data-tab="profile">档案</button><button class="tb" data-tab="database">数据库</button><button class="tb" data-tab="diet">饮食</button><button class="tb" data-tab="suppl">补剂</button><button class="tb" data-tab="schedule">日程表</button><button class="tb" data-tab="sleep">睡眠</button><button class="tb" data-tab="todo">待办</button><button class="tb" data-tab="blood">血检</button><button class="tb" data-tab="know">认知</button><button class="tb" data-tab="settings">设置</button>
 </div>
 
 <div class="sec active" id="sec-profile"><div class="c">
@@ -112,14 +136,27 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <div class="c"><div class="ct">食物数据库</div><div class="ht">每100g(或每个) / 名称可编辑 / 点表头排序</div>
 <div style="margin-bottom:4px"><button class="btn btn-a" id="dbf-add">+新增</button></div>
 <div style="overflow-x:auto"><table class="db-tbl" id="dbf-tbl"><thead id="dbfhdr"></thead><tbody id="dbf-tb"></tbody></table></div>
-<div id="dbf-form" style="display:none" class="c"><div style="display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="dfn-nm" placeholder="名称" style="width:60px"><select class="sl" id="dfn-cat"><option>主食</option><option>蛋白</option><option>脂肪</option><option>蔬菜</option><option>乳制品</option><option>饮品</option></select><input class="ip" id="dfn-p" placeholder="P" style="width:26px"><input class="ip" id="dfn-f" placeholder="F" style="width:26px"><input class="ip" id="dfn-c" placeholder="C" style="width:26px"><input class="ip" id="dfn-w" placeholder="水" style="width:26px"><input class="ip" id="dfn-cal" placeholder="cal" style="width:30px"><input class="ip" id="dfn-gi" placeholder="GI" style="width:26px"><button class="btn btn-a" id="dfn-sv">存</button></div></div></div></div>
+<div id="dbf-form" style="display:none" class="c"><div style="display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="dfn-nm" placeholder="名称" style="width:60px"><select class="sl" id="dfn-cat"><option>主食</option><option>蛋白</option><option>脂肪</option><option>蔬菜</option><option>乳制品</option><option>饮品</option></select><input class="ip" id="dfn-p" placeholder="P" style="width:26px"><input class="ip" id="dfn-f" placeholder="F" style="width:26px"><input class="ip" id="dfn-c" placeholder="C" style="width:26px"><input class="ip" id="dfn-w" placeholder="水" style="width:26px"><input class="ip" id="dfn-cal" placeholder="cal" style="width:30px"><input class="ip" id="dfn-gi" placeholder="GI" style="width:26px"><button class="btn btn-a" id="dfn-sv">存</button></div></div></div>
+<div class="c"><div class="ct">AI 智能补全 <span style="font-size:8px;color:var(--pur)">(Gemini)</span></div>
+<div class="ht">新增补剂/食物后，输入品牌型号或上传图片，AI自动补全所有营养信息</div>
+<div style="display:flex;gap:3px;margin-bottom:4px;flex-wrap:wrap">
+<select class="sl" id="air-type"><option value="suppl">补剂</option><option value="food">食物</option></select>
+<input class="ip" id="air-name" placeholder="名称/品牌/型号" style="width:160px;flex:1">
+</div>
+<div style="margin-bottom:4px"><label class="btn" style="cursor:pointer"><input type="file" id="air-file" accept="image/*" style="display:none">上传图片(标签/成分表)</label><span id="air-fname" style="font-size:8px;color:var(--tx3);margin-left:4px"></span></div>
+<textarea class="ta" id="air-text" placeholder="或粘贴产品信息文字（成分表、营养标签等）" rows="2"></textarea>
+<div style="display:flex;gap:4px;margin-top:4px"><button class="ai-btn" id="air-go">AI 补全信息</button><button class="ai-btn" id="air-search" style="border-color:rgba(138,180,248,.3);color:var(--inf)">AI 联网检索</button></div>
+<div class="ai-resp" id="air-resp"></div>
+</div></div>
 
 <div class="sec" id="sec-diet">
 <div class="hl"><b><span class="ed" data-key="d-strat" contenteditable="true">低胰岛素饮食 + 16:8</span></b><div style="font-size:9px;color:var(--tx2)">高脂中蛋白低碳水 / 各餐时间在日程表管理</div></div>
 <div class="c"><div class="ct">宏量计算器</div><div id="mout"></div><div class="formula" id="fout"></div></div>
-<div class="c"><div class="ct">三餐规划 <span style="font-size:8px;color:var(--tx3)">(食物链接数据库)</span></div><div id="mlout"></div><div class="dtot" id="dtot" style="display:none"></div></div></div>
+<div class="c"><div class="ct">三餐规划 <span style="font-size:8px;color:var(--tx3)">(食物链接数据库)</span></div><div id="mlout"></div><div class="dtot" id="dtot" style="display:none"></div>
+<button class="ai-btn" id="ai-diet" style="margin-top:6px">AI 分析饮食方案</button><div class="ai-resp" id="ai-diet-resp"></div></div></div>
 
-<div class="sec" id="sec-suppl"><div class="ht">名称剂量可编辑 / 溶解性标注 / 点击展开备注</div><div id="sc"></div></div>
+<div class="sec" id="sec-suppl"><div class="ht">名称剂量可编辑 / 溶解性标注 / 点击展开备注</div><div id="sc"></div>
+<button class="ai-btn" id="ai-suppl" style="margin-top:6px">AI 分析补剂方案</button><div class="ai-resp" id="ai-suppl-resp"></div></div>
 
 <div class="sec" id="sec-schedule"><div class="c"><div class="ct">周日程表 <span style="font-size:8px;color:var(--tx3)">(自动从配置生成 / 6:00-24:00)</span></div>
 <div class="sch-wrap"><div class="sch" id="schgrid"></div></div></div>
@@ -171,7 +208,8 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 
 <div class="sec" id="sec-blood"><div class="c"><div class="ct">血液检查 <span style="font-size:8px;color:var(--tx3)">(点击展开详情)</span></div>
 <div class="lb">跟医生说(自动生成):</div><div class="ds" id="dsc"></div><div id="bl"></div>
-<div style="margin-top:4px;display:flex;gap:3px"><button class="btn btn-a" id="ba">+新增</button></div>
+<div style="margin-top:4px;display:flex;gap:3px"><button class="btn btn-a" id="ba">+新增</button><button class="ai-btn" id="ai-blood">AI 分析血检方案</button></div>
+<div class="ai-resp" id="ai-blood-resp"></div>
 <div id="bf" style="display:none;margin-top:3px;gap:3px;flex-wrap:wrap"><input class="ip" id="bnn" placeholder="项目" style="width:80px"><input class="ip" id="bnr" placeholder="参考值" style="width:60px"><input class="ip" id="bnw" placeholder="原因" style="width:90px"><button class="btn btn-a" id="bns">存</button></div>
 </div></div>
 
@@ -182,7 +220,24 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <div style="display:flex;gap:3px;margin-bottom:2px"><input class="ip" id="knt" placeholder="标题" style="width:100%;flex:1"><select class="sl" id="kncat"><option>代谢</option><option>补剂</option><option>营养</option><option>睡眠</option><option>运动</option><option>其他</option></select></div>
 <textarea class="ta" id="knd" placeholder="内容" rows="2"></textarea><button class="btn btn-a" id="kns" style="margin-top:2px">存</button></div></div>
 
-<div class="ft">v4.3 / 2026.04</div>
+<div class="sec" id="sec-settings">
+<div class="c"><div class="ct">Gemini API</div>
+<div class="set-row"><span class="lb2">API Key</span><input class="set-input" id="set-apikey" type="password" placeholder="输入Gemini API Key"><button class="btn" id="set-showkey" style="font-size:8px">显示</button></div>
+<div class="set-row"><span class="lb2">模型</span><select class="sl" id="set-model"><option value="gemini-2.0-flash">Gemini 2.0 Flash</option><option value="gemini-2.5-flash">Gemini 2.5 Flash</option><option value="gemini-2.5-pro">Gemini 2.5 Pro</option></select></div>
+<button class="btn btn-a" id="set-savekey">保存API Key</button>
+<div style="font-size:8px;color:var(--tx3);margin-top:4px">Key仅存储在你的浏览器localStorage中，不上传到服务器</div>
+</div>
+<div class="c"><div class="ct">数据管理</div>
+<button class="btn" id="set-export" style="margin-right:4px">导出全部数据(JSON)</button>
+<button class="btn btn-d" id="set-clear">清除所有本地数据</button>
+<div style="font-size:8px;color:var(--tx3);margin-top:4px">导出数据可喂给Claude Chat做全面分析</div>
+</div>
+<div class="c"><div class="ct">账户</div>
+<button class="btn btn-d" id="set-logout">退出登录</button>
+</div>
+</div>
+
+<div class="ft">v4.4 / 2026.04</div>
 </div><div class="toast" id="toast">已保存</div>
 <script>
 (function(){
@@ -249,16 +304,16 @@ f.sort(function(a,b){var ak=a[sDBk],bk=b[sDBk];if(typeof ak==="string")return sD
 f.forEach(function(d){
 var rc=RC[d.r]||"#999",rb=RB[d.r]||"rgba(255,255,255,.05)";
 var rw=document.createElement("tr");rw.className="dbr";rw.setAttribute("data-sid",d.id);if(d.hidden)rw.style.opacity=".3";
-rw.innerHTML="<td><span class='ed' contenteditable='true' data-sfield='nm' data-sid2='"+d.id+"'>"+esc(d.nm)+"</span></td><td><span class='ed' contenteditable='true' data-sfield='brand' data-sid2='"+d.id+"' style='font-size:8px'>"+esc(d.brand)+"</span></td><td style='font-size:8px'>"+esc(d.sol)+"</td><td>"+starC(d.ls)+"</td><td>"+starC(d.os)+"</td><td>"+starC(d.ms)+"</td><td style='font-size:8px'>"+esc(d.t)+"</td><td><span class='bdg' style='background:"+rb+";color:"+rc+"'>"+d.r+"</span></td><td style='cursor:pointer;font-size:9px;color:var(--tx3)' data-shide='"+d.id+"'>"+(d.hidden?"\u25b6":"\u23f8")+"</td><td style='cursor:pointer;color:var(--dng)' data-sdel='"+d.id+"'>x</td>";
+rw.innerHTML="<td><span class='ed' contenteditable='true' data-sfield='nm' data-sid2='"+d.id+"'>"+esc(d.nm)+"</span>"+(!d.ingredients?"<span style='font-size:7px;padding:1px 3px;border-radius:3px;background:rgba(255,169,77,.15);color:var(--wrn);margin-left:3px'>\u5f85review</span>":"")+"</td><td><span class='ed' contenteditable='true' data-sfield='brand' data-sid2='"+d.id+"' style='font-size:8px'>"+esc(d.brand)+"</span></td><td style='font-size:8px'>"+esc(d.sol)+"</td><td>"+starC(d.ls)+"</td><td>"+starC(d.os)+"</td><td>"+starC(d.ms)+"</td><td style='font-size:8px'>"+esc(d.t)+"</td><td><span class='bdg' style='background:"+rb+";color:"+rc+"'>"+d.r+"</span></td><td style='cursor:pointer;font-size:9px;color:var(--tx3)' data-shide='"+d.id+"'>"+(d.hidden?"\u25b6":"\u23f8")+"</td><td style='cursor:pointer;color:var(--dng)' data-sdel='"+d.id+"'>x</td>";
 var det=document.createElement("tr");det.className="dbd-row";det.setAttribute("data-sid",d.id);
 det.innerHTML="<td colspan='10'><b>\u5242\u91cf:</b> "+esc(d.dose)+" | <b>\u65f6\u95f4:</b> "+esc(d.timing)+"<br><b>\u6210\u5206:</b> "+esc(d.ingredients)+"<br><b>\u50a8\u5b58:</b> \u5f00\u5c01"+esc(d.so)+" \u672a\u5f00\u5c01"+esc(d.ss)+(d.sp?" | "+esc(d.sp):"")+"<br><b>\u5907\u6ce8:</b> "+esc(d.notes)+"</td>";
 tb.appendChild(rw);tb.appendChild(det)})}drawDBS();
 
 q("#dbs-tb").addEventListener("click",function(e){
-var del=e.target.closest("[data-sdel]");if(del){var id=del.getAttribute("data-sdel");var idx=SUPPLS.findIndex(function(s){return s.id===id});if(idx>=0){SUPPLS.splice(idx,1);sv("suppls-e",SUPPLS);drawDBS()}return}
+var del=e.target.closest("[data-sdel]");if(del){var id=del.getAttribute("data-sdel");var idx=SUPPLS.findIndex(function(s){return s.id===id});if(idx>=0){var delNm=SUPPLS[idx].nm;SUPPLS.splice(idx,1);sv("suppls-e",SUPPLS);drawDBS();suppl.forEach(function(g){for(var j=g.items.length-1;j>=0;j--){if(g.items[j].n===delNm)g.items.splice(j,1)}});sv("suppl",suppl);drawSup()}return}
 var hd=e.target.closest("[data-shide]");if(hd){var id2=hd.getAttribute("data-shide");var s=SUPPLS.find(function(x){return x.id===id2});if(s){s.hidden=!s.hidden;sv("suppls-e",SUPPLS);drawDBS()}return}
 if(e.target.closest(".ed"))return;var r=e.target.closest("tr.dbr");if(!r)return;var sid=r.getAttribute("data-sid");q("#dbs-tb").querySelectorAll("tr.dbd-row").forEach(function(d){if(d.getAttribute("data-sid")===sid)d.classList.toggle("show");else d.classList.remove("show")})});
-q("#dbs-tb").addEventListener("blur",function(e){var ed=e.target.closest("[data-sfield]");if(!ed)return;var s=SUPPLS.find(function(x){return x.id===ed.getAttribute("data-sid2")});if(s)s[ed.getAttribute("data-sfield")]=ed.textContent;sv("suppls-e",SUPPLS)},true);
+q("#dbs-tb").addEventListener("blur",function(e){var ed=e.target.closest("[data-sfield]");if(!ed)return;var s=SUPPLS.find(function(x){return x.id===ed.getAttribute("data-sid2")});if(!s)return;var field=ed.getAttribute("data-sfield");var oldVal=s[field];var newVal=ed.textContent;s[field]=newVal;sv("suppls-e",SUPPLS);if(field==="nm"&&oldVal!==newVal){suppl.forEach(function(g){g.items.forEach(function(it){if(it.n===oldVal)it.n=newVal})});sv("suppl",suppl);drawSup()}},true);
 q("#dbshdr").addEventListener("click",function(e){var c=e.target.closest("[data-sort]");if(!c)return;var k=c.getAttribute("data-sort");if(sDBk===k)sDBa=!sDBa;else{sDBk=k;sDBa=false}qa("#dbshdr th").forEach(function(x){x.classList.remove("ac")});c.classList.add("ac");drawDBS()});
 q("#dbsflt").addEventListener("click",function(e){var b=e.target.closest(".fb");if(!b)return;sDBf=b.getAttribute("data-sf");qa("#dbsflt .fb").forEach(function(x){x.classList.remove("on")});b.classList.add("on");drawDBS()});
 q("#dbs-add").addEventListener("click",function(){var f=q("#dbs-form");f.style.display=f.style.display==="none"?"block":"none"});
@@ -485,9 +540,109 @@ h+="<text x='"+(PADL-3)+"' y='"+(PADT+8)+"' fill='rgba(255,255,255,.3)' font-siz
 h+="<text x='"+(PADL-3)+"' y='"+(PADT+gh)+"' fill='rgba(255,255,255,.3)' font-size='6' text-anchor='end'>\u4f4e</text>";
 svg.innerHTML=h}
 drawMetaCurve();
-/* redraw curve when meals or schedule change */
-var _origRecalc=recalc;
-recalc=function(){_origRecalc();drawMetaCurve()};
+/* === AI REVIEW FOR DATABASE === */
+var airFileB64=null;
+q("#air-file").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;q("#air-fname").textContent=f.name;var reader=new FileReader();reader.onload=function(ev){airFileB64=ev.target.result.split(",")[1]};reader.readAsDataURL(f)});
+
+function callGeminiVision(parts,respEl){
+var key=ld("gemini-key")||"";var model=ld("gemini-model")||"gemini-2.0-flash";
+if(!key){respEl.innerHTML="<span style='color:var(--wrn)'>\u8bf7\u5148\u5728\u300c\u8bbe\u7f6e\u300d\u9875\u8f93\u5165 Gemini API Key</span>";respEl.classList.add("show");return}
+respEl.innerHTML="<span class='ai-loading'>\u2728 AI\u5206\u6790\u4e2d...</span>";respEl.classList.add("show");
+var url="https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent?key="+key;
+fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:parts}],generationConfig:{temperature:0.3,maxOutputTokens:3000}})}).then(function(r){return r.json()}).then(function(d){
+if(d.error){respEl.innerHTML="<span style='color:var(--dng)'>API\u9519\u8bef: "+esc(d.error.message||"")+"</span>";return}
+var txt="";try{txt=d.candidates[0].content.parts[0].text}catch(e){txt="\u65e0\u6cd5\u89e3\u6790"}
+respEl.innerHTML=txt.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>")}).catch(function(e){respEl.innerHTML="<span style='color:var(--dng)'>\u7f51\u7edc\u9519\u8bef: "+esc(e.message)+"</span>"})}
+
+q("#air-go").addEventListener("click",function(){
+var name=q("#air-name").value.trim();var text=q("#air-text").value.trim();var type=q("#air-type").value;
+if(!name&&!text&&!airFileB64){q("#air-resp").innerHTML="<span style='color:var(--wrn)'>\u8bf7\u8f93\u5165\u540d\u79f0\u6216\u4e0a\u4f20\u56fe\u7247</span>";q("#air-resp").classList.add("show");return}
+var parts=[];
+var preamble=type==="suppl"?"\u4f60\u662f\u8865\u5242\u4e13\u5bb6\u3002\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u6839\u636e\u4ee5\u4e0b\u4fe1\u606f\uff0c\u8865\u5168\u8fd9\u4e2a\u8865\u5242\u7684\u6240\u6709\u4fe1\u606f:\n\n\u540d\u79f0: "+name+"\n"+(text?"\u7528\u6237\u63d0\u4f9b\u7684\u4fe1\u606f: "+text+"\n":"")+"\n\u8bf7\u8fd4\u56de\u4ee5\u4e0b\u683c\u5f0f:\n- \u54c1\u724c\u548c\u578b\u53f7\n- \u6bcf\u4efd\u5b8c\u6574\u6210\u5206\u8868(\u542b\u91cf)\n- \u6eb6\u89e3\u6027(\u8102\u6eb6/\u6c34\u6eb6/\u6df7\u5408)\n- \u5efa\u8bae\u5242\u91cf\u548c\u670d\u7528\u65f6\u95f4\n- \u50a8\u5b58\u6761\u4ef6(\u5149\u654f/\u6c27\u654f/\u6f6e\u654f/\u6e29\u5ea6)\n- \u98ce\u9669\u7b49\u7ea7(\u6781\u9ad8/\u9ad8/\u4e2d/\u4f4e/\u6781\u4f4e)\n- \u6ce8\u610f\u4e8b\u9879\u548c\u4e0e\u5176\u4ed6\u8865\u5242\u7684\u76f8\u4e92\u4f5c\u7528":
+"\u4f60\u662f\u8425\u517b\u5b66\u4e13\u5bb6\u3002\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u6839\u636e\u4ee5\u4e0b\u4fe1\u606f\uff0c\u8865\u5168\u8fd9\u4e2a\u98df\u7269\u7684\u6240\u6709\u8425\u517b\u4fe1\u606f:\n\n\u540d\u79f0: "+name+"\n"+(text?"\u7528\u6237\u63d0\u4f9b\u7684\u4fe1\u606f: "+text+"\n":"")+"\n\u8bf7\u8fd4\u56de\u6bcf100g\u7684:\n- \u5b8f\u91cf\u8425\u517b\u7d20: \u86cb\u767d\u8d28P \u8102\u80aa F \u78b3\u6c34\u5316\u5408\u7269C \u70ed\u91cf cal\n- GI\u503c\n- \u8102\u80aa\u9178\u5206\u5e03: n-3 n-6 n-9 \u9971\u548c\u8102\u80aa\u9178(g)\n- \u5fae\u91cf\u5143\u7d20\u542b\u91cf\n- \u6c28\u57fa\u9178\u7279\u70b9\n- \u9002\u5408\u8102\u80aa\u809d\u60a3\u8005\u5417";
+parts.push({text:preamble});
+if(airFileB64){parts.push({inlineData:{mimeType:"image/jpeg",data:airFileB64}})}
+callGeminiVision(parts,q("#air-resp"))});
+
+q("#air-search").addEventListener("click",function(){
+var name=q("#air-name").value.trim();var type=q("#air-type").value;
+if(!name){q("#air-resp").innerHTML="<span style='color:var(--wrn)'>\u8bf7\u8f93\u5165\u540d\u79f0/\u54c1\u724c/\u578b\u53f7</span>";q("#air-resp").classList.add("show");return}
+var prompt=type==="suppl"?
+"\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u5e2e\u6211\u68c0\u7d22\u8865\u5242\u300c"+name+"\u300d\u7684\u5b8c\u6574\u4fe1\u606f\u3002\u5305\u62ec:\n1. \u54c1\u724c\u3001\u4ea7\u5730\u3001\u8ba4\u8bc1(\u5982IFOS/GMP/NSF)\n2. \u6bcf\u4efd\u5b8c\u6574\u6210\u5206\u8868\u548c\u542b\u91cf\n3. \u5242\u578b(\u8f6f\u80f6\u56ca/\u7247\u5242/\u7c89\u5242)\u3001\u5438\u6536\u5f62\u6001(rTG/EE/\u87af\u5408\u7b49)\n4. \u50a8\u5b58\u6761\u4ef6\u548c\u4fdd\u8d28\u671f\n5. \u5e02\u573a\u53e3\u7891\u548c\u7b2c\u4e09\u65b9\u6d4b\u8bc4\n6. \u4ef7\u683c\u533a\u95f4":
+"\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u5e2e\u6211\u68c0\u7d22\u98df\u7269\u300c"+name+"\u300d\u7684\u5b8c\u6574\u8425\u517b\u4fe1\u606f\u3002\u5305\u62ec:\n1. \u6bcf100g\u7684\u5b8f\u91cf\u8425\u517b\u7d20(P/F/C/cal)\n2. GI\u503c\u548c\u5347\u7cd6\u7279\u70b9\n3. \u8102\u80aa\u9178\u5206\u5e03(n-3/n-6/n-9/\u9971\u548c)\n4. \u5173\u952e\u5fae\u91cf\u5143\u7d20\n5. \u6c28\u57fa\u9178\u7279\u70b9\n6. \u5bf9\u8102\u80aa\u809d/\u80f0\u5c9b\u7d20\u7684\u5f71\u54cd";
+callGemini(prompt,q("#air-resp"))});
+
+/* === LOGIN === */
+var UH="af3daa38cd2c1235987d71edb08229fb48d0b9b618234b52eaaa9f9ea2e9c251";
+var PH="08f462b48355c75e23a89a68d392a604af81c6ce05a48e12f8653231170fc8cd";
+function sha256(s){var buf=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",buf).then(function(h){return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,"0")}).join("")})}
+function checkAuth(){if(ld("auth-ok")){q("#login-overlay").style.display="none";q("#main-app").style.display="block"}}
+checkAuth();
+q("#login-btn").addEventListener("click",function(){
+var u=q("#login-user").value.trim(),p=q("#login-pass").value;
+if(!u||!p){q("#login-err").textContent="\u8bf7\u8f93\u5165\u7528\u6237\u540d\u548c\u5bc6\u7801";return}
+Promise.all([sha256(u),sha256(p)]).then(function(r){
+if(r[0]===UH&&r[1]===PH){sv("auth-ok",true);q("#login-overlay").style.display="none";q("#main-app").style.display="block";q("#login-err").textContent=""}
+else{q("#login-err").textContent="\u7528\u6237\u540d\u6216\u5bc6\u7801\u9519\u8bef"}})});
+q("#login-pass").addEventListener("keydown",function(e){if(e.key==="Enter")q("#login-btn").click()});
+
+/* === SETTINGS === */
+var apiKey=ld("gemini-key")||"";
+var apiModel=ld("gemini-model")||"gemini-2.0-flash";
+q("#set-apikey").value=apiKey;q("#set-model").value=apiModel;
+q("#set-showkey").addEventListener("click",function(){var inp=q("#set-apikey");inp.type=inp.type==="password"?"text":"password";this.textContent=inp.type==="password"?"\u663e\u793a":"\u9690\u85cf"});
+q("#set-savekey").addEventListener("click",function(){apiKey=q("#set-apikey").value.trim();apiModel=q("#set-model").value;sv("gemini-key",apiKey);sv("gemini-model",apiModel)});
+q("#set-logout").addEventListener("click",function(){localStorage.removeItem("hp_auth-ok");location.reload()});
+q("#set-clear").addEventListener("click",function(){if(confirm("\u786e\u5b9a\u6e05\u9664\u6240\u6709\u672c\u5730\u6570\u636e\uff1f\u8fd9\u4f1a\u91cd\u7f6e\u6240\u6709\u8bbe\u7f6e\u548c\u8bb0\u5f55\u3002")){var keys=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("hp_")===0)keys.push(k)}keys.forEach(function(k){localStorage.removeItem(k)});location.reload()}});
+q("#set-export").addEventListener("click",function(){
+var data={profile:{name:ld("p-name"),year:ld("p-year"),weight:ld("p-weight"),height:ld("p-height"),sex:ld("p-sex"),sleep:ld("p-sleep"),goal:ld("p-goal"),act:ld("p-act"),subgoals:ld("subgoals"),health:ld("htags")},meals:meals,supplements:suppl,schedule:schCfg,todos:todos,bloodTests:bls,knowledge:kws,sleepLogs:ld("slplogs")};
+var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="health_data_"+new Date().toISOString().split("T")[0]+".json";a.click()});
+
+/* === GEMINI AI === */
+function callGemini(prompt,respEl){
+var key=ld("gemini-key")||"";
+var model=ld("gemini-model")||"gemini-2.0-flash";
+if(!key){respEl.innerHTML="<span style='color:var(--wrn)'>\u8bf7\u5148\u5728\u300c\u8bbe\u7f6e\u300d\u9875\u8f93\u5165 Gemini API Key</span>";respEl.classList.add("show");return}
+respEl.innerHTML="<span class='ai-loading'>\u2728 AI\u5206\u6790\u4e2d...</span>";respEl.classList.add("show");
+var url="https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent?key="+key;
+fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7,maxOutputTokens:2000}})}).then(function(r){return r.json()}).then(function(d){
+if(d.error){respEl.innerHTML="<span style='color:var(--dng)'>API\u9519\u8bef: "+esc(d.error.message||"Unknown")+"</span>";return}
+var txt="";try{txt=d.candidates[0].content.parts[0].text}catch(e){txt="\u65e0\u6cd5\u89e3\u6790\u54cd\u5e94"}
+respEl.innerHTML=txt.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>")
+}).catch(function(e){respEl.innerHTML="<span style='color:var(--dng)'>\u7f51\u7edc\u9519\u8bef: "+esc(e.message)+"</span>"})}
+
+function buildContext(){
+var p=gp();var ctx="\u7528\u6237\u6863\u6848: "+p.w+"kg "+p.h+"cm "+p.age+"\u5c81 "+p.sx+" \u76ee\u6807:"+p.goal+" \u6d3b\u52a8:"+p.act+"\n";
+ctx+="\u5065\u5eb7\u72b6\u51b5: "+(ld("htags")||[]).join("/")+"\n";
+ctx+="\u996e\u98df: ";meals.forEach(function(m){ctx+=m.nm+":";m.items.forEach(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});if(fd)ctx+=fd.nm+it.qty+(fd.pc?"":"g")+" "});ctx+="; "});ctx+="\n";
+ctx+="\u8865\u5242: ";suppl.forEach(function(g){ctx+=g.time+":";g.items.forEach(function(it){ctx+=it.n+"("+it.d+") "});ctx+="; "});ctx+="\n";
+return ctx}
+
+q("#ai-diet").addEventListener("click",function(){
+var p=gp(),gm=GM[p.goal]||GM.fatliver;var bmr=p.sx==="m"?(10*p.w+6.25*p.h-5*p.age+5):(10*p.w+6.25*p.h-5*p.age-161);var tgt=Math.round(bmr*p.act-gm.def);
+var dp=0,df=0,dc=0,dcl=0,dn3=0,dn6=0,dsat=0;
+var mealDetail="";
+meals.forEach(function(ml){mealDetail+="\n"+ml.nm+": ";ml.items.forEach(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});if(!fd)return;var m=fd.pc?it.qty:(it.qty/100);dp+=fd.p*m;df+=fd.f*m;dc+=fd.c*m;dcl+=fd.cal*m;var om=fd.omega||{};dn3+=(om.n3||0)*m;dn6+=(om.n6||0)*m;dsat+=(om.sat||0)*m;mealDetail+=fd.nm+" "+it.qty+(fd.pc?"":"g")+"(P"+Math.round(fd.p*m)+"F"+Math.round(fd.f*m)+"C"+Math.round(fd.c*m)+" "+Math.round(fd.cal*m)+"kcal) "})});
+var cg=Math.round(tgt*gm.c/4),pg2=Math.round(tgt*gm.p/4),fg=Math.round(tgt*gm.f/9);
+var prompt="\u4f60\u662f\u4e13\u4e1a\u8425\u517b\u5b66\u987e\u95ee\u3002\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\n\n\u7528\u6237\u6863\u6848: "+p.w+"kg "+p.h+"cm "+p.age+"\u5c81\u7537 \u76ee\u6807:\u51cf\u8102+\u8102\u80aa\u809d\u9006\u8f6c \u5065\u5eb7:"+(ld("htags")||[]).join("/")+"\n\u65ad\u98df\u6a21\u5f0f: 16:8\n\n\u4e09\u9910\u660e\u7ec6:"+mealDetail+"\n\n\u5b9e\u9645\u6444\u5165: \u70ed\u91cf"+Math.round(dcl)+"kcal P"+Math.round(dp)+"g F"+Math.round(df)+"g C"+Math.round(dc)+"g\nn-3:"+dn3.toFixed(1)+"g n-6:"+dn6.toFixed(1)+"g \u9971\u548c:"+dsat.toFixed(1)+"g\n\u76ee\u6807: \u70ed\u91cf"+tgt+"kcal P"+pg2+"g("+Math.round(gm.p*100)+"%) F"+fg+"g("+Math.round(gm.f*100)+"%) C"+cg+"g("+Math.round(gm.c*100)+"%)\n\n\u8bf7\u6309\u4ee5\u4e0b\u7ed3\u6784\u5206\u6790:\n\n1. **\u5b8f\u91cf\u8fbe\u6807**: \u6bcf\u4e2a\u5b8f\u91cf\u5dee\u591a\u5c11\uff0c\u662f\u5426\u5408\u7406\n2. **\u8102\u80aa\u9178\u5206\u5e03**: n-3:n-6\u6bd4\u4f8b\u662f\u5426\u5065\u5eb7\uff0c\u9971\u548c\u8102\u80aa\u5360\u6bd4\n3. **\u8102\u80aa\u809d\u5f71\u54cd**: \u54ea\u4e9b\u98df\u7269\u6709\u52a9\u4e8e\u9006\u8f6c\uff0c\u54ea\u4e9b\u4e0d\u5229\n4. **\u80f0\u5c9b\u7d20\u8d1f\u62c5**: \u5404\u9910GI\u8d1f\u8377\u548c\u86cb\u767d+\u78b3\u6c34\u53e0\u52a0\u6548\u5e94\n5. **\u5177\u4f53\u5efa\u8bae**: 2-3\u6761\u53ef\u7acb\u5373\u6267\u884c\u7684\u6539\u52a8(\u6307\u660e\u5177\u4f53\u98df\u7269\u548c\u91cf)";
+callGemini(prompt,q("#ai-diet-resp"))});
+
+q("#ai-suppl").addEventListener("click",function(){
+var ctx=buildContext();
+var prompt="\u4f60\u662f\u4e00\u4e2a\u4e13\u4e1a\u7684\u8865\u5242\u987e\u95ee\u3002\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u5206\u6790\u4ee5\u4e0b\u8865\u5242\u65b9\u6848\uff1a\n"+ctx+"\n\u8bf7\u5206\u6790:\n1. \u662f\u5426\u6709\u76f8\u4e92\u4f5c\u7528\u6216\u51b2\u7a81(\u5982\u5c0f\u6a97\u78b1\u548c\u76ca\u751f\u83cc\u7684\u65f6\u95f4\u95f4\u9694)\n2. \u8102\u6eb6\u6027\u8865\u5242\u662f\u5426\u5b89\u6392\u5728\u542b\u6cb9\u8102\u7684\u9910\u6b21\n3. \u5242\u91cf\u662f\u5426\u5408\u7406\uff0c\u6709\u65e0\u91cd\u53e0\n4. \u9488\u5bf9\u7528\u6237\u5065\u5eb7\u72b6\u51b5(\u8102\u80aa\u809d/\u524d\u5217\u817a\u9499\u5316/\u80ba\u7ed3\u8282)\u7684\u4f18\u5316\u5efa\u8bae";
+callGemini(prompt,q("#ai-suppl-resp"))});
+
+q("#ai-blood").addEventListener("click",function(){
+var ctx=buildContext();
+ctx+="\u8840\u68c0\u9879\u76ee: ";bls.forEach(function(b){ctx+=b.name+"(\u53c2\u8003:"+b.ref+",\u539f\u56e0:"+b.why+") "});
+var prompt="\u4f60\u662f\u4e00\u4e2a\u4e13\u4e1a\u7684\u5065\u5eb7\u7ba1\u7406\u987e\u95ee\u3002\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u5206\u6790\u4ee5\u4e0b\u8840\u68c0\u65b9\u6848\uff1a\n"+ctx+"\n\u8bf7\u5206\u6790:\n1. \u8fd9\u4e9b\u68c0\u67e5\u9879\u76ee\u662f\u5426\u5168\u9762\u8986\u76d6\u4e86\u7528\u6237\u7684\u8865\u5242\u65b9\u6848\n2. \u662f\u5426\u6709\u9057\u6f0f\u7684\u91cd\u8981\u68c0\u67e5\u9879\n3. \u5efa\u8bae\u7684\u68c0\u67e5\u9891\u7387\n4. \u62ff\u5230\u7ed3\u679c\u540e\u9700\u8981\u91cd\u70b9\u5173\u6ce8\u7684\u6307\u6807";
+callGemini(prompt,q("#ai-blood-resp"))});
+
+/* === METABOLIC CURVE (reattach after recalc override) === */
+drawMetaCurve();
+var _origRecalc2=recalc;
+recalc=function(){_origRecalc2();drawMetaCurve()};
 })();
 </script>
 </body></html>
