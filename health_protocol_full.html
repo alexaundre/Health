@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>俊峰的健康管理全方案</title>
+<style>
+:root{--bg:#0e1015;--bg2:#161a22;--bg3:#1c2029;--tx:#e8e8ec;--tx2:rgba(232,232,236,0.65);--tx3:rgba(232,232,236,0.4);--bd:rgba(255,255,255,0.06);--bd2:rgba(255,255,255,0.12);--acc:#7dd3a8;--warn:#ffa94d;--danger:#ff6b6b;--info:#8ab4f8;--purple:#c090e0;--gold:#f0c060}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:22px;font-weight:700;margin:0}
+.subtitle{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
+.desc{font-size:12px;color:var(--tx3);margin-top:4px}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 16px;position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 0}
+.tabs button{padding:7px 14px;border-radius:20px;border:1px solid var(--bd);background:transparent;color:var(--tx3);cursor:pointer;font-size:12px;transition:all .2s}
+.tabs button.on{border-color:var(--bd2);background:rgba(255,255,255,0.08);color:#fff;font-weight:600}
+
+/* Section */
+.section{display:none}
+.section.active{display:block}
+.card{background:var(--bg2);border-radius:12px;border:1px solid var(--bd);padding:18px 16px;margin-bottom:12px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:12px}
+.label{font-size:10px;color:var(--tx3);margin-bottom:2px}
+.val{font-size:13px;font-weight:600}
+
+/* Profile grid */
+.pgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.pgrid .item{background:var(--bg3);border-radius:8px;padding:8px 12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:11px;padding:3px 10px;border-radius:14px}
+.tag-warn{background:rgba(255,180,100,0.12);color:var(--warn)}
+.tag-green{background:rgba(125,211,168,0.12);color:var(--acc)}
+
+/* Timeline */
+.tblock{margin-bottom:14px}
+.tblock-title{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tblock-title .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.titem{background:var(--bg3);border-radius:8px;padding:9px 11px;margin-bottom:5px;cursor:pointer;transition:background .15s}
+.titem:hover{background:rgba(255,255,255,0.05)}
+.titem-head{display:flex;justify-content:space-between;align-items:baseline}
+.titem-name{font-size:13px;font-weight:600}
+.titem-dose{font-size:11px;color:var(--tx3);flex-shrink:0;margin-left:8px}
+.titem-note{font-size:11px;color:var(--tx2);margin-top:3px;display:none;line-height:1.5}
+.titem.open .titem-note{display:block}
+
+/* Table rows */
+.thead{display:grid;grid-template-columns:minmax(0,1.6fr) 42px 42px 42px 56px 44px;gap:3px;font-size:10px;color:var(--tx3);padding:0 6px 4px}
+.thead>div:not(:first-child){text-align:center}
+.srow{display:grid;grid-template-columns:minmax(0,1.6fr) 42px 42px 42px 56px 44px;gap:3px;align-items:center;padding:9px 6px;border-radius:8px;cursor:pointer;font-size:12px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--bd);transition:background .15s}
+.srow:hover,.srow.open{background:var(--bg3)}
+.srow>div:not(:first-child){text-align:center;font-size:11px}
+.sdet{display:none;padding:10px 8px 14px;background:var(--bg3);border-radius:0 0 8px 8px;margin-bottom:4px}
+.sdet.show{display:block}
+.sdet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.sdet-card{background:var(--bg2);border-radius:8px;padding:8px;border:1px solid var(--bd)}
+.sdet-line{font-size:11px;margin-bottom:5px;line-height:1.5;color:var(--tx2)}
+.sdet-line b{color:var(--tx);font-weight:600}
+.sdet-tip{margin-top:6px;padding:6px 8px;background:rgba(138,180,248,0.08);border-radius:0;border-left:2px solid rgba(138,180,248,0.3);font-size:11px;line-height:1.5;color:var(--info)}
+.badge{font-size:10px;padding:2px 6px;border-radius:6px;font-weight:600}
+
+/* Macro table */
+table.mtable{width:100%;font-size:12px;border-collapse:collapse;margin:8px 0 14px}
+table.mtable th{text-align:left;padding:6px 8px;color:var(--tx3);font-weight:500;font-size:11px;border-bottom:1px solid var(--bd2)}
+table.mtable td{padding:7px 8px;border-bottom:1px solid var(--bd)}
+
+/* Meal grid */
+.meals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.meal{background:var(--bg3);border-radius:10px;padding:12px}
+.meal-title{font-size:12px;font-weight:700;margin-bottom:6px}
+.meal ul{font-size:12px;line-height:1.8;padding-left:16px;color:var(--tx2)}
+
+/* Todo items */
+.todo{background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:7px}
+.todo-head{display:flex;justify-content:space-between;align-items:baseline}
+.todo-name{font-size:13px;font-weight:600}
+.todo-tag{font-size:10px;padding:2px 8px;border-radius:10px}
+.todo-desc{font-size:11px;color:var(--tx2);margin-top:4px;line-height:1.5}
+.todo-no{border-left:2px solid rgba(255,100,100,0.25)}
+.todo-yes{border-left:2px solid rgba(125,211,168,0.35)}
+
+/* Blood test */
+.btest{font-size:11px;border-collapse:collapse;width:100%}
+.btest td{padding:6px 8px;border-bottom:1px solid var(--bd)}
+.btest td:first-child{font-weight:600}
+.btest td:nth-child(2){color:var(--tx3)}
+
+/* Knowledge */
+.kitem{margin-bottom:10px;background:var(--bg3);border-radius:8px;padding:10px 12px}
+.kitem-title{font-weight:700;font-size:13px;margin-bottom:3px}
+.kitem-desc{font-size:12px;color:var(--tx2);line-height:1.6}
+
+/* Principles box */
+.principles{margin-top:16px;padding:14px;background:var(--bg2);border-radius:10px;border:1px solid var(--bd)}
+.principles h3{font-size:13px;font-weight:700;margin-bottom:8px}
+.principles p{font-size:12px;line-height:1.8;color:var(--tx2)}
+.principles strong{color:var(--tx)}
+
+/* Filters */
+.filters{display:flex;gap:6px;margin-bottom:10px}
+.filters button{padding:4px 10px;border-radius:14px;border:1px solid var(--bd);background:transparent;color:var(--tx3);cursor:pointer;font-size:11px}
+.filters button.on{background:rgba(255,255,255,0.08);color:var(--tx);border-color:var(--bd2)}
+
+/* Quickref */
+.qref{margin-top:10px;font-size:11px;color:var(--tx2);line-height:1.8;background:var(--bg3);border-radius:8px;padding:10px 12px}
+.qref b{color:var(--tx)}
+
+.footer{text-align:center;font-size:10px;color:var(--tx3);margin-top:24px}
+.highlight{background:rgba(125,211,168,0.08);border-radius:10px;padding:12px;margin-bottom:12px;border-left:3px solid rgba(125,211,168,0.4)}
+.highlight .hl-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.highlight .hl-desc{font-size:12px;color:var(--tx2);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="subtitle">Health Protocol</div>
+<h1>俊峰的健康管理全方案</h1>
+<div class="desc">基于 Claude Project 全部对话整理 · 2026.04 · 点击任意条目可展开详情</div>
+
+<div class="tabs" id="tabs">
+<button class="on" onclick="showTab('profile',this)">👤 档案</button>
+<button onclick="showTab('diet',this)">🍱 饮食</button>
+<button onclick="showTab('suppl',this)">💊 补剂</button>
+<button onclick="showTab('storage',this)">🧊 储存</button>
+<button onclick="showTab('todo',this)">📋 待办</button>
+<button onclick="showTab('blood',this)">🩸 血检</button>
+<button onclick="showTab('know',this)">🧠 认知</button>
+</div>
+
+<!-- ======== PROFILE ======== -->
+<div class="section active" id="sec-profile">
+<div class="card">
+<div class="pgrid">
+<div class="item"><div class="label">姓名</div><div class="val">徐俊峰</div></div>
+<div class="item"><div class="label">出生年</div><div class="val">1980</div></div>
+<div class="item"><div class="label">体重</div><div class="val">78kg</div></div>
+<div class="item"><div class="label">职业</div><div class="val">CEO / 久坐</div></div>
+<div class="item"><div class="label">日照</div><div class="val">极少</div></div>
+<div class="item"><div class="label">睡眠</div><div class="val">5-7h</div></div>
+</div>
+<div class="label">健康状况</div>
+<div class="tags">
+<span class="tag tag-warn">轻度脂肪肝</span>
+<span class="tag tag-warn">轻度前列腺钙化</span>
+<span class="tag tag-warn">肺结节（需跟进NMN）</span>
+<span class="tag tag-warn">胰岛素敏感性待优化</span>
+</div>
+<div style="margin-top:14px">
+<div class="label">饮食模式</div>
+<div class="tags">
+<span class="tag tag-green">16:8 间歇断食</span>
+<span class="tag tag-green">进食窗口 12:00-18:00</span>
+<span class="tag tag-green">每天2餐 不加餐</span>
+<span class="tag tag-green">低胰岛素饮食（非生酮）</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ======== DIET ======== -->
+<div class="section" id="sec-diet">
+<div class="highlight">
+<div class="hl-title">核心策略：低胰岛素饮食 + 16:8 间歇断食</div>
+<div class="hl-desc">不是生酮，而是"高脂肪、中蛋白、低碳水"——控制全天胰岛素AUC（曲线下面积）是逆转脂肪肝的核心。窗口内仅2餐，只触发2次胰岛素脉冲。</div>
+</div>
+<div class="card">
+<div class="card-title">每日宏量目标（78kg，减脂）</div>
+<table class="mtable">
+<tr><th>宏量</th><th>目标</th><th>占比</th><th>说明</th></tr>
+<tr><td>碳水</td><td style="color:var(--acc)">80-120g</td><td style="color:var(--tx3)">~20%</td><td style="color:var(--tx2);font-size:11px">低GI为主，糙米优于紫米</td></tr>
+<tr><td>蛋白质</td><td style="color:var(--acc)">100-110g</td><td style="color:var(--tx3)">~25%</td><td style="color:var(--tx2);font-size:11px">每餐30-50g，避免单餐堆太多</td></tr>
+<tr><td>脂肪</td><td style="color:var(--acc)">80-90g</td><td style="color:var(--tx3)">~55%</td><td style="color:var(--tx2);font-size:11px">脂肪几乎不触发胰岛素</td></tr>
+<tr><td>总热量</td><td style="color:var(--acc)">~1500kcal</td><td style="color:var(--tx3)">—</td><td style="color:var(--tx2);font-size:11px">轻度热量赤字</td></tr>
+</table>
+</div>
+<div class="meals">
+<div class="meal"><div class="meal-title" style="color:var(--gold)">🌞 午餐（较重）</div>
+<ul><li>糙米饭 120-150g</li><li>带皮鸡腿/五花肉 80-100g 或翅中 4-5 个</li><li>鸡蛋 2 个</li><li>大量绿叶蔬菜</li></ul></div>
+<div class="meal"><div class="meal-title" style="color:var(--info)">🌙 晚餐（较轻）</div>
+<ul><li>糙米饭 80-100g</li><li>翅中3个 / 鸡蛋4个 / 虾仁100g+油脂</li><li>大量蔬菜</li><li>可加半杯希腊酸奶</li></ul></div>
+</div>
+<div class="qref">
+<b>常用换算：</b>熟糙米碳水≈重量×33% · 熟紫米碳水≈重量×31% · 1翅中≈9g蛋白+6g脂肪 · 1鸡蛋≈6.5g蛋白+5g脂肪 · 100g虾仁≈20g蛋白+1g脂肪 · 100g五花肉≈14g蛋白+脂肪充足 · 3翅中≈4鸡蛋<br><b>关键：</b>蛋白+碳水叠加的胰岛素是超加性的 · 搭脂肪能"刹车" · 晚餐轻=肝脏修复窗口长 · 饭后散步20min压血糖峰值30-40%
+</div>
+</div>
+
+<!-- ======== SUPPLEMENTS ======== -->
+<div class="section" id="sec-suppl">
+<div id="suppl-content"></div>
+</div>
+
+<!-- ======== STORAGE ======== -->
+<div class="section" id="sec-storage">
+<div class="filters">
+<button class="on" onclick="filStorage('all',this)">全部 (17)</button>
+<button onclick="filStorage('hi',this)">⚠️ 高风险</button>
+<button onclick="filStorage('lo',this)">✅ 稳定</button>
+</div>
+<div class="thead"><div>补剂</div><div>光</div><div>氧</div><div>潮</div><div>温度</div><div>风险</div></div>
+<div id="storage-tb"></div>
+<div class="principles">
+<h3>📋 通用储存原则</h3>
+<p><strong>最怕什么：</strong>鱼油/叶黄素/番茄红素→怕氧+光 · CoQ10/姜黄素→怕光+热 · 益生菌→怕热+潮 · 复合维生素→怕潮 · 镁盐/甘氨酸/肌酸/小檗碱→几乎无特殊要求<br><br>
+<strong>最佳存放：</strong>卧室抽屉或书柜。绝对不放浴室和厨房灶台附近。<br><br>
+<strong>冷藏建议：</strong>鱼油开封后冷藏；益生菌冷藏更佳；其他室温即可。频繁进出冰箱的温差反而有害。<br><br>
+<strong>取用习惯：</strong>快开快关，手要干燥，保留瓶内干燥剂。<br><br>
+<strong>不囤货：</strong>按3-6个月用量购买。跨境产品运输仓储条件不可控。</p>
+</div>
+</div>
+
+<!-- ======== TODO ======== -->
+<div class="section" id="sec-todo">
+<div class="card-title" style="margin-bottom:10px;color:var(--acc)">✅ 值得新增</div>
+<div id="todo-yes"></div>
+<div class="card-title" style="margin:16px 0 10px;color:var(--danger)">❌ 明确不做</div>
+<div id="todo-no"></div>
+</div>
+
+<!-- ======== BLOOD ======== -->
+<div class="section" id="sec-blood">
+<div class="card">
+<div class="card-title">血液检查计划</div>
+<div style="font-size:12px;color:var(--tx2);margin-bottom:12px">空腹去同仁医院南区挂内分泌科，跟医生说：</div>
+<div style="background:var(--bg3);border-radius:8px;padding:12px;font-family:monospace;font-size:12px;line-height:1.8;margin-bottom:14px">生化全套 + 25羟基维生素D + 铁蛋白 +<br>同型半胱氨酸 + 糖化血红蛋白 + 血清镁</div>
+<table class="btest">
+<tr><td>25(OH)D</td><td>40-60 ng/mL</td><td style="font-size:11px;color:var(--tx2)">D3补充是否到位</td></tr>
+<tr><td>血清钙+磷</td><td>生化全套含</td><td style="font-size:11px;color:var(--tx2)">有无高钙风险</td></tr>
+<tr><td>血清镁</td><td>需单独勾选</td><td style="font-size:11px;color:var(--tx2)">苏糖酸镁是否够</td></tr>
+<tr><td>铁蛋白</td><td>30-150 ng/mL</td><td style="font-size:11px;color:var(--tx2)">铁代谢状态</td></tr>
+<tr><td>同型半胱氨酸</td><td>&lt;10 μmol/L</td><td style="font-size:11px;color:var(--tx2)">B6/B12/叶酸效果</td></tr>
+<tr><td>肝功ALT/AST</td><td>生化全套含</td><td style="font-size:11px;color:var(--tx2)">NAC/姜黄素/小檗碱安全</td></tr>
+<tr><td>空腹血糖+HbA1c</td><td>—</td><td style="font-size:11px;color:var(--tx2)">小檗碱降糖基线</td></tr>
+<tr><td>血脂四项</td><td>—</td><td style="font-size:11px;color:var(--tx2)">鱼油效果追踪</td></tr>
+</table>
+<div style="font-size:11px;color:var(--tx3);margin-top:10px">费用约¥300-500 · 大部分当天出 · 25(OH)D可能次日</div>
+</div>
+</div>
+
+<!-- ======== KNOWLEDGE ======== -->
+<div class="section" id="sec-know">
+<div id="know-content"></div>
+</div>
+
+<div class="footer">数据来源：GOED氧化控制指南 · PMC/PubMed文献 · ICH Q1A · 中国居民营养素参考值(NRV)<br>整理日期：2026年4月</div>
+</div>
+
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// === SUPPLEMENTS ===
+const suppl=[
+{time:"起床空腹",color:"#f0c060",items:[
+{n:"NMN",d:"按产品标签",note:"NAD+前体。⚠️ 因肺结节+促癌争议，后续讨论建议暂不加，需医生确认"}
+]},
+{time:"午餐随餐（必须有油脂）",color:"#7dd3a8",items:[
+{n:"GNC Mega Men 复合维生素",d:"1片（减半）",note:"B族远超其他品牌全量，不另补B族。含钙100mg、镁50mg"},
+{n:"NOW Foods D3+K2",d:"D3 5000IU + K2 180μg",note:"MenaQ7®专利，不含钙。脂溶性需油脂"},
+{n:"CoQ10 辅酶Q10",d:"按产品标签",note:"脂溶性，线粒体能量"},
+{n:"GNC 4X 鱼油 (rTG)",d:"2粒",note:"EPAX原料，IFOS五星，rTG形式"},
+{n:"叶黄素",d:"10-20mg",note:"GNC减半后仅1mg远不够，需单独补"},
+{n:"东北制药盐酸小檗碱",d:"500mg(5片)",note:"药品级¥10-15/瓶。AMPK激活，控胰岛素"},
+{n:"NAC (NOW Foods)",d:"1000mg×1粒",note:"水溶，谷胱甘肽前体，护肝"}
+]},
+{time:"晚餐随餐",color:"#c090e0",items:[
+{n:"姜黄素",d:"按产品标签",note:"脂溶性抗炎，分散午餐脂溶性负担"},
+{n:"东北制药盐酸小檗碱",d:"500mg(5片)",note:"第二次随餐"},
+{n:"益生菌",d:"按产品标签",note:"NOW Probiotic-10 / Garden of Life。与小檗碱间隔2h"}
+]},
+{time:"睡前30-60分钟",color:"#8ab4f8",items:[
+{n:"苏糖酸镁 (NOW)",d:"3粒=144mg镁",note:"穿越血脑屏障，专负责脑部镁"},
+{n:"Ashwagandha 南非醉茄",d:"KSM-66认证",note:"降皮质醇+助眠。⚠️ 避开Timeless品牌"},
+{n:"甘氨酸",d:"3g粉末冲水",note:"助眠(降核心体温)+谷胱甘肽前体"},
+{n:"肌酸（一水肌酸）",d:"3-5g",note:"认知+肌肉维持。也可放其他时间"}
+]}
+];
+(function(){
+const c=document.getElementById('suppl-content');
+suppl.forEach(b=>{
+let h='<div class="tblock"><div class="tblock-title"><span class="dot" style="background:'+b.color+'"></span><span style="color:'+b.color+'">'+b.time+'</span></div>';
+b.items.forEach(it=>{
+h+='<div class="titem" onclick="this.classList.toggle(\'open\')"><div class="titem-head"><span class="titem-name">'+it.n+'</span><span class="titem-dose">'+it.d+'</span></div><div class="titem-note">'+it.note+'</div></div>';
+});
+h+='</div>';
+c.insertAdjacentHTML('beforeend',h);
+});
+})();
+
+// === STORAGE ===
+const SD=[
+{n:"鱼油 (rTG)",c:"脂溶",t:"≤25°C",td:"氧化速率每升10°C翻倍。4°C保质60-90天(开封)。",l:"★★★",ln:"EPA/DHA多不饱和双键极易光氧化。深色瓶/铝箔泡罩。",o:"★★★",on:"n-3 PUFA接触氧气即启动链式过氧化。转小瓶减少空间。",m:"★☆☆",mn:"胶囊受潮变软粘连。保留干燥剂。",so:"3-6月",ss:"2-3年",sp:"GOED：PV≤5 AV≤20。闻到鱼腥/苦味=已氧化。开封后建议冷藏。",r:"极高"},
+{n:"叶黄素",c:"脂溶",t:"20-25°C",td:"≥25°C显著加速降解，40°C 1h即有损失。",l:"★★★",ln:"极度光敏！直射阳光6h完全降解。",o:"★★★",on:"自氧化是最常见降解途径。",m:"★★☆",mn:"粉末吸潮结块加速降解。",so:"尽快用完",ss:"1-2年",sp:"颜色变褐/灰=降解信号。",r:"极高"},
+{n:"番茄红素(待购)",c:"脂溶",t:"≤25°C",td:"13个共轭双键极易降解。",l:"★★★",ln:"极度光敏！",o:"★★★",on:"自氧化是主要途径。",m:"★☆☆",mn:"脂溶性，湿度影响小。",so:"3-6月",ss:"1-2年",sp:"与叶黄素储存要求相似。",r:"极高"},
+{n:"CoQ10",c:"脂溶",t:"15-25°C",td:">25°C加速降解，>45°C软化结块。",l:"★★★",ln:"80°C+UV 120min降解72%。鲜橙→浅黄=降解。",o:"★★☆",on:"Ubiquinol暴露空气氧化回Ubiquinone。",m:"★☆☆",mn:"湿度影响不显著。",so:"6-12月",ss:"1-2年",sp:"1-30°C存储。含维C配方中可能互相转化。",r:"高"},
+{n:"姜黄素",c:"脂溶",t:"20-27°C",td:"80°C以下2h稳定。4°C和25°C降解率相似。",l:"★★★",ln:"极度光敏！直射阳光6h完全脱色。",o:"★★☆",on:"磷脂复合剂型更稳定。",m:"★☆☆",mn:"极低水溶性，湿度影响不大。",so:"6-12月",ss:"2年",sp:"颜色褪变=降解指标。",r:"高"},
+{n:"益生菌",c:"活菌",t:"冷藏最佳",td:"每升10°C存活率显著下降。",l:"★☆☆",ln:"光对活菌影响不大。",o:"★★☆",on:"厌氧菌暴露氧气会死亡。",m:"★★★",mn:"最大威胁！湿度激活休眠菌株致死亡。",so:"1-3月",ss:"6月-2年",sp:"唯一「活」补剂。标签CFU到期可能只剩一半。",r:"高"},
+{n:"D3+K2",c:"脂溶",t:"室温",td:"D3稳定，K2(MK-7)是短板。",l:"★★☆",ln:"K2对光敏感。",o:"★★☆",on:"K2可被氧化。软胶囊有保护。",m:"★★☆",mn:"纯D3K2软胶囊问题不大。",so:"K2 3-6月",ss:"2-3年",sp:"MenaQ7®稳定性经过专门优化。",r:"中"},
+{n:"GNC复合维生素",c:"混合",t:"室温",td:"维C和叶酸最易降解。",l:"★☆☆",ln:"片剂有保护。",o:"★☆☆",on:"维C氧化最快但面积小。",m:"★★★",mn:"最大威胁！片剂吸潮变软。不放浴室。",so:"按需不囤",ss:"2-3年",sp:"1片/天120片用4月。拧紧瓶盖。",r:"中"},
+{n:"Fisetin(待购)",c:"脂溶",t:"室温",td:"黄酮类，中等热稳定。",l:"★★☆",ln:"黄酮对光中等敏感。",o:"★★☆",on:"酚羟基可被氧化。",m:"★☆☆",mn:"湿度影响小。",so:"6-12月",ss:"2年",sp:"间歇方案一瓶用很久，更要注意储存。",r:"中"},
+{n:"NAC",c:"水溶",t:"室温",td:"巯基(-SH)是活性基团也是脆弱点。",l:"★☆☆",ln:"固体不太敏感。",o:"★★☆",on:"巯基可氧化形成二硫键。",m:"★★☆",mn:"吸湿加速巯基氧化。",so:"6-12月",ss:"2-3年",sp:"强烈硫味=可能已部分氧化。",r:"低-中"},
+{n:"尿石素A(待购)",c:"水溶",t:"室温",td:"干燥固体稳定。",l:"★☆☆",ln:"酚羟基中等光敏。",o:"★☆☆",on:"酚类有抗氧化性。",m:"★☆☆",mn:"低吸湿性。",so:"6-12月",ss:"2年",sp:"Mitopure®有完整稳定性研究。",r:"低"},
+{n:"Ashwagandha",c:"水溶",t:"室温",td:"KSM-66稳定性良好。",l:"★☆☆",ln:"中等光敏。",o:"★☆☆",on:"轻度氧化影响效价。",m:"★★☆",mn:"怕潮，受潮可能发霉。",so:"6-12月",ss:"2年",sp:"Timeless发霉事件=包装很重要。",r:"低"},
+{n:"盐酸小檗碱",c:"水溶",t:"室温",td:"药品级非常稳定。",l:"★☆☆",ln:"固体很稳定。",o:"☆☆☆",on:"不敏感。",m:"★☆☆",mn:"铝板泡罩防护好。",so:"按保质期",ss:"3-5年",sp:"最稳定之一。药品级铝板独立包装。",r:"极低"},
+{n:"苏糖酸镁",c:"水溶",t:"室温",td:"矿物质螯合物，非常稳定。",l:"☆☆☆",ln:"不光敏。",o:"☆☆☆",on:"不氧化。",m:"★★☆",mn:"受潮可结块。",so:"按保质期",ss:"2-3年",sp:"防潮即可。",r:"极低"},
+{n:"甘氨酸镁(待购)",c:"水溶",t:"室温",td:"非常稳定。",l:"☆☆☆",ln:"不光敏。",o:"☆☆☆",on:"不氧化。",m:"★★☆",mn:"镁盐有吸湿性。",so:"按保质期",ss:"2-3年",sp:"与苏糖酸镁同。",r:"极低"},
+{n:"甘氨酸(粉末)",c:"水溶",t:"室温",td:"熔点233°C。极其稳定。",l:"☆☆☆",ln:"不光敏。",o:"☆☆☆",on:"无可氧化基团。",m:"★★☆",mn:"吸湿结块不影响安全。",so:"极长",ss:"3-5年",sp:"最稳定补剂。密封+干燥。",r:"极低"},
+{n:"肌酸(一水肌酸)",c:"水溶",t:"室温",td:"干粉极稳定。溶水后转化为肌酐。",l:"☆☆☆",ln:"不光敏。",o:"☆☆☆",on:"不氧化。",m:"★★☆",mn:"受潮加速转化肌酐。",so:"极长",ss:"3-5年",sp:"泡水后尽快喝完。",r:"极低"}
+];
+const RC={"极高":"#E24B4A","高":"#EF9F27","中":"#BA7517","低-中":"#97C459","低":"#1D9E75","极低":"#1D9E75"};
+const RCbg={"极高":"rgba(255,107,107,.15)","高":"rgba(255,169,77,.12)","中":"rgba(255,212,59,.1)","低-中":"rgba(125,211,168,.1)","低":"rgba(125,211,168,.1)","极低":"rgba(125,211,168,.1)"};
+let sFil='all',sOpen=null;
+function filStorage(t,btn){sFil=t;sOpen=null;document.querySelectorAll('#sec-storage .filters button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');drawStorage();}
+function drawStorage(){
+const tb=document.getElementById('storage-tb');tb.innerHTML='';
+const f=SD.filter(d=>{if(sFil==='hi')return['极高','高'].includes(d.r);if(sFil==='lo')return['极低','低','低-中'].includes(d.r);return true;});
+f.forEach(d=>{
+const rw=document.createElement('div');rw.className='srow'+(sOpen===d.n?' open':'');
+rw.innerHTML='<div><span style="font-weight:600">'+d.n+'</span><span style="font-size:10px;color:var(--tx3);margin-left:5px">'+d.c+'</span></div><div>'+d.l+'</div><div>'+d.o+'</div><div>'+d.m+'</div><div style="font-size:10px;color:var(--tx2)">'+d.t+'</div><div><span class="badge" style="background:'+RCbg[d.r]+';color:'+RC[d.r]+'">'+d.r+'</span></div>';
+const det=document.createElement('div');det.className='sdet'+(sOpen===d.n?' show':'');
+det.innerHTML='<div class="sdet-grid"><div class="sdet-card"><div class="label">存储温度</div><div class="val" style="font-size:12px">'+d.t+'</div><div style="font-size:11px;color:var(--tx2);margin-top:3px;line-height:1.5">'+d.td+'</div></div><div class="sdet-card"><div class="label">保质期</div><div style="font-size:11px;margin-top:4px"><span style="color:var(--tx3)">未开封</span> <b>'+d.ss+'</b></div><div style="font-size:11px;margin-top:2px"><span style="color:var(--tx3)">开封后</span> <b>'+d.so+'</b></div></div></div><div class="sdet-line"><b>☀️ 光照 '+d.l+'</b> '+d.ln+'</div><div class="sdet-line"><b>💨 氧气 '+d.o+'</b> '+d.on+'</div><div class="sdet-line"><b>💧 湿度 '+d.m+'</b> '+d.mn+'</div>'+(d.sp?'<div class="sdet-tip">'+d.sp+'</div>':'');
+rw.onclick=()=>{sOpen=sOpen===d.n?null:d.n;drawStorage();};
+tb.appendChild(rw);tb.appendChild(det);
+});
+}
+drawStorage();
+
+// === TODO ===
+const todoYes=[
+{n:"尿石素A (Mitopure/Timeline)",t:"首选新增",d:"线粒体自噬通路，多项人体RCT，证据级别B+。500-1000mg/天，~$50-70/月"},
+{n:"Fisetin 间歇方案",t:"可考虑",d:"Senolytic衰老细胞清除。每月2天×1400mg分两餐配脂肪。Doctor's Best或Neurogan"},
+{n:"甘氨酸镁",t:"建议加",d:"补全身系统性镁200-300mg元素镁。苏糖酸镁只够脑部。睡前一起吃"},
+{n:"番茄红素 10-15mg",t:"建议加",d:"前列腺健康。GNC减半后仅0.5mg远不够"},
+{n:"钙（柠檬酸钙）~500mg",t:"视饮食定",d:"去掉D3K2钙片后有缺口。分2次吃避免血钙spike。若饮食够奶/豆腐可不补"},
+];
+const todoNo=[
+{n:"瑞拓龄 (RESTORIN)",d:"膳食补充剂非药品，无人体临床验证，成分剂量不透明，¥2000-3000/月性价比极低"},
+{n:"NR/NMN（长期大量）",d:"潜在促癌信号未排除，berberine已覆盖部分代谢调节通路"},
+{n:"二甲双胍",d:"与berberine机制高度重叠（AMPK），可能干扰运动适应性。TAME试验结果未出"},
+{n:"Timeless品牌",d:"央视315曝光假进口产业链，产品霉变投诉"},
+];
+(function(){
+const yc=document.getElementById('todo-yes'),nc=document.getElementById('todo-no');
+todoYes.forEach(t=>{yc.insertAdjacentHTML('beforeend','<div class="todo todo-yes"><div class="todo-head"><span class="todo-name">'+t.n+'</span><span class="todo-tag" style="background:rgba(125,211,168,.12);color:var(--acc)">'+t.t+'</span></div><div class="todo-desc">'+t.d+'</div></div>');});
+todoNo.forEach(t=>{nc.insertAdjacentHTML('beforeend','<div class="todo todo-no"><div class="todo-name">'+t.n+'</div><div class="todo-desc">'+t.d+'</div></div>');});
+})();
+
+// === KNOWLEDGE ===
+const knowData=[
+{t:"脂肪肝本质",d:"不是"脂肪病"，是"胰岛素病"。高胰岛素→SREBP-1c→DNL→肝脏脂肪堆积→胰岛素抵抗→更高胰岛素，正反馈环。"},
+{t:"控制胰岛素的三个杠杆",d:"① 进食窗口（16:8/18:6）> ② 减少碳水总量和密度 > ③ 避免蛋白+碳水大剂量叠加（超加性胰岛素响应）"},
+{t:"血糖低≠胰岛素低",d:"碳水+蛋白的胰岛素可达80-120+ μIU/mL（比单吃碳水更高），但血糖反而更低。CGM好看不等于胰岛素负担小。"},
+{t:"饭后散步机制",d:"肌肉收缩通过GLUT4直接摄取葡萄糖（不需胰岛素），和低碳+小檗碱是同一目标的不同切入点，三者叠加效果更强。"},
+{t:"脂溶性维生素安全",d:"GNC减半已解决A/E重叠。D3 2500-5000IU远低于毒性阈值（需10000+IU长期）。K2是钙的'交通警察'。"},
+{t:"镁的分工",d:"苏糖酸镁→脑部（穿越血脑屏障）；甘氨酸镁→全身系统性需求；GNC→50mg保险。三者不冲突。"},
+{t:"Berberine vs 二甲双胍",d:"机制高度重叠（AMPK激活/线粒体复合体I抑制）。药品级黄连素¥10-15/瓶，性价比碾压进口补剂10倍以上。"},
+{t:"皮质醇管理",d:"Ashwagandha + 镁 + 甘氨酸 三重睡前方案，同时降皮质醇、助深度睡眠、支持谷胱甘肽再生。"},
+{t:"饱和脂肪的正确理解",d:"替代物比减少本身更重要。饱和脂肪既非毒药也非特别有益；n-6 PUFA在某些情境下比饱和脂肪更有问题。"},
+{t:"鱼油品质判断",d:"rTG > EE吸收率；IFOS认证看成品而非原料；TOTOX=2×PV+AV；EPAX/KD Pharma/Solutex是三大优质原料商。"}
+];
+(function(){
+const kc=document.getElementById('know-content');
+knowData.forEach(k=>{kc.insertAdjacentHTML('beforeend','<div class="kitem"><div class="kitem-title">'+k.t+'</div><div class="kitem-desc">'+k.d+'</div></div>');});
+})();
+</script>
+</body>
+</html>
