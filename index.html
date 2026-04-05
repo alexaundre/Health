@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>健康管理 v4.2</title>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>健康管理 v4.3</title>
 <style>
 :root{--bg:#0e1015;--bg2:#161a22;--bg3:#1c2029;--tx:#e8e8ec;--tx2:rgba(232,232,236,.65);--tx3:rgba(232,232,236,.4);--bd:rgba(255,255,255,.06);--bd2:rgba(255,255,255,.12);--acc:#7dd3a8;--wrn:#ffa94d;--dng:#ff6b6b;--inf:#8ab4f8;--pur:#c090e0;--gld:#f0c060}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;font-size:12px}
@@ -23,13 +23,16 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 .formula{background:var(--bg3);border-radius:5px;padding:6px 8px;font-size:9px;line-height:1.6;color:var(--tx2);margin:4px 0;font-family:monospace;white-space:pre-wrap}.formula strong{color:var(--inf)}
 .mr{display:flex;gap:3px;align-items:center;margin-bottom:3px;flex-wrap:wrap;font-size:10px}
 .dtot{background:rgba(125,211,168,.08);border-radius:6px;padding:6px;margin-top:6px;border:1px solid rgba(125,211,168,.15)}.dtot table{font-size:10px;width:100%;border-collapse:collapse}.dtot td{padding:2px 4px}
-.dbr{display:grid;gap:2px;align-items:center;padding:5px 4px;border-radius:5px;cursor:pointer;font-size:10px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--bd)}.dbr:hover{background:var(--bg3)}
+.dbr{cursor:pointer;font-size:10px;background:rgba(255,255,255,.02)}.dbr:hover{background:var(--bg3)}
 .dbhdr{font-size:8px;color:var(--tx3);padding:0 4px 2px;display:grid;gap:2px}.dbhdr>div:not(:first-child){text-align:center}
 .dbhdr .so{cursor:pointer;user-select:none}.dbhdr .so:hover{color:var(--tx)}.dbhdr .so.ac{color:var(--inf)}
-.dbd{display:none;padding:5px;background:var(--bg3);border-radius:0 0 5px 5px;margin-bottom:2px;font-size:9px;line-height:1.5;color:var(--tx2)}.dbd.show{display:block}.dbd strong{color:var(--tx)}
+.db-tbl{width:100%;border-collapse:collapse;font-size:10px}.db-tbl th{text-align:left;padding:3px 4px;font-size:8px;color:var(--tx3);font-weight:400;border-bottom:1px solid var(--bd2);cursor:pointer;user-select:none;white-space:nowrap}.db-tbl th:hover{color:var(--tx)}.db-tbl th.ac{color:var(--inf)}
+.db-tbl td{padding:4px;border-bottom:1px solid var(--bd);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}.db-tbl td:first-child{max-width:none;white-space:normal;font-weight:600}
+.db-tbl tr.dbr{cursor:pointer;background:rgba(255,255,255,.02)}.db-tbl tr.dbr:hover{background:var(--bg3)}
+.db-tbl tr.dbd-row{display:none}.db-tbl tr.dbd-row.show{display:table-row}.db-tbl tr.dbd-row td{padding:5px 8px;font-size:9px;line-height:1.5;color:var(--tx2);background:var(--bg3)}.db-tbl tr.dbd-row td strong{color:var(--tx)}
 .bdg{font-size:8px;padding:1px 4px;border-radius:4px;font-weight:600}
 .ti{background:var(--bg3);border-radius:6px;padding:6px 8px;margin-bottom:3px;cursor:pointer}.ti:hover{background:rgba(255,255,255,.04)}
-.ti-top{display:flex;justify-content:space-between;align-items:baseline;gap:4px}.ti-n{font-size:11px;font-weight:600}.ti-d{font-size:9px;color:var(--tx3)}.ti-note{font-size:9px;color:var(--tx2);margin-top:2px;display:none;line-height:1.4}.ti.open .ti-note{display:block}
+.ti-top{display:grid;grid-template-columns:1fr 56px 56px 14px;gap:4px;align-items:center}.ti-n{font-size:11px;font-weight:600}.ti-d{font-size:9px;color:var(--tx3)}.ti-note{font-size:9px;color:var(--tx2);margin-top:2px;display:none;line-height:1.4}.ti.open .ti-note{display:block}
 .td-i{background:var(--bg3);border-radius:6px;padding:6px 8px;margin-bottom:4px}.td-i.done{opacity:.4}.td-top{display:flex;justify-content:space-between;align-items:center;gap:4px}.td-n{font-size:11px;font-weight:600;flex:1}.td-t{font-size:8px;padding:1px 4px;border-radius:5px}.td-d{font-size:9px;color:var(--tx2);margin-top:2px}.td-y{border-left:2px solid rgba(125,211,168,.35)}.td-no{border-left:2px solid rgba(255,100,100,.25)}.td-dn{border-left:2px solid rgba(138,180,248,.35)}
 .bi{display:grid;grid-template-columns:1fr 60px 1fr 14px;gap:2px;padding:3px 4px;border-bottom:1px solid var(--bd);align-items:center;font-size:9px}.bi .bn{font-weight:600;font-size:10px}.bx{color:var(--dng);cursor:pointer;text-align:center}
 .ds{background:var(--bg3);border-radius:5px;padding:7px;font-size:10px;line-height:1.6;margin-bottom:7px}
@@ -46,14 +49,38 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 .sb-eat{background:rgba(125,211,168,.15);color:var(--acc)}.sb-walk{background:rgba(255,212,59,.1);color:#c90}.sb-str{background:rgba(192,144,224,.15);color:var(--pur)}.sb-cardio{background:rgba(138,180,248,.12);color:var(--inf)}.sb-hiit{background:rgba(255,107,107,.1);color:var(--dng)}.sb-yoga{background:rgba(125,211,168,.08);color:var(--acc)}.sb-rest{background:rgba(255,255,255,.02);color:var(--tx3)}.sb-sleep{background:rgba(138,180,248,.06);color:rgba(138,180,248,.4)}.sb-suppl{background:rgba(255,169,77,.1);color:var(--wrn)}
 .spop{position:fixed;background:var(--bg2);border:1px solid var(--bd2);border-radius:6px;padding:8px;font-size:9px;color:var(--tx2);line-height:1.5;z-index:20;max-width:260px;display:none;white-space:pre-line}.spop b{color:var(--tx)}
 .scfg{display:grid;grid-template-columns:44px 40px 40px 40px 40px 1fr;gap:3px;align-items:center;font-size:9px;padding:3px 0;border-bottom:1px solid var(--bd)}
+
+.curve-wrap{position:relative;background:var(--bg3);border-radius:8px;padding:8px 4px 4px;margin:4px 0;overflow:hidden}
+.curve-wrap svg{width:100%;height:auto;display:block}
+.curve-legend{display:flex;gap:8px;justify-content:center;margin-top:4px;font-size:8px;flex-wrap:wrap}
+.curve-legend span{display:flex;align-items:center;gap:2px}.curve-legend i{width:8px;height:3px;border-radius:1px;display:inline-block}
+
+.slp-card{background:var(--bg3);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.slp-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:3px}
+.slp-metric{background:var(--bg2);border-radius:6px;padding:6px 8px;flex:1;min-width:90px;text-align:center}
+.slp-metric .slp-v{font-size:16px;font-weight:700}.slp-metric .slp-l{font-size:8px;color:var(--tx3)}
+.slp-bar{height:16px;border-radius:3px;background:var(--bg2);position:relative;overflow:hidden;margin:2px 0}
+.slp-fill{height:100%;border-radius:3px;transition:width .3s}
+.slp-tip{background:rgba(138,180,248,.06);border-left:2px solid rgba(138,180,248,.3);padding:5px 8px;border-radius:0 5px 5px 0;font-size:9px;color:var(--tx2);margin-bottom:3px;line-height:1.5}
+.slp-log{background:var(--bg3);border-radius:6px;padding:5px 8px;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;font-size:10px}
+
+.bl-item{background:var(--bg3);border-radius:6px;margin-bottom:3px;overflow:hidden}
+.bl-top{display:grid;grid-template-columns:1fr 60px 1fr 14px;gap:2px;padding:5px 8px;align-items:center;font-size:10px;cursor:pointer}
+.bl-top:hover{background:rgba(255,255,255,.03)}
+.bl-top .bn{font-weight:600}
+.bl-det{display:none;padding:5px 8px;font-size:9px;color:var(--tx2);line-height:1.5;border-top:1px solid var(--bd);background:var(--bg2)}.bl-det.show{display:block}
+.bl-det strong{color:var(--tx)}
+
+.ki-wrap{position:relative}.ki-acts{position:absolute;top:4px;right:6px;display:flex;gap:3px;opacity:0;transition:opacity .15s}.ki:hover .ki-acts{opacity:1}
+.ki-cat{font-size:7px;padding:1px 4px;border-radius:3px;background:rgba(138,180,248,.1);color:var(--inf);margin-left:4px}
 </style>
 </head><body>
 <div class="w">
-<div style="font-size:9px;letter-spacing:2px;color:var(--tx3)">HEALTH PROTOCOL v4.2</div>
+<div style="font-size:9px;letter-spacing:2px;color:var(--tx3)">HEALTH PROTOCOL v4.3</div>
 <h1>健康管理全方案</h1>
 <div style="font-size:9px;color:var(--tx3);margin-top:2px">虚线可编辑 / 日程表自动生成 / [P2]=AI功能</div>
 <div class="tabs" id="tabs">
-<button class="tb on" data-tab="profile">档案</button><button class="tb" data-tab="database">数据库</button><button class="tb" data-tab="diet">饮食</button><button class="tb" data-tab="suppl">补剂</button><button class="tb" data-tab="schedule">日程表</button><button class="tb" data-tab="todo">待办</button><button class="tb" data-tab="blood">血检</button><button class="tb" data-tab="know">认知</button>
+<button class="tb on" data-tab="profile">档案</button><button class="tb" data-tab="database">数据库</button><button class="tb" data-tab="diet">饮食</button><button class="tb" data-tab="suppl">补剂</button><button class="tb" data-tab="schedule">日程表</button><button class="tb" data-tab="sleep">睡眠</button><button class="tb" data-tab="todo">待办</button><button class="tb" data-tab="blood">血检</button><button class="tb" data-tab="know">认知</button>
 </div>
 
 <div class="sec active" id="sec-profile"><div class="c">
@@ -70,21 +97,21 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <div class="lb" style="margin-top:4px">副目标 <span style="font-size:7px;color:var(--inf)">(点击添加/移除)</span></div>
 <div id="sub-goals" style="margin:3px 0"></div>
 <div class="lb" style="margin-top:4px">活动水平</div><select class="sl" id="asel"><option value="1.2">久坐</option><option value="1.375" selected>轻度</option><option value="1.55">中度</option><option value="1.725">高强度</option></select>
-<div class="lb" style="margin-top:4px">健康状况</div>
-<div class="ed" data-key="p-health" contenteditable="true" style="font-size:10px;line-height:1.8"><span class="tag tw">轻度脂肪肝</span> <span class="tag tw">前列腺钙化</span> <span class="tag tw">肺结节</span> <span class="tag tw">胰岛素敏感性待优化</span></div>
+<div class="lb" style="margin-top:4px">健康状况 <span style="font-size:7px;color:var(--inf)">(点击添加/移除)</span></div>
+<div id="health-tags" style="margin:3px 0"></div>
 </div>
-<div class="c"><div class="ct">代谢曲线模拟 <span style="font-size:8px;color:var(--pur)">[P2]</span></div><div class="ai-box" style="display:block">批次B: 模拟血糖/胰岛素/皮质醇24h曲线</div></div></div>
+<div class="c"><div class="ct">代谢曲线模拟 <span style="font-size:8px;color:var(--tx3)">(联动饮食/补剂)</span></div>
+<div class="curve-wrap"><svg id="metaCurve" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+<div class="curve-legend"><span><i style="background:#7dd3a8"></i>血糖</span><span><i style="background:#ffa94d"></i>胰岛素</span><span><i style="background:#c090e0"></i>皮质醇</span><span><i style="background:rgba(138,180,248,.4)"></i>断食区</span></div></div></div></div>
 
 <div class="sec" id="sec-database">
 <div class="c"><div class="ct">补剂数据库</div><div class="ht">名称品牌可编辑 / 点表头排序 / 点行展开详情</div>
 <div style="display:flex;gap:3px;margin-bottom:4px;flex-wrap:wrap"><span id="dbsflt" style="display:flex;gap:2px"><button class="fb on" data-sf="all">全部</button><button class="fb" data-sf="hi">高风险</button><button class="fb" data-sf="lo">稳定</button></span><button class="btn btn-a" id="dbs-add">+新增</button></div>
-<div class="dbhdr" id="dbshdr" style="grid-template-columns:minmax(0,1fr) 46px 30px 22px 22px 22px 30px 26px 14px 14px"><div>名称</div><div class="so" data-sort="brand">品牌</div><div class="so" data-sort="sol">溶解</div><div class="so" data-sort="ls">光</div><div class="so" data-sort="os">氧</div><div class="so" data-sort="ms">潮</div><div class="so" data-sort="ts">温</div><div class="so ac" data-sort="rs">险</div><div></div><div></div></div>
-<div id="dbs-tb"></div>
+<div style="overflow-x:auto"><table class="db-tbl" id="dbs-tbl"><thead id="dbshdr"></thead><tbody id="dbs-tb"></tbody></table></div>
 <div id="dbs-form" style="display:none" class="c"><div style="display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="dsn-nm" placeholder="名称" style="width:80px"><input class="ip" id="dsn-br" placeholder="品牌" style="width:60px"><select class="sl" id="dsn-sol"><option>脂溶</option><option>水溶</option><option>混合</option><option>特殊(活菌)</option></select><button class="btn btn-a" id="dsn-sv">保存</button></div></div></div>
 <div class="c"><div class="ct">食物数据库</div><div class="ht">每100g(或每个) / 名称可编辑 / 点表头排序</div>
 <div style="margin-bottom:4px"><button class="btn btn-a" id="dbf-add">+新增</button></div>
-<div class="dbhdr" id="dbfhdr" style="grid-template-columns:minmax(0,1fr) 32px 24px 24px 24px 20px 24px 22px 14px 14px"><div>名称</div><div class="so" data-sort="cat">类别</div><div class="so" data-sort="p">P</div><div class="so" data-sort="f">F</div><div class="so" data-sort="c">C</div><div class="so" data-sort="w">水</div><div class="so" data-sort="cal">cal</div><div class="so" data-sort="gi">GI</div><div></div><div></div></div>
-<div id="dbf-tb"></div>
+<div style="overflow-x:auto"><table class="db-tbl" id="dbf-tbl"><thead id="dbfhdr"></thead><tbody id="dbf-tb"></tbody></table></div>
 <div id="dbf-form" style="display:none" class="c"><div style="display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="dfn-nm" placeholder="名称" style="width:60px"><select class="sl" id="dfn-cat"><option>主食</option><option>蛋白</option><option>脂肪</option><option>蔬菜</option><option>乳制品</option><option>饮品</option></select><input class="ip" id="dfn-p" placeholder="P" style="width:26px"><input class="ip" id="dfn-f" placeholder="F" style="width:26px"><input class="ip" id="dfn-c" placeholder="C" style="width:26px"><input class="ip" id="dfn-w" placeholder="水" style="width:26px"><input class="ip" id="dfn-cal" placeholder="cal" style="width:30px"><input class="ip" id="dfn-gi" placeholder="GI" style="width:26px"><button class="btn btn-a" id="dfn-sv">存</button></div></div></div></div>
 
 <div class="sec" id="sec-diet">
@@ -92,7 +119,7 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <div class="c"><div class="ct">宏量计算器</div><div id="mout"></div><div class="formula" id="fout"></div></div>
 <div class="c"><div class="ct">三餐规划 <span style="font-size:8px;color:var(--tx3)">(食物链接数据库)</span></div><div id="mlout"></div><div class="dtot" id="dtot" style="display:none"></div></div></div>
 
-<div class="sec" id="sec-suppl"><div class="ht">名称剂量可编辑 / 溶解性标注</div><div id="sc"></div></div>
+<div class="sec" id="sec-suppl"><div class="ht">名称剂量可编辑 / 溶解性标注 / 点击展开备注</div><div id="sc"></div></div>
 
 <div class="sec" id="sec-schedule"><div class="c"><div class="ct">周日程表 <span style="font-size:8px;color:var(--tx3)">(自动从配置生成 / 6:00-24:00)</span></div>
 <div class="sch-wrap"><div class="sch" id="schgrid"></div></div></div>
@@ -102,20 +129,60 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <div id="schcfg"></div>
 <div id="exdetail" style="margin-top:4px"></div></div></div>
 
+
+<div class="sec" id="sec-sleep">
+<div class="c"><div class="ct">睡眠概览</div>
+<div class="slp-row">
+<div class="slp-metric"><div class="slp-v" id="slp-dur">8.0h</div><div class="slp-l">时长</div></div>
+<div class="slp-metric"><div class="slp-v" id="slp-eff" style="color:var(--acc)">--</div><div class="slp-l">效率</div></div>
+<div class="slp-metric"><div class="slp-v" id="slp-score" style="color:var(--inf)">--</div><div class="slp-l">评分</div></div>
+</div>
+<div style="font-size:9px;color:var(--tx3);margin:4px 0 2px">睡眠窗口 <span style="color:var(--tx2)" id="slp-window">23:00 → 7:00</span></div>
+<div class="slp-bar"><div class="slp-fill" id="slp-bar-fill" style="width:100%;background:linear-gradient(90deg,rgba(138,180,248,.3),rgba(138,180,248,.5),rgba(138,180,248,.3))"></div></div>
+</div>
+<div class="c"><div class="ct">睡前方案</div>
+<div class="slp-tip"><b>时间线</b> 睡前90min停屏幕 → 睡前60min苏糖酸镁3粒 → 睡前30min甘氨酸3g+Ashwagandha → 睡前15min调暗灯光</div>
+<div class="slp-tip"><b>温度</b> 甘氨酸通过外周血管扩张降低核心体温~0.3°C → 触发入睡信号</div>
+<div class="slp-tip"><b>皮质醇</b> Ashwagandha(KSM-66) 降低晚间皮质醇14-28% → 缩短入睡潜伏期</div>
+<div class="slp-tip"><b>镁</b> 苏糖酸镁穿越血脑屏障 → 增强GABA受体活性 → 提升深睡比例</div>
+</div>
+<div class="c"><div class="ct">睡眠记录 <span style="font-size:8px;color:var(--tx3)">(点击编辑)</span></div>
+<div id="slp-logs"></div>
+<div style="margin-top:4px;display:flex;gap:3px"><button class="btn btn-a" id="slp-add">+记录</button></div>
+<div id="slp-form" style="display:none;margin-top:4px" class="c">
+<div style="display:flex;gap:3px;flex-wrap:wrap;align-items:center">
+<input class="ip" id="slp-date" type="date" style="width:100px">
+<input class="ip" id="slp-bed" placeholder="入睡" value="23:00" style="width:46px">
+<input class="ip" id="slp-wake" placeholder="起床" value="07:00" style="width:46px">
+<select class="sl" id="slp-qual"><option value="5">很好</option><option value="4" selected>不错</option><option value="3">一般</option><option value="2">较差</option><option value="1">很差</option></select>
+<button class="btn btn-a" id="slp-sv">存</button>
+</div></div>
+</div>
+<div class="c"><div class="ct">优化建议</div>
+<div class="slp-tip"><b>目标</b> 卧床时间23:00, 起床7:00, 实际入睡<15min, 深睡>1.5h</div>
+<div class="slp-tip"><b>光照</b> 起床后30min内接受户外光(≥10000lux) → 锚定昼夜节律</div>
+<div class="slp-tip"><b>咖啡</b> 最后一杯咖啡在14:00前 → 咖啡因半衰期5-6h</div>
+<div class="slp-tip"><b>运动</b> 避免睡前3h内高强度运动 → 核心体温升高延迟入睡</div>
+</div></div>
+
 <div class="sec" id="sec-todo">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div class="ct" style="margin:0">待办</div><div style="display:flex;gap:3px"><button class="btn btn-a" id="ta">+新增</button><button class="btn" id="tt">隐藏已完成</button></div></div>
 <div id="tl"></div><div id="tf" style="display:none" class="c"><input class="ip" id="tn" placeholder="名称" style="width:100%;margin-bottom:2px"><textarea class="ta" id="td2" placeholder="描述" rows="1"></textarea><div style="display:flex;gap:3px;margin-top:2px"><select class="sl" id="tty"><option value="yes">待执行</option><option value="no">不做</option><option value="done">已完成</option></select><button class="btn btn-a" id="ts2">存</button></div></div></div>
 
-<div class="sec" id="sec-blood"><div class="c"><div class="ct">血液检查</div>
+<div class="sec" id="sec-blood"><div class="c"><div class="ct">血液检查 <span style="font-size:8px;color:var(--tx3)">(点击展开详情)</span></div>
 <div class="lb">跟医生说(自动生成):</div><div class="ds" id="dsc"></div><div id="bl"></div>
-<div style="margin-top:4px;display:flex;gap:3px"><button class="btn btn-a" id="ba">+新增</button><button class="btn btn-ai" data-ai="blood">[P2]AI检查</button></div>
-<div id="bf" style="display:none;margin-top:3px;display:flex;gap:3px;flex-wrap:wrap"><input class="ip" id="bnn" placeholder="项目" style="width:80px"><input class="ip" id="bnr" placeholder="参考值" style="width:60px"><input class="ip" id="bnw" placeholder="原因" style="width:90px"><button class="btn btn-a" id="bns">存</button></div>
-<div class="ai-box" id="ai-blood">P2</div></div></div>
+<div style="margin-top:4px;display:flex;gap:3px"><button class="btn btn-a" id="ba">+新增</button></div>
+<div id="bf" style="display:none;margin-top:3px;gap:3px;flex-wrap:wrap"><input class="ip" id="bnn" placeholder="项目" style="width:80px"><input class="ip" id="bnr" placeholder="参考值" style="width:60px"><input class="ip" id="bnw" placeholder="原因" style="width:90px"><button class="btn btn-a" id="bns">存</button></div>
+</div></div>
 
-<div class="sec" id="sec-know"><div id="kc"></div><button class="btn btn-a" id="ka" style="margin-top:4px">+新增</button>
-<div id="kf" style="display:none;margin-top:3px" class="c"><input class="ip" id="knt" placeholder="标题" style="width:100%;margin-bottom:2px"><textarea class="ta" id="knd" placeholder="内容" rows="1"></textarea><button class="btn btn-a" id="kns" style="margin-top:2px">存</button></div></div>
+<div class="sec" id="sec-know">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div class="ct" style="margin:0">认知库</div><div style="display:flex;gap:3px"><span id="kflt" style="display:flex;gap:2px"><button class="fb on" data-kf="all">全部</button><button class="fb" data-kf="代谢">代谢</button><button class="fb" data-kf="补剂">补剂</button><button class="fb" data-kf="营养">营养</button><button class="fb" data-kf="睡眠">睡眠</button></span><button class="btn btn-a" id="ka">+新增</button></div></div>
+<div id="kc"></div>
+<div id="kf" style="display:none;margin-top:3px" class="c">
+<div style="display:flex;gap:3px;margin-bottom:2px"><input class="ip" id="knt" placeholder="标题" style="width:100%;flex:1"><select class="sl" id="kncat"><option>代谢</option><option>补剂</option><option>营养</option><option>睡眠</option><option>运动</option><option>其他</option></select></div>
+<textarea class="ta" id="knd" placeholder="内容" rows="2"></textarea><button class="btn btn-a" id="kns" style="margin-top:2px">存</button></div></div>
 
-<div class="ft">v4.2 / 2026.04</div>
+<div class="ft">v4.3 / 2026.04</div>
 </div><div class="toast" id="toast">已保存</div>
 <script>
 (function(){
@@ -128,7 +195,7 @@ function ld(k){try{var v=localStorage.getItem("hp_"+k);return v?JSON.parse(v):nu
 function esc(s){if(!s)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
 function q(s){return document.querySelector(s)}
 function qa(s){return document.querySelectorAll(s)}
-function starC(n){var s="";for(var i=0;i<3;i++)s+=i<n?"\u2605":"\u2606";return s}
+function starC(n){var lb=["\u65e0","\u4f4e","\u4e2d","\u9ad8"];var cl=["#1D9E75","#8ab4f8","#f0c060","#E24B4A"];var idx=Math.min(n,3);return"<span style='color:"+cl[idx]+";font-size:7px;font-weight:600'>"+lb[idx]+"</span>"}
 var RC={"极高":"#E24B4A","高":"#EF9F27","中":"#BA7517","低-中":"#97C459","低":"#1D9E75","极低":"#1D9E75"};
 var RB={"极高":"rgba(255,107,107,.15)","高":"rgba(255,169,77,.12)","中":"rgba(255,212,59,.1)","低-中":"rgba(125,211,168,.1)","低":"rgba(125,211,168,.1)","极低":"rgba(125,211,168,.1)"};
 
@@ -143,6 +210,11 @@ var subGoalOpts=["\u8102\u80aa\u809d\u9006\u8f6c","\u6539\u5584\u7761\u7720","\u
 var subGoals=ld("subgoals")||["\u8102\u80aa\u809d\u9006\u8f6c","\u6539\u5584\u7761\u7720","\u524d\u5217\u817a\u5065\u5eb7"];
 function drawSubGoals(){var el=q("#sub-goals");el.innerHTML="";subGoalOpts.forEach(function(g){var on=subGoals.indexOf(g)>=0;el.insertAdjacentHTML("beforeend","<span class='tag "+(on?"tp":"")+"' style='cursor:pointer;opacity:"+(on?"1":".4")+"' data-sg='"+esc(g)+"'>"+esc(g)+"</span> ")})}drawSubGoals();
 q("#sub-goals").addEventListener("click",function(e){var t=e.target.closest("[data-sg]");if(!t)return;var g=t.getAttribute("data-sg");var i=subGoals.indexOf(g);if(i>=0)subGoals.splice(i,1);else subGoals.push(g);sv("subgoals",subGoals);drawSubGoals()});
+
+var healthOpts=["\u8f7b\u5ea6\u8102\u80aa\u809d","\u524d\u5217\u817a\u9499\u5316","\u80ba\u7ed3\u8282","\u80f0\u5c9b\u7d20\u654f\u611f\u6027\u5f85\u4f18\u5316","\u9ad8\u8840\u538b","\u9ad8\u8840\u8102","\u5c3f\u9178\u504f\u9ad8","\u80be\u7ed3\u77f3","\u9888\u690e\u75c5"];
+var healthTags=ld("htags")||["\u8f7b\u5ea6\u8102\u80aa\u809d","\u524d\u5217\u817a\u9499\u5316","\u80ba\u7ed3\u8282","\u80f0\u5c9b\u7d20\u654f\u611f\u6027\u5f85\u4f18\u5316"];
+function drawHealthTags(){var el=q("#health-tags");el.innerHTML="";healthOpts.forEach(function(g){var on=healthTags.indexOf(g)>=0;el.insertAdjacentHTML("beforeend","<span class='tag "+(on?"tw":"")+"' style='cursor:pointer;opacity:"+(on?"1":".4")+"' data-ht='"+esc(g)+"'>"+esc(g)+"</span> ")})}drawHealthTags();
+q("#health-tags").addEventListener("click",function(e){var t=e.target.closest("[data-ht]");if(!t)return;var g=t.getAttribute("data-ht");var i=healthTags.indexOf(g);if(i>=0)healthTags.splice(i,1);else healthTags.push(g);sv("htags",healthTags);drawHealthTags()});
 
 var GM={fatliver:{c:.2,p:.25,f:.55,def:500},lose:{c:.3,p:.3,f:.4,def:500},maintain:{c:.4,p:.25,f:.35,def:0},gain:{c:.4,p:.3,f:.3,def:-300},metabolic:{c:.25,p:.25,f:.5,def:300}};
 function gp(){var w=parseFloat(String(ld("p-weight")||q("[data-key=p-weight]").textContent).replace(/[^0-9.]/g,""))||78;var h=parseFloat(String(ld("p-height")||q("[data-key=p-height]").textContent).replace(/[^0-9.]/g,""))||175;var yr=parseInt(String(ld("p-year")||q("[data-key=p-year]").textContent).replace(/[^0-9]/g,""))||1980;var sx=String(ld("p-sex")||q("[data-key=p-sex]").textContent).indexOf("\u5973")>=0?"f":"m";return{w:w,h:h,age:2026-yr,sx:sx,goal:gsel.value,act:parseFloat(asel.value)}}
@@ -169,55 +241,61 @@ q("#mlout").addEventListener("change",function(e){var s=e.target.closest("[data-
 recalc();
 
 var sDBk="rs",sDBa=false,sDBf="all";
-function drawDBS(){var tb=q("#dbs-tb");tb.innerHTML="";
+function drawDBS(){var hdr=q("#dbshdr"),tb=q("#dbs-tb");
+hdr.innerHTML="<tr><th data-sort='nm'>名称</th><th data-sort='brand'>品牌</th><th data-sort='sol'>溶解</th><th data-sort='ls'>光</th><th data-sort='os'>氧</th><th data-sort='ms'>潮</th><th data-sort='ts'>温</th><th data-sort='rs' class='ac'>险</th><th></th><th></th></tr>";
+tb.innerHTML="";
 var f=SUPPLS.filter(function(d){if(sDBf==="hi")return d.rs>=4;if(sDBf==="lo")return d.rs<=2;return true});
 f.sort(function(a,b){var ak=a[sDBk],bk=b[sDBk];if(typeof ak==="string")return sDBa?String(ak).localeCompare(String(bk)):String(bk).localeCompare(String(ak));return sDBa?(ak-bk):(bk-ak)});
 f.forEach(function(d){
 var rc=RC[d.r]||"#999",rb=RB[d.r]||"rgba(255,255,255,.05)";
-var rw=document.createElement("div");rw.className="dbr";rw.setAttribute("data-sid",d.id);
-rw.style.cssText="grid-template-columns:minmax(0,1fr) 46px 30px 22px 22px 22px 30px 26px 14px 14px"+(d.hidden?";opacity:.3":"");
-rw.innerHTML="<div><span style='font-weight:600' class='ed' contenteditable='true' data-sfield='nm' data-sid2='"+d.id+"'>"+esc(d.nm)+"</span></div><div class='ed' contenteditable='true' data-sfield='brand' data-sid2='"+d.id+"' style='font-size:7px'>"+esc(d.brand)+"</div><div style='font-size:7px'>"+esc(d.sol)+"</div><div style='color:#f0c060'>"+starC(d.ls)+"</div><div style='color:#8ab4f8'>"+starC(d.os)+"</div><div style='color:#7dd3a8'>"+starC(d.ms)+"</div><div style='font-size:7px'>"+esc(d.t)+"</div><div><span class='bdg' style='background:"+rb+";color:"+rc+"'>"+d.r+"</span></div><div style='cursor:pointer;font-size:9px;color:var(--tx3)' data-shide='"+d.id+"'>"+(d.hidden?"\u25b6":"\u23f8")+"</div><div style='cursor:pointer;font-size:10px;color:var(--dng)' data-sdel='"+d.id+"'>x</div>";
-var det=document.createElement("div");det.className="dbd";det.setAttribute("data-sid",d.id);
-det.innerHTML="<b>\u5242\u91cf:</b> "+esc(d.dose)+" | <b>\u65f6\u95f4:</b> "+esc(d.timing)+"<br><b>\u6210\u5206:</b> "+esc(d.ingredients)+"<br><b>\u50a8\u5b58:</b> \u5f00\u5c01"+esc(d.so)+" \u672a\u5f00\u5c01"+esc(d.ss)+(d.sp?" | "+esc(d.sp):"")+"<br><b>\u5907\u6ce8:</b> "+esc(d.notes);
+var rw=document.createElement("tr");rw.className="dbr";rw.setAttribute("data-sid",d.id);if(d.hidden)rw.style.opacity=".3";
+rw.innerHTML="<td><span class='ed' contenteditable='true' data-sfield='nm' data-sid2='"+d.id+"'>"+esc(d.nm)+"</span></td><td><span class='ed' contenteditable='true' data-sfield='brand' data-sid2='"+d.id+"' style='font-size:8px'>"+esc(d.brand)+"</span></td><td style='font-size:8px'>"+esc(d.sol)+"</td><td>"+starC(d.ls)+"</td><td>"+starC(d.os)+"</td><td>"+starC(d.ms)+"</td><td style='font-size:8px'>"+esc(d.t)+"</td><td><span class='bdg' style='background:"+rb+";color:"+rc+"'>"+d.r+"</span></td><td style='cursor:pointer;font-size:9px;color:var(--tx3)' data-shide='"+d.id+"'>"+(d.hidden?"\u25b6":"\u23f8")+"</td><td style='cursor:pointer;color:var(--dng)' data-sdel='"+d.id+"'>x</td>";
+var det=document.createElement("tr");det.className="dbd-row";det.setAttribute("data-sid",d.id);
+det.innerHTML="<td colspan='10'><b>\u5242\u91cf:</b> "+esc(d.dose)+" | <b>\u65f6\u95f4:</b> "+esc(d.timing)+"<br><b>\u6210\u5206:</b> "+esc(d.ingredients)+"<br><b>\u50a8\u5b58:</b> \u5f00\u5c01"+esc(d.so)+" \u672a\u5f00\u5c01"+esc(d.ss)+(d.sp?" | "+esc(d.sp):"")+"<br><b>\u5907\u6ce8:</b> "+esc(d.notes)+"</td>";
 tb.appendChild(rw);tb.appendChild(det)})}drawDBS();
 
 q("#dbs-tb").addEventListener("click",function(e){
-var del=e.target.closest("[data-sdel]");if(del){var id=del.getAttribute("data-sdel");var idx=SUPPLS.findIndex(function(s){return s.id===id});if(idx>=0&&confirm("\u5220\u9664 "+SUPPLS[idx].nm+"?")){SUPPLS.splice(idx,1);sv("suppls-e",SUPPLS);drawDBS()}return}
+var del=e.target.closest("[data-sdel]");if(del){var id=del.getAttribute("data-sdel");var idx=SUPPLS.findIndex(function(s){return s.id===id});if(idx>=0){SUPPLS.splice(idx,1);sv("suppls-e",SUPPLS);drawDBS()}return}
 var hd=e.target.closest("[data-shide]");if(hd){var id2=hd.getAttribute("data-shide");var s=SUPPLS.find(function(x){return x.id===id2});if(s){s.hidden=!s.hidden;sv("suppls-e",SUPPLS);drawDBS()}return}
-if(e.target.closest(".ed"))return;var r=e.target.closest(".dbr");if(!r)return;var sid=r.getAttribute("data-sid");q("#dbs-tb").querySelectorAll(".dbd").forEach(function(d){if(d.getAttribute("data-sid")===sid)d.classList.toggle("show");else d.classList.remove("show")})});
+if(e.target.closest(".ed"))return;var r=e.target.closest("tr.dbr");if(!r)return;var sid=r.getAttribute("data-sid");q("#dbs-tb").querySelectorAll("tr.dbd-row").forEach(function(d){if(d.getAttribute("data-sid")===sid)d.classList.toggle("show");else d.classList.remove("show")})});
 q("#dbs-tb").addEventListener("blur",function(e){var ed=e.target.closest("[data-sfield]");if(!ed)return;var s=SUPPLS.find(function(x){return x.id===ed.getAttribute("data-sid2")});if(s)s[ed.getAttribute("data-sfield")]=ed.textContent;sv("suppls-e",SUPPLS)},true);
-q("#dbshdr").addEventListener("click",function(e){var c=e.target.closest(".so");if(!c)return;var k=c.getAttribute("data-sort");if(sDBk===k)sDBa=!sDBa;else{sDBk=k;sDBa=false}qa("#dbshdr .so").forEach(function(x){x.classList.remove("ac")});c.classList.add("ac");drawDBS()});
+q("#dbshdr").addEventListener("click",function(e){var c=e.target.closest("[data-sort]");if(!c)return;var k=c.getAttribute("data-sort");if(sDBk===k)sDBa=!sDBa;else{sDBk=k;sDBa=false}qa("#dbshdr th").forEach(function(x){x.classList.remove("ac")});c.classList.add("ac");drawDBS()});
 q("#dbsflt").addEventListener("click",function(e){var b=e.target.closest(".fb");if(!b)return;sDBf=b.getAttribute("data-sf");qa("#dbsflt .fb").forEach(function(x){x.classList.remove("on")});b.classList.add("on");drawDBS()});
 q("#dbs-add").addEventListener("click",function(){var f=q("#dbs-form");f.style.display=f.style.display==="none"?"block":"none"});
 q("#dsn-sv").addEventListener("click",function(){var nm=q("#dsn-nm").value.trim();if(!nm)return;SUPPLS.push({id:"s"+Date.now(),nm:nm,brand:q("#dsn-br").value.trim()||"--",cat:"",sol:q("#dsn-sol").value,dose:"",timing:"",ingredients:"",notes:"",l:"-",o:"-",m:"-",t:"\u5ba4\u6e29",so:"",ss:"",sp:"",r:"\u4f4e",ls:0,os:0,ms:0,rs:1,ts:25});sv("suppls-e",SUPPLS);drawDBS();q("#dsn-nm").value="";q("#dsn-br").value="";q("#dbs-form").style.display="none"});
 
 var fDBk="cal",fDBa=false;var catO={"\u4e3b\u98df":0,"\u86cb\u767d":1,"\u8102\u80aa":2,"\u4e73\u5236\u54c1":3,"\u996e\u54c1":4,"\u852c\u83dc":5};
-function drawDBF(){var tb=q("#dbf-tb");tb.innerHTML="";
+function drawDBF(){var hdr=q("#dbfhdr"),tb=q("#dbf-tb");
+hdr.innerHTML="<tr><th data-sort='nm'>名称</th><th data-sort='cat'>类别</th><th data-sort='p'>P</th><th data-sort='f'>F</th><th data-sort='c'>C</th><th data-sort='w'>水</th><th data-sort='cal'>cal</th><th data-sort='gi'>GI</th><th></th><th></th></tr>";
+tb.innerHTML="";
 var f=FOODS.slice().sort(function(a,b){if(fDBk==="cat"){return fDBa?(catO[a.cat]||9)-(catO[b.cat]||9):(catO[b.cat]||9)-(catO[a.cat]||9)}var av=a[fDBk]||0,bv=b[fDBk]||0;return fDBa?(av-bv):(bv-av)});
 f.forEach(function(d){
-var rw=document.createElement("div");rw.className="dbr";rw.setAttribute("data-fid",d.id);
-rw.style.cssText="grid-template-columns:minmax(0,1fr) 32px 24px 24px 24px 20px 24px 22px 14px 14px"+(d.hidden?";opacity:.3":"");
-rw.innerHTML="<div><span style='font-weight:600' class='ed' contenteditable='true' data-ffield='nm' data-fid2='"+d.id+"'>"+esc(d.nm)+"</span></div><div style='font-size:7px'>"+esc(d.cat)+"</div><div>"+d.p+"</div><div>"+d.f+"</div><div>"+d.c+"</div><div>"+(d.w||0)+"</div><div>"+d.cal+"</div><div>"+(d.gi||"-")+"</div><div style='cursor:pointer;font-size:9px;color:var(--tx3)' data-fhide='"+d.id+"'>"+(d.hidden?"\u25b6":"\u23f8")+"</div><div style='cursor:pointer;font-size:10px;color:var(--dng)' data-fdel='"+d.id+"'>x</div>";
-var det=document.createElement("div");det.className="dbd";det.setAttribute("data-fid",d.id);var om=d.omega||{};
-det.innerHTML=(d.pc?"<b>\u6bcf\u4e2a:</b> P"+d.p+"g F"+d.f+"g C"+d.c+"g "+d.cal+"cal<br>":"")+
-"<b>\u8102\u80aa\u9178:</b> n3:"+om.n3+"g n6:"+om.n6+"g n9:"+om.n9+"g sat:"+om.sat+"g<br><b>\u5fae\u91cf:</b> "+(d.micro||"--")+(d.amino?"<br><b>\u6c28\u57fa\u9178:</b> "+esc(d.amino):"");
+var rw=document.createElement("tr");rw.className="dbr";rw.setAttribute("data-fid",d.id);if(d.hidden)rw.style.opacity=".3";
+rw.innerHTML="<td><span class='ed' contenteditable='true' data-ffield='nm' data-fid2='"+d.id+"'>"+esc(d.nm)+"</span></td><td style='font-size:8px'>"+esc(d.cat)+"</td><td>"+d.p+"</td><td>"+d.f+"</td><td>"+d.c+"</td><td>"+(d.w||0)+"</td><td>"+d.cal+"</td><td>"+(d.gi||"-")+"</td><td style='cursor:pointer;font-size:9px;color:var(--tx3)' data-fhide='"+d.id+"'>"+(d.hidden?"\u25b6":"\u23f8")+"</td><td style='cursor:pointer;color:var(--dng)' data-fdel='"+d.id+"'>x</td>";
+var det=document.createElement("tr");det.className="dbd-row";det.setAttribute("data-fid",d.id);var om=d.omega||{};
+det.innerHTML="<td colspan='10'>"+(d.pc?"<b>\u6bcf\u4e2a:</b> P"+d.p+"g F"+d.f+"g C"+d.c+"g "+d.cal+"cal<br>":"")+"<b>\u8102\u80aa\u9178:</b> n3:"+om.n3+"g n6:"+om.n6+"g n9:"+om.n9+"g sat:"+om.sat+"g<br><b>\u5fae\u91cf:</b> "+(d.micro||"--")+(d.amino?"<br><b>\u6c28\u57fa\u9178:</b> "+esc(d.amino):"")+"</td>";
 tb.appendChild(rw);tb.appendChild(det)})}drawDBF();
 
 q("#dbf-tb").addEventListener("click",function(e){
-var del=e.target.closest("[data-fdel]");if(del){var id=del.getAttribute("data-fdel");var idx=FOODS.findIndex(function(f){return f.id===id});if(idx>=0&&confirm("\u5220\u9664 "+FOODS[idx].nm+"?")){FOODS.splice(idx,1);sv("foods-e",FOODS);drawDBF()}return}
+var del=e.target.closest("[data-fdel]");if(del){var id=del.getAttribute("data-fdel");var idx=FOODS.findIndex(function(f){return f.id===id});if(idx>=0){FOODS.splice(idx,1);sv("foods-e",FOODS);drawDBF()}return}
 var hd=e.target.closest("[data-fhide]");if(hd){var id2=hd.getAttribute("data-fhide");var f=FOODS.find(function(x){return x.id===id2});if(f){f.hidden=!f.hidden;sv("foods-e",FOODS);drawDBF()}return}
-if(e.target.closest(".ed"))return;var r=e.target.closest(".dbr");if(!r)return;var fid=r.getAttribute("data-fid");q("#dbf-tb").querySelectorAll(".dbd").forEach(function(d){if(d.getAttribute("data-fid")===fid)d.classList.toggle("show");else d.classList.remove("show")})});
+if(e.target.closest(".ed"))return;var r=e.target.closest("tr.dbr");if(!r)return;var fid=r.getAttribute("data-fid");q("#dbf-tb").querySelectorAll("tr.dbd-row").forEach(function(d){if(d.getAttribute("data-fid")===fid)d.classList.toggle("show");else d.classList.remove("show")})});
 q("#dbf-tb").addEventListener("blur",function(e){var ed=e.target.closest("[data-ffield]");if(!ed)return;var f=FOODS.find(function(x){return x.id===ed.getAttribute("data-fid2")});if(f)f[ed.getAttribute("data-ffield")]=ed.textContent;sv("foods-e",FOODS)},true);
-q("#dbfhdr").addEventListener("click",function(e){var c=e.target.closest(".so");if(!c)return;var k=c.getAttribute("data-sort");if(fDBk===k)fDBa=!fDBa;else{fDBk=k;fDBa=false}qa("#dbfhdr .so").forEach(function(x){x.classList.remove("ac")});c.classList.add("ac");drawDBF()});
+q("#dbfhdr").addEventListener("click",function(e){var c=e.target.closest("[data-sort]");if(!c)return;var k=c.getAttribute("data-sort");if(fDBk===k)fDBa=!fDBa;else{fDBk=k;fDBa=false}qa("#dbfhdr th").forEach(function(x){x.classList.remove("ac")});c.classList.add("ac");drawDBF()});
 q("#dbf-add").addEventListener("click",function(){var f=q("#dbf-form");f.style.display=f.style.display==="none"?"block":"none"});
 q("#dfn-sv").addEventListener("click",function(){var nm=q("#dfn-nm").value.trim();if(!nm)return;FOODS.push({id:"f"+Date.now(),nm:nm,cat:q("#dfn-cat").value,u:"g",per:100,p:parseFloat(q("#dfn-p").value)||0,f:parseFloat(q("#dfn-f").value)||0,c:parseFloat(q("#dfn-c").value)||0,w:parseFloat(q("#dfn-w").value)||0,cal:parseInt(q("#dfn-cal").value)||0,gi:parseInt(q("#dfn-gi").value)||0,step:50,d:0,omega:{n3:0,n6:0,n9:0,sat:0},micro:"--",amino:""});sv("foods-e",FOODS);drawDBF();q("#dfn-nm").value="";q("#dbf-form").style.display="none"});
 
-var suppl=ld("suppl")||[{time:"\u7a7a\u8179",color:"#f0c060",items:[{n:"NMN",d:"\u6309\u6807\u7b7e",sol:"\u6c34\u6eb6(\u7a7a\u8179)",note:"\u9700\u533b\u751f\u786e\u8ba4"}]},{time:"\u5348\u9910\u968f\u9910(\u987b\u6cb9\u8102)",color:"#7dd3a8",items:[{n:"GNC Mega Men",d:"1\u7247",sol:"\u6df7\u5408",note:"B\u65cf\u5145\u8db3"},{n:"NOW D3+K2",d:"1\u7c92",sol:"\u8102\u6eb6",note:"MenaQ7"},{n:"CoQ10",d:"\u6309\u6807\u7b7e",sol:"\u8102\u6eb6",note:""},{n:"GNC 4X\u9c7c\u6cb9",d:"2\u7c92",sol:"\u8102\u6eb6",note:"EPAX rTG"},{n:"\u53f6\u9ec4\u7d20",d:"10-20mg",sol:"\u8102\u6eb6",note:""},{n:"\u76d0\u9178\u5c0f\u6a97\u78b1",d:"500mg",sol:"\u6c34\u6eb6",note:"\u4e1c\u5317\u5236\u836f"},{n:"NAC",d:"1000mg",sol:"\u6c34\u6eb6",note:"\u8c37\u80f1\u7518\u80bd\u524d\u4f53"}]},{time:"\u665a\u9910\u968f\u9910",color:"#c090e0",items:[{n:"\u59dc\u9ec4\u7d20",d:"\u6309\u6807\u7b7e",sol:"\u8102\u6eb6",note:"\u6297\u708e"},{n:"\u76d0\u9178\u5c0f\u6a97\u78b1",d:"500mg",sol:"\u6c34\u6eb6",note:"\u7b2c\u4e8c\u6b21"},{n:"\u76ca\u751f\u83cc",d:"\u6309\u6807\u7b7e",sol:"\u7279\u6b8a(\u6d3b\u83cc)",note:"\u95f4\u96942h"}]},{time:"\u7761\u524d",color:"#8ab4f8",items:[{n:"\u82cf\u7cd6\u9178\u9541",d:"3\u7c92",sol:"\u6c34\u6eb6",note:"\u8111\u90e8\u9541"},{n:"Ashwagandha",d:"KSM-66",sol:"\u6c34\u6eb6",note:"\u964d\u76ae\u8d28\u9187"},{n:"\u7518\u6c28\u9178",d:"3g",sol:"\u6c34\u6eb6",note:"\u52a9\u7720"},{n:"\u808c\u9178",d:"3-5g",sol:"\u6c34\u6eb6",note:"\u8ba4\u77e5"}]}];
-function drawSup(){var sc=q("#sc");sc.innerHTML="";suppl.forEach(function(b,bi){var h="<div style='font-size:11px;font-weight:600;margin:5px 0 2px;display:flex;align-items:center;gap:4px'><span style='width:6px;height:6px;border-radius:50%;display:inline-block;background:"+b.color+"'></span><span style='color:"+b.color+"'>"+esc(b.time)+"</span><button class='btn btn-a' data-spadd='"+bi+"' style='font-size:7px;padding:1px 4px'>+</button></div>";
-b.items.forEach(function(it,ii){h+="<div class='ti' data-bi='"+bi+"' data-ii='"+ii+"'><div class='ti-top'><span class='ti-n ed' contenteditable='true' data-sf='n'>"+esc(it.n)+"</span><span style='font-size:7px;padding:1px 3px;border-radius:3px;background:rgba(255,255,255,.04);color:var(--tx3)'>"+esc(it.sol)+"</span><span class='ti-d ed' contenteditable='true' data-sf='d'>"+esc(it.d)+"</span><span style='cursor:pointer;color:var(--dng);font-size:10px;margin-left:2px' data-spdel='"+bi+"-"+ii+"'>x</span></div><div class='ti-note'>"+esc(it.note)+"</div></div>"});sc.insertAdjacentHTML("beforeend",h)})}drawSup();
+var suppl=ld("suppl")||[{time:"\u7a7a\u8179",color:"#f0c060",items:[{n:"NMN",d:"\u6309\u6807\u7b7e",sol:"\u6c34\u6eb6(\u7a7a\u8179)",note:"\u9700\u533b\u751f\u786e\u8ba4"}]},{time:"\u65e9\u9910",color:"#ff9770",items:[{n:"\u9ed1\u5496\u5561",d:"200ml",sol:"--",note:"\u7a7a\u8179\u5496\u5561\u56e0"}]},{time:"\u5348\u9910\u968f\u9910(\u987b\u6cb9\u8102)",color:"#7dd3a8",items:[{n:"GNC Mega Men",d:"1\u7247",sol:"\u6df7\u5408",note:"B\u65cf\u5145\u8db3"},{n:"NOW D3+K2",d:"1\u7c92",sol:"\u8102\u6eb6",note:"MenaQ7"},{n:"CoQ10",d:"\u6309\u6807\u7b7e",sol:"\u8102\u6eb6",note:""},{n:"GNC 4X\u9c7c\u6cb9",d:"2\u7c92",sol:"\u8102\u6eb6",note:"EPAX rTG"},{n:"\u53f6\u9ec4\u7d20",d:"10-20mg",sol:"\u8102\u6eb6",note:""},{n:"\u76d0\u9178\u5c0f\u6a97\u78b1",d:"500mg",sol:"\u6c34\u6eb6",note:"\u4e1c\u5317\u5236\u836f"},{n:"NAC",d:"1000mg",sol:"\u6c34\u6eb6",note:"\u8c37\u80f1\u7518\u80bd\u524d\u4f53"}]},{time:"\u665a\u9910\u968f\u9910",color:"#c090e0",items:[{n:"\u59dc\u9ec4\u7d20",d:"\u6309\u6807\u7b7e",sol:"\u8102\u6eb6",note:"\u6297\u708e"},{n:"\u76d0\u9178\u5c0f\u6a97\u78b1",d:"500mg",sol:"\u6c34\u6eb6",note:"\u7b2c\u4e8c\u6b21"},{n:"\u76ca\u751f\u83cc",d:"\u6309\u6807\u7b7e",sol:"\u7279\u6b8a(\u6d3b\u83cc)",note:"\u95f4\u96942h"}]},{time:"\u7761\u524d",color:"#8ab4f8",items:[{n:"\u82cf\u7cd6\u9178\u9541",d:"3\u7c92",sol:"\u6c34\u6eb6",note:"\u8111\u90e8\u9541"},{n:"Ashwagandha",d:"KSM-66",sol:"\u6c34\u6eb6",note:"\u964d\u76ae\u8d28\u9187"},{n:"\u7518\u6c28\u9178",d:"3g",sol:"\u6c34\u6eb6",note:"\u52a9\u7720"},{n:"\u808c\u9178",d:"3-5g",sol:"\u6c34\u6eb6",note:"\u8ba4\u77e5"}]}];
+var spAddBi=-1;
+function drawSup(){var sc=q("#sc");sc.innerHTML="";suppl.forEach(function(b,bi){var h="<div class='sp-grp' data-spg='"+bi+"'><div style='font-size:11px;font-weight:600;margin:5px 0 2px;display:flex;align-items:center;gap:4px'><span style='width:6px;height:6px;border-radius:50%;display:inline-block;background:"+b.color+"'></span><span style='color:"+b.color+"'>"+esc(b.time)+"</span><button class='btn btn-a' data-spadd='"+bi+"' style='font-size:7px;padding:1px 4px'>+</button></div>";
+b.items.forEach(function(it,ii){h+="<div class='ti' data-bi='"+bi+"' data-ii='"+ii+"'><div class='ti-top'><span class='ti-n ed' contenteditable='true' data-sf='n'>"+esc(it.n)+"</span><span style='font-size:7px;padding:1px 3px;border-radius:3px;background:rgba(255,255,255,.04);color:var(--tx3)'>"+esc(it.sol)+"</span><span class='ti-d ed' contenteditable='true' data-sf='d'>"+esc(it.d)+"</span><span style='cursor:pointer;color:var(--dng);font-size:10px;margin-left:2px' data-spdel='"+bi+"-"+ii+"'>x</span></div><div class='ti-note'>"+esc(it.note)+"</div></div>"});
+h+="<div class='sp-inline-form' data-spfi='"+bi+"' style='display:none;padding:4px;background:var(--bg2);border:1px solid var(--bd);border-radius:6px;margin:3px 0'><div style='display:flex;gap:3px;flex-wrap:wrap;align-items:center'><input class='ip sp-inm' placeholder='\u540d\u79f0' style='width:70px'><input class='ip sp-idose' placeholder='\u5242\u91cf' style='width:50px'><select class='sl sp-isol'><option>\u8102\u6eb6</option><option>\u6c34\u6eb6</option><option>\u6df7\u5408</option><option>\u7279\u6b8a(\u6d3b\u83cc)</option><option>\u6c34\u6eb6(\u7a7a\u8179)</option></select><input class='ip sp-inote' placeholder='\u5907\u6ce8' style='width:60px'><button class='btn btn-a sp-isv'>\u5b58</button><button class='btn sp-icancel'>\u53d6\u6d88</button></div></div>";
+h+="</div>";sc.insertAdjacentHTML("beforeend",h)})}drawSup();
 q("#sc").addEventListener("click",function(e){
-var ab=e.target.closest("[data-spadd]");if(ab){var bi=parseInt(ab.getAttribute("data-spadd"));var nm=prompt("\u8865\u5242\u540d\u79f0:");if(nm){suppl[bi].items.push({n:nm,d:"--",sol:"--",note:""});sv("suppl",suppl);drawSup()}return}
-var dl=e.target.closest("[data-spdel]");if(dl){var parts=dl.getAttribute("data-spdel").split("-");var bi2=parseInt(parts[0]),ii2=parseInt(parts[1]);if(confirm("\u5220\u9664 "+suppl[bi2].items[ii2].n+"?")){suppl[bi2].items.splice(ii2,1);sv("suppl",suppl);drawSup()}return}
+var ab=e.target.closest("[data-spadd]");if(ab){var bi=parseInt(ab.getAttribute("data-spadd"));qa(".sp-inline-form").forEach(function(f){f.style.display="none"});var form=q("[data-spfi='"+bi+"']");if(form){form.style.display="block";spAddBi=bi;var inp=form.querySelector(".sp-inm");if(inp){inp.value="";inp.focus()}}return}
+var sv2=e.target.closest(".sp-isv");if(sv2){var form2=sv2.closest(".sp-inline-form");var bi3=parseInt(form2.getAttribute("data-spfi"));var nm=form2.querySelector(".sp-inm").value.trim();if(!nm)return;suppl[bi3].items.push({n:nm,d:form2.querySelector(".sp-idose").value.trim()||"--",sol:form2.querySelector(".sp-isol").value,note:form2.querySelector(".sp-inote").value.trim()});sv("suppl",suppl);drawSup();return}
+var cancel=e.target.closest(".sp-icancel");if(cancel){cancel.closest(".sp-inline-form").style.display="none";return}
+var dl=e.target.closest("[data-spdel]");if(dl){var parts=dl.getAttribute("data-spdel").split("-");var bi2=parseInt(parts[0]),ii2=parseInt(parts[1]);suppl[bi2].items.splice(ii2,1);sv("suppl",suppl);drawSup();return}
 if(e.target.closest(".ed"))return;var t=e.target.closest(".ti");if(t)t.classList.toggle("open")});
 q("#sc").addEventListener("blur",function(e){var ed=e.target.closest("[data-sf]");if(!ed)return;var t=ed.closest(".ti"),bi=parseInt(t.getAttribute("data-bi")),ii=parseInt(t.getAttribute("data-ii"));suppl[bi].items[ii][ed.getAttribute("data-sf")]=ed.textContent;sv("suppl",suppl)},true);
 
@@ -259,18 +337,19 @@ h+="<div class='sch-t'>"+hr+":00</div>";
 for(var di=0;di<7;di++){
 h+="<div class='sch-c'>";
 var d=schCfg[di];if(!d){h+="</div>";continue}
+var _lu=d.lu||"12:00",_di=d.di||"18:00",_bf=d.bf||"",_ex=d.ex||"";
 function addBlk(time,cls,label,detail){
-if(!time)return;var tp=(time||"").split(":");var th=parseInt(tp[0])||0;
+if(!time)return;var tp=time.split(":");var th=parseInt(tp[0])||0;
 if(th===hr){h+="<div class='sblk "+cls+"' data-pop='"+esc(label)+"\n"+esc(detail||"")+"'>"+esc(label)+"</div>"}}
-addBlk(d.bf,"sb-eat","\u65e9\u9910",meals[0].items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?fd.nm+it.qty+(fd.pc?"":"g"):""}).join(" "));
-addBlk(d.lu,"sb-eat","\u5348\u9910",meals[1].items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?fd.nm+it.qty+(fd.pc?"":"g"):""}).join(" "));
-addBlk(d.di,"sb-eat","\u665a\u9910",meals[2].items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?fd.nm+it.qty+(fd.pc?"":"g"):""}).join(" "));
-if(d.lu){var lh=parseInt(d.lu.split(":")[0])||12;if(hr===lh){h+="<div class='sblk sb-suppl' data-pop='\u5348\u9910\u8865\u5242\n"+(suppl[1]?esc(suppl[1].items.map(function(s){return s.n}).join("/")):"")+"'>\u8865\u5242</div>"}}
-var luM=parseInt((d.lu||"12:00").split(":")[1])||0;var wH=parseInt(d.lu.split(":")[0])||12;var wMin=luM+40;if(wMin>=60){wH++;wMin-=60}if(hr===wH){h+="<div class='sblk sb-walk' data-pop='\u5348\u540e\u5feb\u8d70 20min'>\u5feb\u8d70</div>"}
-var diH=parseInt((d.di||"18:00").split(":")[0])||18;var diM=parseInt((d.di||"18:00").split(":")[1])||0;var wH2=diH;var wM2=diM+40;if(wM2>=60){wH2++;wM2-=60}if(hr===wH2){h+="<div class='sblk sb-walk' data-pop='\u665a\u540e\u5feb\u8d70 20min'>\u5feb\u8d70</div>"}
-if(d.di){var diHr=parseInt(d.di.split(":")[0])||18;if(hr===diHr){h+="<div class='sblk sb-suppl' data-pop='\u665a\u9910\u8865\u5242\n"+(suppl[2]?esc(suppl[2].items.map(function(s){return s.n}).join("/")):"")+"'>\u8865\u5242</div>"}}
-if(d.ex&&d.ext&&d.ext!=="rest"){var exH=parseInt(d.ex.split(":")[0])||14;if(hr===exH){var exI=EXDATA[d.ext];var det=d.ext==="strength"?EXDATA.strength.moves.map(function(m){return m.nm+" "+m.sets+"x"+m.reps}).join(" / "):(exI?exI.detail:"");h+="<div class='sblk "+(exCls[d.ext]||"sb-str")+"' data-pop='"+esc(exLbl[d.ext]||"")+"\n"+esc(det)+"'>"+esc(exLbl[d.ext]||"")+"</div>"}}
-if(hr===22){h+="<div class='sblk sb-sleep' data-pop='\u7761\u524d\u8865\u5242\n"+(suppl[3]?esc(suppl[3].items.map(function(s){return s.n+" "+s.d}).join(" / ")):"")+"'>\u7761\u524d</div>"}
+addBlk(_bf,"sb-eat","\u65e9\u9910",meals[0].items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?fd.nm+it.qty+(fd.pc?"":"g"):""}).join(" "));
+addBlk(_lu,"sb-eat","\u5348\u9910",meals[1].items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?fd.nm+it.qty+(fd.pc?"":"g"):""}).join(" "));
+addBlk(_di,"sb-eat","\u665a\u9910",meals[2].items.map(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});return fd?fd.nm+it.qty+(fd.pc?"":"g"):""}).join(" "));
+var lh=parseInt(_lu.split(":")[0])||12;if(hr===lh){var _slu=suppl.find(function(g){return g.time.indexOf("\u5348\u9910")>=0});h+="<div class='sblk sb-suppl' data-pop='\u5348\u9910\u8865\u5242\n"+(_slu?esc(_slu.items.map(function(s){return s.n}).join("/")):"")+"'>\u8865\u5242</div>"}
+var luM=parseInt(_lu.split(":")[1])||0;var wH=lh;var wMin=luM+40;if(wMin>=60){wH++;wMin-=60}if(hr===wH){h+="<div class='sblk sb-walk' data-pop='\u5348\u540e\u5feb\u8d70 20min'>\u5feb\u8d70</div>"}
+var diH=parseInt(_di.split(":")[0])||18;var diM=parseInt(_di.split(":")[1])||0;var wH2=diH;var wM2=diM+40;if(wM2>=60){wH2++;wM2-=60}if(hr===wH2){h+="<div class='sblk sb-walk' data-pop='\u665a\u540e\u5feb\u8d70 20min'>\u5feb\u8d70</div>"}
+if(hr===diH){var _sdi=suppl.find(function(g){return g.time.indexOf("\u665a\u9910")>=0});h+="<div class='sblk sb-suppl' data-pop='\u665a\u9910\u8865\u5242\n"+(_sdi?esc(_sdi.items.map(function(s){return s.n}).join("/")):"")+"'>\u8865\u5242</div>"}
+if(_ex&&d.ext&&d.ext!=="rest"){var exH=parseInt(_ex.split(":")[0])||14;if(hr===exH){var exI=EXDATA[d.ext];var det=d.ext==="strength"?EXDATA.strength.moves.map(function(m){return m.nm+" "+m.sets+"x"+m.reps}).join(" / "):(exI?exI.detail:"");h+="<div class='sblk "+(exCls[d.ext]||"sb-str")+"' data-pop='"+esc(exLbl[d.ext]||"")+"\n"+esc(det)+"'>"+esc(exLbl[d.ext]||"")+"</div>"}}
+if(hr===22){var _ssl=suppl.find(function(g){return g.time.indexOf("\u7761\u524d")>=0});h+="<div class='sblk sb-sleep' data-pop='\u7761\u524d\u8865\u5242\n"+(_ssl?esc(_ssl.items.map(function(s){return s.n+" "+s.d}).join(" / ")):"")+"'>\u7761\u524d</div>"}
 if(hr===23){h+="<div class='sblk sb-sleep' data-pop='\u7761\u7720'>\u7761\u7720</div>"}
 h+="</div>"}}g.innerHTML=h}drawSch();
 
@@ -286,17 +365,129 @@ q("#tt").addEventListener("click",function(){hd2=!hd2;this.textContent=hd2?"\u66
 q("#ta").addEventListener("click",function(){q("#tf").style.display=q("#tf").style.display==="none"?"block":"none"});
 q("#ts2").addEventListener("click",function(){var n=q("#tn").value.trim();if(!n)return;todos.push({n:n,d:q("#td2").value.trim(),type:q("#tty").value});sv("todos",todos);drawTd();q("#tn").value="";q("#td2").value="";q("#tf").style.display="none"});
 
+var BLDETAILS={"25(OH)D":{info:"维生素D活性形式。反映体内D3储备水平",ideal:"40-60 ng/mL (最优区间)",affects:"D3+K2补剂、日照量、肤色",warn:"<20严重缺乏 >100过量",supp:"NOW D3+K2 5000IU/天"},"血清钙+磷":{info:"钙磷平衡反映骨代谢和甲状旁腺功能",ideal:"Ca 2.1-2.6 mmol/L; P 0.8-1.5",affects:"D3剂量、钙补充、甲状旁腺",warn:"高钙需排查甲旁亢",supp:"D3K2+柠檬酸钙"},"血清镁":{info:"细胞内第二丰富阳离子。血清镁仅反映1%的总镁",ideal:"0.85-1.10 mmol/L",affects:"苏糖酸镁+甘氨酸镁+GNC",warn:"<0.7可致心律失常",supp:"苏糖酸镁144mg+GNC50mg"},"铁蛋白":{info:"储存铁指标。比血清铁更稳定可靠",ideal:"30-150 ng/mL (男性最优50-100)",affects:"GNC含Fe4.5mg、红肉、茶抑制吸收",warn:">300需排查铁过载",supp:"GNC半量4.5mg已足"},"同型半胱氨酸":{info:"甲基化效率标志物。B6/B12/叶酸功能验证",ideal:"<10 μmol/L (最优5-8)",affects:"GNC B族、叶酸、B12",warn:">15心血管风险升高",supp:"GNC半量B族已充足"},"肝功ALT/AST":{info:"肝细胞损伤标志。脂肪肝核心监控指标",ideal:"ALT<30 AST<30 (真正理想值)",affects:"NAC、小檗碱、酒精、高脂饮食",warn:"ALT>40需关注",supp:"NAC+小檗碱+断食护肝"},"血糖+HbA1c":{info:"空腹血糖+糖化血红蛋白=短期+长期血糖控制",ideal:"空腹<5.6 HbA1c<5.7%",affects:"小檗碱、16:8断食、运动",warn:"HbA1c>6.5%=糖尿病",supp:"小檗碱500mgx2+饭后快走"},"血脂四项":{info:"TC/TG/HDL/LDL。需联合看比值",ideal:"TG<1.7 HDL>1.0 LDL<3.4",affects:"鱼油EPA、断食、运动",warn:"TG/HDL比>3需干预",supp:"GNC 4X鱼油EPA647mg"}};
 var bls=ld("bls")||[{name:"25(OH)D",ref:"40-60",why:"D3"},{name:"\u8840\u6e05\u9499+\u78f7",ref:"\u751f\u5316\u5957",why:"\u9ad8\u9499"},{name:"\u8840\u6e05\u9541",ref:"\u5355\u72ec",why:"\u9541"},{name:"\u94c1\u86cb\u767d",ref:"30-150",why:"\u94c1"},{name:"\u540c\u578b\u534a\u80f1\u6c28\u9178",ref:"<10",why:"B\u65cf"},{name:"\u809d\u529fALT/AST",ref:"\u751f\u5316\u5957",why:"\u8865\u5242\u5b89\u5168"},{name:"\u8840\u7cd6+HbA1c",ref:"--",why:"\u5c0f\u6a97\u78b1"},{name:"\u8840\u8102\u56db\u9879",ref:"--",why:"\u9c7c\u6cb9"}];
-function drawBl(){var bl=q("#bl");bl.innerHTML="";bls.forEach(function(b,i){bl.insertAdjacentHTML("beforeend","<div class='bi' data-bi='"+i+"'><span class='bn ed' contenteditable='true' data-bf='name'>"+esc(b.name)+"</span><span class='ed' contenteditable='true' data-bf='ref' style='color:var(--tx3)'>"+esc(b.ref)+"</span><span class='ed' contenteditable='true' data-bf='why' style='color:var(--tx2)'>"+esc(b.why)+"</span><span class='bx' data-bd='"+i+"'>x</span></div>")});q("#dsc").textContent="\u8bf7\u5e2e\u6211\u67e5\uff1a"+bls.map(function(b){return b.name}).join("\u3001")}drawBl();
-q("#bl").addEventListener("blur",function(e){var ed=e.target.closest("[data-bf]");if(!ed)return;var it=ed.closest(".bi"),i=parseInt(it.getAttribute("data-bi"));bls[i][ed.getAttribute("data-bf")]=ed.textContent;sv("bls",bls);drawBl()},true);
-q("#bl").addEventListener("click",function(e){var x=e.target.closest("[data-bd]");if(!x)return;bls.splice(parseInt(x.getAttribute("data-bd")),1);sv("bls",bls);drawBl()});
+function drawBl(){var bl=q("#bl");bl.innerHTML="";bls.forEach(function(b,i){
+var det=BLDETAILS[b.name]||null;
+var h="<div class='bl-item'><div class='bl-top' data-bli='"+i+"'><span class='bn'>"+esc(b.name)+"</span><span style='color:var(--tx3);font-size:9px'>"+esc(b.ref)+"</span><span style='color:var(--tx2);font-size:9px'>"+esc(b.why)+"</span><span class='bx' data-bd='"+i+"' style='color:var(--dng);cursor:pointer'>x</span></div>";
+if(det){h+="<div class='bl-det' data-bld='"+i+"'><strong>含义:</strong> "+esc(det.info)+"<br><strong>理想范围:</strong> <span style='color:var(--acc)'>"+esc(det.ideal)+"</span><br><strong>影响因素:</strong> "+esc(det.affects)+"<br><strong>警戒:</strong> <span style='color:var(--wrn)'>"+esc(det.warn)+"</span><br><strong>你的补剂:</strong> "+esc(det.supp)+"</div>"}
+else{h+="<div class='bl-det' data-bld='"+i+"'><em style='color:var(--tx3)'>暂无详情数据</em></div>"}
+h+="</div>";bl.insertAdjacentHTML("beforeend",h)});
+q("#dsc").textContent="\u8bf7\u5e2e\u6211\u67e5\uff1a"+bls.map(function(b){return b.name}).join("\u3001")}drawBl();
+q("#bl").addEventListener("click",function(e){
+var x=e.target.closest("[data-bd]");if(x){e.stopPropagation();bls.splice(parseInt(x.getAttribute("data-bd")),1);sv("bls",bls);drawBl();return}
+var top=e.target.closest(".bl-top");if(top){var i=top.getAttribute("data-bli");qa(".bl-det").forEach(function(d){if(d.getAttribute("data-bld")===i)d.classList.toggle("show");else d.classList.remove("show")})}});
 q("#ba").addEventListener("click",function(){q("#bf").style.display=q("#bf").style.display==="none"?"flex":"none"});
 q("#bns").addEventListener("click",function(){var n=q("#bnn").value.trim();if(!n)return;bls.push({name:n,ref:q("#bnr").value.trim()||"--",why:q("#bnw").value.trim()||""});sv("bls",bls);drawBl();q("#bnn").value="";q("#bf").style.display="none"});
 
-var kws=ld("kws")||[{t:"\u8102\u80aa\u809d\u672c\u8d28",d:"\u80f0\u5c9b\u7d20\u75c5 \u9ad8\u80f0\u5c9b\u7d20->DNL->\u809d\u8102\u80aa->\u62b5\u6297"},{t:"\u63a7\u80f0\u5c9b\u7d20",d:"1)\u7a97\u53e3>2)\u51cf\u78b3\u6c34>3)\u907f\u53e0\u52a0"},{t:"\u996d\u540e\u6563\u6b65",d:"GLUT4\u76f4\u63a5\u6444\u53d6\u8461\u8404\u7cd6"},{t:"\u9541\u5206\u5de5",d:"\u82cf\u7cd6\u9178\u9541->\u8111;\u7518\u6c28\u9178\u9541->\u5168\u8eab"},{t:"\u9c7c\u6cb9",d:"rTG>EE;IFOS\u770b\u6210\u54c1;TOTOX=2xPV+AV"}];
-function drawKw(){q("#kc").innerHTML="";kws.forEach(function(k){q("#kc").insertAdjacentHTML("beforeend","<div class='ki'><b>"+esc(k.t)+"</b><p>"+esc(k.d)+"</p></div>")})}drawKw();
+var kwFlt="all";
+var kws=ld("kws")||[{t:"\u8102\u80aa\u809d\u672c\u8d28",d:"\u80f0\u5c9b\u7d20\u75c5 \u9ad8\u80f0\u5c9b\u7d20->DNL->\u809d\u8102\u80aa->\u62b5\u6297",cat:"\u4ee3\u8c22"},{t:"\u63a7\u80f0\u5c9b\u7d20",d:"1)\u7a97\u53e3>2)\u51cf\u78b3\u6c34>3)\u907f\u53e0\u52a0",cat:"\u4ee3\u8c22"},{t:"\u996d\u540e\u6563\u6b65",d:"GLUT4\u76f4\u63a5\u6444\u53d6\u8461\u8404\u7cd6",cat:"\u4ee3\u8c22"},{t:"\u9541\u5206\u5de5",d:"\u82cf\u7cd6\u9178\u9541->\u8111;\u7518\u6c28\u9178\u9541->\u5168\u8eab",cat:"\u8865\u5242"},{t:"\u9c7c\u6cb9",d:"rTG>EE;IFOS\u770b\u6210\u54c1;TOTOX=2xPV+AV",cat:"\u8865\u5242"},{t:"\u76ae\u8d28\u9187\u7ba1\u7406",d:"Ashwagandha+\u9541+\u7518\u6c28\u9178 \u4e09\u91cd\u7761\u524d\u964d\u76ae\u8d28\u9187",cat:"\u7761\u7720"},{t:"\u996e\u98df\u8102\u80aa\u66ff\u4ee3\u539f\u5219",d:"\u66ff\u4ee3\u7269\u6bd4\u51cf\u5c11\u672c\u8eab\u66f4\u91cd\u8981;n-6 PUFA\u67d0\u4e9b\u60c5\u5883\u6bd4\u9971\u548c\u8102\u80aa\u66f4\u6709\u95ee\u9898",cat:"\u8425\u517b"},{t:"\u7518\u6c28\u9178\u52a9\u7720",d:"\u5916\u5468\u8840\u7ba1\u6269\u5f20\u964d\u4f4e\u6838\u5fc3\u4f53\u6e29~0.3\u00b0C \u89e6\u53d1\u5165\u7761\u4fe1\u53f7",cat:"\u7761\u7720"},{t:"Berberine\u673a\u5236",d:"AMPK\u6fc0\u6d3b+\u7ebf\u7c92\u4f53\u590d\u5408\u4f53I\u6291\u5236 \u4e0e\u4e8c\u7532\u53cc\u80cd\u91cd\u53e0",cat:"\u8865\u5242"}];
+function drawKw(){q("#kc").innerHTML="";kws.forEach(function(k,i){
+if(kwFlt!=="all"&&(k.cat||"\u5176\u4ed6")!==kwFlt)return;
+q("#kc").insertAdjacentHTML("beforeend","<div class='ki ki-wrap'><b>"+esc(k.t)+(k.cat?"<span class='ki-cat'>"+esc(k.cat)+"</span>":"")+"</b><p>"+esc(k.d)+"</p><div class='ki-acts'><span class='btn' data-kdel='"+i+"' style='font-size:7px;padding:1px 4px;color:var(--dng)'>x</span></div></div>")})}drawKw();
 q("#ka").addEventListener("click",function(){q("#kf").style.display=q("#kf").style.display==="none"?"block":"none"});
-q("#kns").addEventListener("click",function(){var t=q("#knt").value.trim();if(!t)return;kws.push({t:t,d:q("#knd").value.trim()});sv("kws",kws);drawKw();q("#knt").value="";q("#knd").value="";q("#kf").style.display="none"});
+q("#kns").addEventListener("click",function(){var t=q("#knt").value.trim();if(!t)return;kws.push({t:t,d:q("#knd").value.trim(),cat:q("#kncat").value});sv("kws",kws);drawKw();q("#knt").value="";q("#knd").value="";q("#kf").style.display="none"});
+q("#kc").addEventListener("click",function(e){var d=e.target.closest("[data-kdel]");if(d){var i=parseInt(d.getAttribute("data-kdel"));kws.splice(i,1);sv("kws",kws);drawKw()}});
+q("#kflt").addEventListener("click",function(e){var b=e.target.closest(".fb");if(!b)return;kwFlt=b.getAttribute("data-kf");qa("#kflt .fb").forEach(function(x){x.classList.remove("on")});b.classList.add("on");drawKw()});
+/* === SLEEP === */
+var slpLogs=ld("slplogs")||[];
+function parseTime(t){var p=(t||"").split(":");return{h:parseInt(p[0])||0,m:parseInt(p[1])||0}}
+function calcSleepDur(bed,wake){var b=parseTime(bed),w=parseTime(wake);var bm=b.h*60+b.m,wm=w.h*60+w.m;if(wm<=bm)wm+=1440;return(wm-bm)/60}
+function drawSlpOverview(){
+var sp=ld("p-sleep")||q("[data-key=p-sleep]").textContent||"23:00-7:00";
+var parts=sp.replace(/\s/g,"").split("-");var bed=parts[0]||"23:00",wake=parts[1]||"7:00";
+var dur=calcSleepDur(bed,wake);
+q("#slp-dur").textContent=dur.toFixed(1)+"h";
+q("#slp-window").textContent=bed+" \u2192 "+wake;
+var pct=Math.min(dur/10*100,100);
+q("#slp-bar-fill").style.width=pct+"%";
+q("#slp-bar-fill").style.background=dur>=7?"linear-gradient(90deg,rgba(138,180,248,.3),rgba(138,180,248,.5),rgba(138,180,248,.3))":"linear-gradient(90deg,rgba(255,169,77,.3),rgba(255,169,77,.5),rgba(255,169,77,.3))";
+if(slpLogs.length>0){var avgQ=0;slpLogs.forEach(function(l){avgQ+=l.qual});avgQ=avgQ/slpLogs.length;
+q("#slp-score").textContent=avgQ.toFixed(1)+"/5";
+var avgD=0;slpLogs.forEach(function(l){avgD+=calcSleepDur(l.bed,l.wake)});avgD=avgD/slpLogs.length;
+q("#slp-eff").textContent=Math.round(avgD/dur*100)+"%"}
+}
+function drawSlpLogs(){var el=q("#slp-logs");el.innerHTML="";
+var qlb={5:"\u5f88\u597d",4:"\u4e0d\u9519",3:"\u4e00\u822c",2:"\u8f83\u5dee",1:"\u5f88\u5dee"};
+var qcl={5:"var(--acc)",4:"var(--inf)",3:"var(--gld)",2:"var(--wrn)",1:"var(--dng)"};
+slpLogs.slice(-7).reverse().forEach(function(l,i){
+var dur=calcSleepDur(l.bed,l.wake);
+el.insertAdjacentHTML("beforeend","<div class='slp-log'><span>"+esc(l.date)+"</span><span>"+esc(l.bed)+"\u2192"+esc(l.wake)+"</span><span style='color:var(--tx2)'>"+dur.toFixed(1)+"h</span><span style='color:"+qcl[l.qual]+";font-size:9px'>"+qlb[l.qual]+"</span><span style='cursor:pointer;color:var(--dng);font-size:9px' data-slpdel='"+i+"'>x</span></div>")})}
+drawSlpOverview();drawSlpLogs();
+q("#slp-add").addEventListener("click",function(){var f=q("#slp-form");f.style.display=f.style.display==="none"?"block":"none";if(!q("#slp-date").value){var d=new Date();q("#slp-date").value=d.toISOString().split("T")[0]}});
+q("#slp-sv").addEventListener("click",function(){var dt=q("#slp-date").value;if(!dt)return;slpLogs.push({date:dt,bed:q("#slp-bed").value||"23:00",wake:q("#slp-wake").value||"07:00",qual:parseInt(q("#slp-qual").value)||4});sv("slplogs",slpLogs);drawSlpLogs();drawSlpOverview();q("#slp-form").style.display="none"});
+q("#slp-logs").addEventListener("click",function(e){var d=e.target.closest("[data-slpdel]");if(d){var ri=slpLogs.length-1-parseInt(d.getAttribute("data-slpdel"));slpLogs.splice(ri,1);sv("slplogs",slpLogs);drawSlpLogs();drawSlpOverview()}});
+
+/* === METABOLIC CURVE === */
+function drawMetaCurve(){
+var svg=q("#metaCurve");if(!svg)return;
+var W=700,H=200,PAD=30,PADL=32,PADR=10,PADT=10,PADB=22;
+var gw=W-PADL-PADR,gh=H-PADT-PADB;
+var h="";
+/* grid */
+h+="<rect x='"+PADL+"' y='"+PADT+"' width='"+gw+"' height='"+gh+"' fill='rgba(255,255,255,.02)' rx='3'/>";
+for(var i=0;i<=24;i+=3){var x=PADL+gw*i/24;h+="<line x1='"+x+"' y1='"+PADT+"' x2='"+x+"' y2='"+(PADT+gh)+"' stroke='rgba(255,255,255,.06)'/>";h+="<text x='"+x+"' y='"+(H-4)+"' fill='rgba(255,255,255,.3)' font-size='7' text-anchor='middle'>"+i+":00</text>"}
+for(var j=0;j<=4;j++){var y=PADT+gh*j/4;h+="<line x1='"+PADL+"' y1='"+y+"' x2='"+(PADL+gw)+"' y2='"+y+"' stroke='rgba(255,255,255,.04)' stroke-dasharray='2'/>"}
+/* fasting zones */
+var mealTimes=[];
+schCfg.forEach(function(d){
+if(d.lu){var t=parseTime(d.lu);mealTimes.push(t.h+t.m/60)}
+if(d.di){var t2=parseTime(d.di);mealTimes.push(t2.h+t2.m/60)}
+if(d.bf){var t3=parseTime(d.bf);mealTimes.push(t3.h+t3.m/60)}});
+var firstMeal=24,lastMeal=0;
+if(mealTimes.length>0){mealTimes.forEach(function(t){if(t<firstMeal)firstMeal=t;if(t>lastMeal)lastMeal=t})}else{firstMeal=12;lastMeal=18}
+/* fasting shading */
+var fx1=PADL;var fx2=PADL+gw*(firstMeal/24);var fx3=PADL+gw*(lastMeal/24);var fx4=PADL+gw;
+h+="<rect x='"+fx1+"' y='"+PADT+"' width='"+(fx2-fx1)+"' height='"+gh+"' fill='rgba(138,180,248,.04)'/>";
+h+="<rect x='"+fx3+"' y='"+PADT+"' width='"+(fx4-fx3)+"' height='"+gh+"' fill='rgba(138,180,248,.04)'/>";
+/* meal markers */
+var mealCfg=schCfg[0]||{bf:"08:00",lu:"12:00",di:"18:00"};
+function addMealMark(time,label){if(!time)return;var t=parseTime(time);var mx=PADL+gw*((t.h+t.m/60)/24);h+="<line x1='"+mx+"' y1='"+PADT+"' x2='"+mx+"' y2='"+(PADT+gh)+"' stroke='rgba(125,211,168,.2)' stroke-dasharray='3'/>";h+="<text x='"+mx+"' y='"+(PADT+gh+12)+"' fill='rgba(125,211,168,.5)' font-size='6' text-anchor='middle'>"+label+"</text>"}
+addMealMark(mealCfg.bf,"\u65e9");addMealMark(mealCfg.lu,"\u5348");addMealMark(mealCfg.di,"\u665a");
+/* compute curves */
+var pts=48;
+function genCurve(baseLevel,mealResponse,decayRate,name){
+var vals=[];
+for(var k=0;k<pts;k++){
+var hr=k*24/pts;var v=baseLevel;
+/* circadian rhythm for cortisol */
+if(name==="cortisol"){v=baseLevel*(0.4+0.6*Math.exp(-((hr-7)*(hr-7))/18))}
+/* meal responses */
+function addMealEffect(mt){if(!mt)return;var t=parseTime(mt);var mh=t.h+t.m/60;var dt=hr-mh;if(dt<0)dt+=24;if(dt>=0&&dt<4){
+var carbLoad=0;var mIdx=mt===mealCfg.bf?0:(mt===mealCfg.lu?1:2);
+if(meals[mIdx]){meals[mIdx].items.forEach(function(it){var fd=FOODS.find(function(f){return f.id===it.fid});if(fd){var m=fd.pc?it.qty:(it.qty/100);carbLoad+=fd.c*m}})}
+var giScale=Math.max(0.3,Math.min(carbLoad/40,2));
+var peak=mealResponse*giScale;
+v+=peak*Math.exp(-dt*decayRate)*Math.sin(dt*Math.PI/3)}}
+addMealEffect(mealCfg.bf);addMealEffect(mealCfg.lu);addMealEffect(mealCfg.di);
+/* berberine dampening effect (lowers post-meal glucose and insulin) */
+if(name!=="cortisol"){
+var hasBerb=false;suppl.forEach(function(sg){sg.items.forEach(function(si){if(si.n.indexOf("\u5c0f\u6a97\u78b1")>=0||si.n.indexOf("berb")>=0)hasBerb=true})});
+if(hasBerb)v*=0.85}
+vals.push(Math.max(0,v))}
+return vals}
+var glucose=genCurve(90,45,1.2,"glucose");
+var insulin=genCurve(8,35,1.5,"insulin");
+var cortisol=genCurve(15,5,0.8,"cortisol");
+/* normalize */
+function normVals(arr){var mx=0;arr.forEach(function(v){if(v>mx)mx=v});return arr.map(function(v){return mx>0?v/mx:0})}
+var ng=normVals(glucose),ni=normVals(insulin),nc=normVals(cortisol);
+function drawLine(vals,color,opacity){
+var d="";vals.forEach(function(v,k){var x=PADL+gw*k/pts;var y=PADT+gh*(1-v*0.85);d+=(k===0?"M":"L")+x.toFixed(1)+","+y.toFixed(1)});
+h+="<path d='"+d+"' fill='none' stroke='"+color+"' stroke-width='1.5' opacity='"+(opacity||0.8)+"'/>";
+/* area fill */
+h+="<path d='"+d+"L"+(PADL+gw)+","+(PADT+gh)+"L"+PADL+","+(PADT+gh)+"Z' fill='"+color+"' opacity='0.06'/>"}
+drawLine(ng,"#7dd3a8",0.9);
+drawLine(ni,"#ffa94d",0.7);
+drawLine(nc,"#c090e0",0.6);
+/* Y axis labels */
+h+="<text x='"+(PADL-3)+"' y='"+(PADT+8)+"' fill='rgba(255,255,255,.3)' font-size='6' text-anchor='end'>\u9ad8</text>";
+h+="<text x='"+(PADL-3)+"' y='"+(PADT+gh)+"' fill='rgba(255,255,255,.3)' font-size='6' text-anchor='end'>\u4f4e</text>";
+svg.innerHTML=h}
+drawMetaCurve();
+/* redraw curve when meals or schedule change */
+var _origRecalc=recalc;
+recalc=function(){_origRecalc();drawMetaCurve()};
 })();
 </script>
 </body></html>
