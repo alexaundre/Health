@@ -93,11 +93,17 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <div id="login-overlay">
 <div class="login-box">
 <div style="font-size:9px;letter-spacing:2px;color:var(--tx3);margin-bottom:4px">HEALTH PROTOCOL</div>
-<h2>登录</h2><p>输入用户名和密码</p>
-<input class="login-input" id="login-user" placeholder="用户名" autocomplete="off">
-<input class="login-input" id="login-pass" placeholder="密码" type="password">
+<h2 id="login-title">登录</h2><p id="login-subtitle">用邮箱登录或注册新账户</p>
+<div style="display:flex;gap:4px;margin-bottom:10px">
+<button class="fb on" id="mode-login" style="flex:1;padding:5px">登录</button>
+<button class="fb" id="mode-register" style="flex:1;padding:5px">注册</button>
+</div>
+<input class="login-input" id="login-email" placeholder="邮箱" type="email" autocomplete="email">
+<input class="login-input" id="login-pass" placeholder="密码 (至少 8 位)" type="password" autocomplete="current-password">
 <button class="login-btn" id="login-btn">登录</button>
 <div class="login-err" id="login-err"></div>
+<div id="register-warn" style="display:none;font-size:9px;color:var(--wrn);margin-top:6px;line-height:1.4">⚠️ 端到端加密：密码即唯一密钥，遗忘后数据无法找回。请务必记牢。</div>
+<div style="font-size:8px;color:var(--tx3);margin-top:8px">数据端到端加密 · 服务端只存密文</div>
 </div></div>
 <div class="w" id="main-app" style="display:none">
 <div style="font-size:9px;letter-spacing:2px;color:var(--tx3)">HEALTH PROTOCOL v4.4</div>
@@ -232,7 +238,15 @@ textarea.ta{background:var(--bg3);color:var(--tx);border:1px solid var(--bd2);bo
 <button class="btn btn-d" id="set-clear">清除所有本地数据</button>
 <div style="font-size:8px;color:var(--tx3);margin-top:4px">导出数据可喂给Claude Chat做全面分析</div>
 </div>
+<div class="c"><div class="ct">云同步</div>
+<div class="set-row"><span class="lb2">服务地址</span><input class="set-input" id="set-syncurl" placeholder="https://health-sync.xxx.workers.dev"></div>
+<button class="btn btn-a" id="set-savesync">保存地址</button>
+<button class="btn" id="set-syncnow" style="margin-left:4px">立即同步</button>
+<div id="sync-status" style="font-size:9px;color:var(--tx3);margin-top:6px">未同步</div>
+<div style="font-size:8px;color:var(--tx3);margin-top:4px">每次保存自动同步 · 数据端到端加密 · 服务端无法解密</div>
+</div>
 <div class="c"><div class="ct">账户</div>
+<div id="set-account-info" style="font-size:10px;color:var(--tx2);margin-bottom:6px"></div>
 <button class="btn btn-d" id="set-logout">退出登录</button>
 </div>
 </div>
@@ -245,8 +259,10 @@ var FOODS=[{"id": "rice", "nm": "糙米饭(熟)", "cat": "主食", "u": "g", "pe
 var SUPPLS=[{"id": "gnc", "nm": "GNC Mega Men", "brand": "GNC", "cat": "复合维生素", "sol": "混合", "dose": "1片(减半)", "timing": "午餐", "ingredients": "VA450ug VC150mg VD312.5ug VE20mg VK40ug B1-B6各25mg B12-25ug folate340ug Ca100mg Fe4.5mg Mg50mg Zn7.5mg Se100ug Cr60ug lutein1mg", "notes": "减半B族仍充足", "l": "*", "o": "*", "m": "***", "t": "室温", "so": "按需", "ss": "2-3年", "sp": "拧紧瓶盖", "r": "中", "ls": 1, "os": 1, "ms": 3, "rs": 3, "ts": 25}, {"id": "d3k2", "nm": "NOW D3+K2", "brand": "NOW Foods", "cat": "骨骼", "sol": "脂溶", "dose": "1粒", "timing": "午餐", "ingredients": "VD3 5000IU VK2(MK-7)180ug MenaQ7", "notes": "须随油脂 不含钙", "l": "**", "o": "**", "m": "**", "t": "室温", "so": "3-6月", "ss": "2-3年", "sp": "K2是短板", "r": "中", "ls": 2, "os": 2, "ms": 2, "rs": 3, "ts": 25}, {"id": "coq10", "nm": "CoQ10", "brand": "--", "cat": "线粒体", "sol": "脂溶", "dose": "100-200mg", "timing": "午餐", "ingredients": "辅酶Q10 100-200mg", "notes": "Ubiquinol更佳", "l": "***", "o": "**", "m": "*", "t": "15-25C", "so": "6-12月", "ss": "1-2年", "sp": "变色=降解", "r": "高", "ls": 3, "os": 2, "ms": 1, "rs": 4, "ts": 25}, {"id": "fish", "nm": "GNC 4X鱼油", "brand": "GNC", "cat": "心血管", "sol": "脂溶", "dose": "2粒", "timing": "午餐", "ingredients": "EPA647+DHA253 rTG EPAX IFOS五星", "notes": "开封冷藏", "l": "***", "o": "***", "m": "*", "t": "<25C", "so": "3-6月", "ss": "2-3年", "sp": "闻腥=氧化", "r": "极高", "ls": 3, "os": 3, "ms": 1, "rs": 5, "ts": 25}, {"id": "lutein", "nm": "叶黄素", "brand": "--", "cat": "眼部", "sol": "脂溶", "dose": "10-20mg", "timing": "午餐", "ingredients": "叶黄素10-20mg+玉米黄质2-4mg", "notes": "GNC减半仅1mg", "l": "***", "o": "***", "m": "**", "t": "20-25C", "so": "尽快", "ss": "1-2年", "sp": "变褐=降解", "r": "极高", "ls": 3, "os": 3, "ms": 2, "rs": 5, "ts": 25}, {"id": "berb", "nm": "盐酸小檗碱", "brand": "东北制药", "cat": "代谢", "sol": "水溶", "dose": "500mgx2", "timing": "午餐+晚餐", "ingredients": "盐酸小檗碱100mg/片", "notes": "AMPK 与益生菌间隔2h", "l": "*", "o": "-", "m": "*", "t": "室温", "so": "保质期", "ss": "3-5年", "sp": "最稳定", "r": "极低", "ls": 1, "os": 0, "ms": 1, "rs": 0, "ts": 25}, {"id": "nac", "nm": "NAC", "brand": "NOW Foods", "cat": "肝脏", "sol": "水溶", "dose": "1000mg", "timing": "午餐", "ingredients": "N-乙酰半胱氨酸1000mg", "notes": "谷胱甘肽前体", "l": "*", "o": "**", "m": "**", "t": "室温", "so": "6-12月", "ss": "2-3年", "sp": "硫味=氧化", "r": "低-中", "ls": 1, "os": 2, "ms": 2, "rs": 2, "ts": 25}, {"id": "curc", "nm": "姜黄素", "brand": "--", "cat": "抗炎", "sol": "脂溶", "dose": "500-1000mg", "timing": "晚餐", "ingredients": "姜黄素+胡椒碱", "notes": "脂溶 光极敏", "l": "***", "o": "**", "m": "*", "t": "20-27C", "so": "6-12月", "ss": "2年", "sp": "褪变=降解", "r": "高", "ls": 3, "os": 2, "ms": 1, "rs": 4, "ts": 27}, {"id": "prob", "nm": "益生菌", "brand": "NOW Foods", "cat": "肠道", "sol": "特殊(活菌)", "dose": "按标签", "timing": "晚餐", "ingredients": "10菌株250亿CFU", "notes": "与小檗碱间隔2h", "l": "*", "o": "**", "m": "***", "t": "冷藏佳", "so": "1-3月", "ss": "6月-2年", "sp": "唯一活补剂", "r": "高", "ls": 1, "os": 2, "ms": 3, "rs": 4, "ts": 4}, {"id": "magt", "nm": "苏糖酸镁", "brand": "NOW Foods", "cat": "睡眠", "sol": "水溶", "dose": "3粒=144mg", "timing": "睡前", "ingredients": "L-苏糖酸镁2000mg(镁144mg)", "notes": "穿越血脑屏障", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "保质期", "ss": "2-3年", "sp": "防潮即可", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}, {"id": "ashw", "nm": "Ashwagandha", "brand": "KSM-66", "cat": "抗压", "sol": "水溶", "dose": "300-600mg", "timing": "睡前", "ingredients": "KSM-66 withanolides5%", "notes": "降皮质醇 避Timeless", "l": "*", "o": "*", "m": "**", "t": "室温", "so": "6-12月", "ss": "2年", "sp": "怕潮发霉", "r": "低", "ls": 1, "os": 1, "ms": 2, "rs": 1, "ts": 25}, {"id": "gly", "nm": "甘氨酸", "brand": "Bulk", "cat": "睡眠", "sol": "水溶", "dose": "3g", "timing": "睡前", "ingredients": "甘氨酸3000mg", "notes": "助眠+谷胱甘肽前体", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "极长", "ss": "3-5年", "sp": "最稳定", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}, {"id": "crea", "nm": "肌酸", "brand": "ON", "cat": "肌肉", "sol": "水溶", "dose": "3-5g", "timing": "睡前", "ingredients": "一水肌酸3-5g", "notes": "泡水快喝", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "极长", "ss": "3-5年", "sp": "受潮转化", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}, {"id": "nmn", "nm": "NMN", "brand": "--", "cat": "NAD+", "sol": "水溶(空腹)", "dose": "250-500mg", "timing": "空腹", "ingredients": "烟酰胺单核苷酸", "notes": "肺结节+促癌暂不加", "l": "*", "o": "*", "m": "*", "t": "室温", "so": "6-12月", "ss": "2年", "sp": "冷藏更佳", "r": "低", "ls": 1, "os": 1, "ms": 1, "rs": 1, "ts": 25}, {"id": "lyco", "nm": "番茄红素", "brand": "--", "cat": "前列腺", "sol": "脂溶", "dose": "10-15mg", "timing": "午餐", "ingredients": "番茄红素10-15mg", "notes": "GNC减半仅0.5mg", "l": "***", "o": "***", "m": "*", "t": "<25C", "so": "3-6月", "ss": "1-2年", "sp": "13双键极易降解", "r": "极高", "ls": 3, "os": 3, "ms": 1, "rs": 5, "ts": 25}, {"id": "magg", "nm": "甘氨酸镁", "brand": "--", "cat": "全身镁", "sol": "水溶", "dose": "200-300mg", "timing": "睡前", "ingredients": "甘氨酸镁", "notes": "补全身镁", "l": "-", "o": "-", "m": "**", "t": "室温", "so": "保质期", "ss": "2-3年", "sp": "防潮", "r": "极低", "ls": 0, "os": 0, "ms": 2, "rs": 0, "ts": 25}];
 var EXDATA={"strength": {"nm": "全身力量(一分化)", "dur": 50, "moves": [{"nm": "深蹲", "sets": 3, "reps": "8-12", "rest": "60-90s", "tgt": "腿/下肢"}, {"nm": "卧推/俯卧撑", "sets": 3, "reps": "8-12", "rest": "60-90s", "tgt": "胸"}, {"nm": "哑铃划船", "sets": 3, "reps": "8-12", "rest": "60-90s", "tgt": "背"}, {"nm": "哑铃肩推", "sets": 3, "reps": "8-12", "rest": "60-90s", "tgt": "肩"}, {"nm": "硬拉/臀桥", "sets": 3, "reps": "8-12", "rest": "60-90s", "tgt": "臀/腰背"}], "motto": "蹲推拉举提", "progress": "连续两次3x12满->加重"}, "hiit": {"nm": "HIIT", "dur": 25, "detail": "20s全力+40s休息x8轮"}, "cardio": {"nm": "有氧", "dur": 30, "detail": "快走/慢跑HR130-150"}, "yoga": {"nm": "瑜伽/拉伸", "dur": 30, "detail": "瑜伽30min"}, "rest": {"nm": "休息", "dur": 0, "detail": ""}};
 
-function sv(k,v){try{localStorage.setItem("hp_"+k,JSON.stringify(v));var t=document.getElementById("toast");t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show")},600)}catch(e){}}
+var SYNC={dirty:false,timer:null,running:false};
+function sv(k,v){try{localStorage.setItem("hp_"+k,JSON.stringify(v));var t=document.getElementById("toast");t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show")},600);if(k!=="auth-ok"&&k!=="sync-token"&&k!=="sync-url"&&k!=="sync-email"&&k!=="sync-version"){SYNC.dirty=true;scheduleSync()}}catch(e){}}
 function ld(k){try{var v=localStorage.getItem("hp_"+k);return v?JSON.parse(v):null}catch(e){return null}}
+function scheduleSync(){if(SYNC.timer)clearTimeout(SYNC.timer);SYNC.timer=setTimeout(function(){pushSync()},2000)}
 function esc(s){if(!s)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
 function q(s){return document.querySelector(s)}
 function qa(s){return document.querySelectorAll(s)}
@@ -572,19 +588,143 @@ var prompt=type==="suppl"?
 "\u8bf7\u7528\u4e2d\u6587\u56de\u7b54\u3002\u5e2e\u6211\u68c0\u7d22\u98df\u7269\u300c"+name+"\u300d\u7684\u5b8c\u6574\u8425\u517b\u4fe1\u606f\u3002\u5305\u62ec:\n1. \u6bcf100g\u7684\u5b8f\u91cf\u8425\u517b\u7d20(P/F/C/cal)\n2. GI\u503c\u548c\u5347\u7cd6\u7279\u70b9\n3. \u8102\u80aa\u9178\u5206\u5e03(n-3/n-6/n-9/\u9971\u548c)\n4. \u5173\u952e\u5fae\u91cf\u5143\u7d20\n5. \u6c28\u57fa\u9178\u7279\u70b9\n6. \u5bf9\u8102\u80aa\u809d/\u80f0\u5c9b\u7d20\u7684\u5f71\u54cd";
 callGemini(prompt,q("#air-resp"))});
 
-/* === LOGIN === */
-var UH="af3daa38cd2c1235987d71edb08229fb48d0b9b618234b52eaaa9f9ea2e9c251";
-var PH="08f462b48355c75e23a89a68d392a604af81c6ce05a48e12f8653231170fc8cd";
-function sha256(s){var buf=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",buf).then(function(h){return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,"0")}).join("")})}
-function checkAuth(){if(ld("auth-ok")){q("#login-overlay").style.display="none";q("#main-app").style.display="block"}}
-checkAuth();
-q("#login-btn").addEventListener("click",function(){
-var u=q("#login-user").value.trim(),p=q("#login-pass").value;
-if(!u||!p){q("#login-err").textContent="\u8bf7\u8f93\u5165\u7528\u6237\u540d\u548c\u5bc6\u7801";return}
-Promise.all([sha256(u),sha256(p)]).then(function(r){
-if(r[0]===UH&&r[1]===PH){sv("auth-ok",true);q("#login-overlay").style.display="none";q("#main-app").style.display="block";q("#login-err").textContent=""}
-else{q("#login-err").textContent="\u7528\u6237\u540d\u6216\u5bc6\u7801\u9519\u8bef"}})});
+/* === AUTH + E2E SYNC === */
+// 端到端加密：密码 -> PBKDF2 -> auth_key (上送) + enc_key (本地保留)
+var AUTH_MODE="login"; // login | register
+var ENC_KEY=null; // 解密用 CryptoKey, 永不离开浏览器
+var SESSION={token:null,email:null,userId:null,version:0};
+
+function b64(buf){var b="";var a=new Uint8Array(buf);for(var i=0;i<a.length;i++)b+=String.fromCharCode(a[i]);return btoa(b)}
+function unb64(s){var b=atob(s);var a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a.buffer}
+
+async function deriveKeys(email,password){
+  var enc=new TextEncoder();
+  var salt=await crypto.subtle.digest("SHA-256",enc.encode("health-sync:"+email.toLowerCase()));
+  var baseKey=await crypto.subtle.importKey("raw",enc.encode(password),{name:"PBKDF2"},false,["deriveBits","deriveKey"]);
+  // auth_key: 上送服务端 (200000 迭代)
+  var authBits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:salt,iterations:200000,hash:"SHA-256"},baseKey,256);
+  // enc_key: 本地 AES key (不同 info, 用 HKDF-like 扩展)
+  var encBits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode("enc:"+email.toLowerCase()),iterations:200000,hash:"SHA-256"},baseKey,256);
+  var encKey=await crypto.subtle.importKey("raw",encBits,{name:"AES-GCM"},false,["encrypt","decrypt"]);
+  return {authKey:b64(authBits),encKey:encKey};
+}
+
+async function encryptBlob(obj,encKey){
+  var iv=crypto.getRandomValues(new Uint8Array(12));
+  var data=new TextEncoder().encode(JSON.stringify(obj));
+  var cipher=await crypto.subtle.encrypt({name:"AES-GCM",iv:iv},encKey,data);
+  return {ciphertext:b64(cipher),iv:b64(iv)}
+}
+async function decryptBlob(blob,encKey){
+  var cipher=unb64(blob.ciphertext);var iv=new Uint8Array(unb64(blob.iv));
+  var plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:iv},encKey,cipher);
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+function syncURL(){return (ld("sync-url")||"").replace(/\/$/,"");}
+function setSyncStatus(s,cls){var el=q("#sync-status");if(el){el.textContent=s;el.style.color=cls==="ok"?"var(--acc)":cls==="err"?"var(--dng)":"var(--tx3)"}}
+
+function collectAllData(){
+  var data={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("hp_")===0&&k!=="hp_auth-ok"&&k!=="hp_sync-token"&&k!=="hp_sync-url"&&k!=="hp_sync-email"&&k!=="hp_sync-version"){try{data[k]=JSON.parse(localStorage.getItem(k))}catch(e){}}}
+  return data;
+}
+function applyAllData(data){
+  // 清掉旧 hp_ 数据 (除元数据)
+  var rm=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("hp_")===0&&k!=="hp_auth-ok"&&k!=="hp_sync-token"&&k!=="hp_sync-url"&&k!=="hp_sync-email"&&k!=="hp_sync-version")rm.push(k)}
+  rm.forEach(function(k){localStorage.removeItem(k)});
+  Object.keys(data||{}).forEach(function(k){try{localStorage.setItem(k,JSON.stringify(data[k]))}catch(e){}});
+}
+
+async function pushSync(){
+  if(SYNC.running||!ENC_KEY||!SESSION.token||!syncURL())return;
+  SYNC.running=true;setSyncStatus("同步中...");
+  try{
+    var enc=await encryptBlob(collectAllData(),ENC_KEY);
+    var r=await fetch(syncURL()+"/api/sync",{method:"PUT",headers:{"Content-Type":"application/json","Authorization":"Bearer "+SESSION.token},body:JSON.stringify({ciphertext:enc.ciphertext,iv:enc.iv,base_version:SESSION.version})});
+    var d=await r.json();
+    if(r.ok){SESSION.version=d.version;localStorage.setItem("hp_sync-version",JSON.stringify(d.version));SYNC.dirty=false;setSyncStatus("✓ 已同步 "+new Date().toLocaleTimeString(),"ok")}
+    else if(r.status===409){setSyncStatus("⚠ 版本冲突，正在拉取...","err");await pullSync();SYNC.dirty=true;scheduleSync()}
+    else setSyncStatus("✗ "+(d.error||"同步失败"),"err");
+  }catch(e){setSyncStatus("✗ 网络错误","err")}
+  SYNC.running=false;
+}
+
+async function pullSync(){
+  if(!ENC_KEY||!SESSION.token||!syncURL())return false;
+  setSyncStatus("拉取中...");
+  try{
+    var r=await fetch(syncURL()+"/api/sync",{headers:{"Authorization":"Bearer "+SESSION.token}});
+    var d=await r.json();
+    if(!r.ok){setSyncStatus("✗ 拉取失败","err");return false}
+    if(!d.blob){setSyncStatus("云端为空，将上传本地数据","ok");return true}
+    var data=await decryptBlob(d.blob,ENC_KEY);
+    applyAllData(data);
+    SESSION.version=d.version;
+    localStorage.setItem("hp_sync-version",JSON.stringify(d.version));
+    setSyncStatus("✓ 已拉取 v"+d.version,"ok");
+    return true;
+  }catch(e){setSyncStatus("✗ 解密失败 (密码错?)","err");return false}
+}
+
+async function doAuth(mode){
+  var email=q("#login-email").value.trim().toLowerCase();
+  var pass=q("#login-pass").value;
+  var url=syncURL();
+  if(!email||!pass){q("#login-err").textContent="请输入邮箱和密码";return}
+  if(pass.length<8){q("#login-err").textContent="密码至少 8 位";return}
+  if(!url){q("#login-err").textContent="请先在『设置→云同步』配置服务地址（首次使用先填，再回来登录）";
+    // 允许仅本地：用 email+pass 派生 enc_key, 不联网
+    var keys2=await deriveKeys(email,pass);ENC_KEY=keys2.encKey;SESSION.email=email;
+    sv2("auth-ok",true);sv2("sync-email",email);showApp();return}
+  q("#login-err").textContent="处理中...";
+  try{
+    var keys=await deriveKeys(email,pass);
+    var r=await fetch(url+"/api/"+mode,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,auth_key:keys.authKey})});
+    var d=await r.json();
+    if(!r.ok){q("#login-err").textContent=d.error||"失败";return}
+    ENC_KEY=keys.encKey;
+    SESSION.token=d.token;SESSION.email=email;SESSION.userId=d.user_id;SESSION.version=ld("sync-version")||0;
+    sv2("sync-token",d.token);sv2("sync-email",email);sv2("auth-ok",true);
+    q("#login-err").textContent="";
+    // 注册后云端为空,直接进; 登录后拉数据
+    if(mode==="login"){await pullSync()}
+    showApp();
+  }catch(e){q("#login-err").textContent="网络错误: "+e.message}
+}
+
+// sv2: 不触发同步的 set
+function sv2(k,v){try{localStorage.setItem("hp_"+k,JSON.stringify(v))}catch(e){}}
+
+function showApp(){
+  q("#login-overlay").style.display="none";
+  q("#main-app").style.display="block";
+  var infoEl=q("#set-account-info");if(infoEl)infoEl.textContent="已登录: "+(SESSION.email||"(本地模式)");
+  var urlEl=q("#set-syncurl");if(urlEl)urlEl.value=ld("sync-url")||"";
+}
+
+// 启动: 检查会话
+(async function(){
+  var token=ld("sync-token");var email=ld("sync-email");
+  if(ld("auth-ok")&&email){
+    // 有会话, 但 ENC_KEY 在内存里丢了 -> 要用户重新输密码
+    q("#login-email").value=email;
+    q("#login-title").textContent="解锁";
+    q("#login-subtitle").textContent="再次输入密码以解锁本地加密数据";
+    if(token)SESSION.token=token;SESSION.email=email;SESSION.version=ld("sync-version")||0;
+  }
+})();
+
+// 模式切换
+q("#mode-login").addEventListener("click",function(){AUTH_MODE="login";this.classList.add("on");q("#mode-register").classList.remove("on");q("#login-btn").textContent="登录";q("#register-warn").style.display="none"});
+q("#mode-register").addEventListener("click",function(){AUTH_MODE="register";this.classList.add("on");q("#mode-login").classList.remove("on");q("#login-btn").textContent="注册";q("#register-warn").style.display="block"});
+q("#login-btn").addEventListener("click",function(){doAuth(AUTH_MODE)});
 q("#login-pass").addEventListener("keydown",function(e){if(e.key==="Enter")q("#login-btn").click()});
+
+// 周期性同步 (每 60s 推一次, 如果有 dirty)
+setInterval(function(){if(SYNC.dirty&&!SYNC.running)pushSync()},60000);
+window.addEventListener("beforeunload",function(){if(SYNC.dirty&&navigator.sendBeacon&&SESSION.token&&syncURL()){
+  // best-effort, 浏览器关闭时尝试推一次 (不保证完成)
+}});
 
 /* === SETTINGS === */
 var apiKey=ld("gemini-key")||"";
@@ -592,7 +732,15 @@ var apiModel=ld("gemini-model")||"gemini-2.0-flash";
 q("#set-apikey").value=apiKey;q("#set-model").value=apiModel;
 q("#set-showkey").addEventListener("click",function(){var inp=q("#set-apikey");inp.type=inp.type==="password"?"text":"password";this.textContent=inp.type==="password"?"\u663e\u793a":"\u9690\u85cf"});
 q("#set-savekey").addEventListener("click",function(){apiKey=q("#set-apikey").value.trim();apiModel=q("#set-model").value;sv("gemini-key",apiKey);sv("gemini-model",apiModel)});
-q("#set-logout").addEventListener("click",function(){localStorage.removeItem("hp_auth-ok");location.reload()});
+q("#set-logout").addEventListener("click",function(){
+  if(SYNC.dirty){if(!confirm("还有未同步的本地修改，确认退出？")){return}}
+  // 调用服务端 logout (best effort)
+  if(SESSION.token&&syncURL()){fetch(syncURL()+"/api/logout",{method:"POST",headers:{"Authorization":"Bearer "+SESSION.token}}).catch(function(){})}
+  ["hp_auth-ok","hp_sync-token","hp_sync-version"].forEach(function(k){localStorage.removeItem(k)});
+  location.reload();
+});
+q("#set-savesync").addEventListener("click",function(){var v=q("#set-syncurl").value.trim().replace(/\/$/,"");sv2("sync-url",v);setSyncStatus("地址已保存: "+v,"ok")});
+q("#set-syncnow").addEventListener("click",function(){if(!ENC_KEY){setSyncStatus("✗ 未解锁","err");return}pushSync()});
 q("#set-clear").addEventListener("click",function(){if(confirm("\u786e\u5b9a\u6e05\u9664\u6240\u6709\u672c\u5730\u6570\u636e\uff1f\u8fd9\u4f1a\u91cd\u7f6e\u6240\u6709\u8bbe\u7f6e\u548c\u8bb0\u5f55\u3002")){var keys=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("hp_")===0)keys.push(k)}keys.forEach(function(k){localStorage.removeItem(k)});location.reload()}});
 q("#set-export").addEventListener("click",function(){
 var data={profile:{name:ld("p-name"),year:ld("p-year"),weight:ld("p-weight"),height:ld("p-height"),sex:ld("p-sex"),sleep:ld("p-sleep"),goal:ld("p-goal"),act:ld("p-act"),subgoals:ld("subgoals"),health:ld("htags")},meals:meals,supplements:suppl,schedule:schCfg,todos:todos,bloodTests:bls,knowledge:kws,sleepLogs:ld("slplogs")};

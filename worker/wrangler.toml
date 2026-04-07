@@ -1,0 +1,11 @@
+name = "health-sync"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "health-sync"
+database_id = "REPLACE_WITH_YOUR_D1_ID"
+
+[vars]
+ALLOWED_ORIGIN = "*"
