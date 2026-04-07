@@ -36,7 +36,69 @@
 - 服务端永远拿不到 `enc_key`，因此无法解密任何用户数据
 - ⚠️ **代价：忘记密码 = 数据永久丢失**（这是端到端加密的本质）
 
-## 部署
+## 部署方案
+
+| 方案 | 适合 | 速度（中国大陆） | 难度 |
+|------|------|----------------|------|
+| **A. 阿里云香港 + 自建** ⭐ | 国内访问为主 | 30-80ms | 中（一键脚本） |
+| B. Cloudflare Pages + Workers | 海外访问为主 | 不稳定 | 简单 |
+
+---
+
+## 方案 A：阿里云香港部署（推荐）
+
+### 准备
+
+- 阿里云轻量应用服务器（香港，2C1G/200Mbps，Ubuntu 22.04 或 24.04）
+- 域名一个（本项目用 `futurus.fit`，后端 `sync.futurus.fit`，前端 `app.futurus.fit`）
+- DNS A 记录两条都指向服务器 IP
+
+### 一键部署
+
+SSH 到服务器后：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/alexaundre/Health/main/server/deploy.sh | sudo bash
+```
+
+脚本会自动：
+1. 装 Node.js 20 LTS、Caddy
+2. 创建 `health` 系统用户
+3. clone 仓库到 `/opt/health-sync`
+4. 启动 systemd 服务（开机自启 + 崩溃重启）
+5. 配置 Caddy 自动 HTTPS（Let's Encrypt）
+6. 部署前端到 `/var/www/health`
+
+### 后续更新
+
+```bash
+sudo /opt/health-sync/server/update.sh
+```
+
+### 文件位置
+
+| 路径 | 说明 |
+|------|------|
+| `/opt/health-sync/` | 后端代码 |
+| `/opt/health-sync/data/health.db` | SQLite 数据库（**记得定期备份**） |
+| `/var/www/health/index.html` | 前端 |
+| `/etc/caddy/Caddyfile` | Caddy 配置 |
+| `/var/log/health-sync.log` | 后端日志 |
+| `/var/log/caddy/` | Caddy 访问日志 |
+
+### 数据备份
+
+```bash
+# 简单备份
+cp /opt/health-sync/data/health.db ~/health-$(date +%Y%m%d).db
+
+# 或加到 crontab
+echo "0 3 * * * cp /opt/health-sync/data/health.db /root/backups/health-\$(date +\%Y\%m\%d).db" | crontab -
+```
+
+---
+
+## 方案 B：Cloudflare 部署
 
 ### 1. 前端 (Cloudflare Pages)
 

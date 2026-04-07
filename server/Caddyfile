@@ -1,0 +1,21 @@
+# Caddy 配置 - 自动 HTTPS + 反代
+# 把这个文件放到 /etc/caddy/Caddyfile，然后 systemctl reload caddy
+
+sync.futurus.fit {
+    encode gzip zstd
+    reverse_proxy 127.0.0.1:3000
+    log {
+        output file /var/log/caddy/sync.log
+        format console
+    }
+}
+
+app.futurus.fit {
+    encode gzip zstd
+    root * /var/www/health
+    file_server
+    log {
+        output file /var/log/caddy/app.log
+        format console
+    }
+}

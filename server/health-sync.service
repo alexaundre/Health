@@ -1,0 +1,26 @@
+[Unit]
+Description=Health Sync Server
+After=network.target
+
+[Service]
+Type=simple
+User=health
+WorkingDirectory=/opt/health-sync
+ExecStart=/usr/bin/node src/index.js
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=DB_PATH=/opt/health-sync/data/health.db
+StandardOutput=append:/var/log/health-sync.log
+StandardError=append:/var/log/health-sync.err.log
+
+# 安全加固
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/health-sync/data /var/log
+
+[Install]
+WantedBy=multi-user.target
